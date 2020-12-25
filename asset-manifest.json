@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/spotify-tier-list-maker/static/css/main.bf9af78e.chunk.css",
-    "main.js": "/spotify-tier-list-maker/static/js/main.bddb8a2c.chunk.js",
-    "main.js.map": "/spotify-tier-list-maker/static/js/main.bddb8a2c.chunk.js.map",
+    "main.js": "/spotify-tier-list-maker/static/js/main.b4a891d6.chunk.js",
+    "main.js.map": "/spotify-tier-list-maker/static/js/main.b4a891d6.chunk.js.map",
     "runtime-main.js": "/spotify-tier-list-maker/static/js/runtime-main.f1401b79.js",
     "runtime-main.js.map": "/spotify-tier-list-maker/static/js/runtime-main.f1401b79.js.map",
     "static/css/2.ce2397d7.chunk.css": "/spotify-tier-list-maker/static/css/2.ce2397d7.chunk.css",
@@ -19,6 +19,6 @@
     "static/css/2.ce2397d7.chunk.css",
     "static/js/2.0d6bd728.chunk.js",
     "static/css/main.bf9af78e.chunk.css",
-    "static/js/main.bddb8a2c.chunk.js"
+    "static/js/main.b4a891d6.chunk.js"
   ]
 }
