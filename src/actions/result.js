@@ -49,3 +49,39 @@ export const initiateGetResult = (searchTerm) => {
     }
   };
 };
+export const initiateLoadMoreAlbums = (url) => {
+  return async (dispatch) => {
+    try {
+      console.log('url', url);
+      const result = await get(url);
+      console.log('categoriess', result);
+      return dispatch(addAlbums(result.albums));
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+};
+export const initiateLoadMoreArtists = (url) => {
+  return async (dispatch) => {
+    try {
+      console.log('url', url);
+      const result = await get(url);
+      console.log('categoriess', result);
+      return dispatch(addArtists(result.artists));
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+};
+export const initiateLoadMorePlaylist = (url) => {
+  return async (dispatch) => {
+    try {
+      console.log('url', url);
+      const result = await get(url);
+      console.log('categoriess', result);
+      return dispatch(addPlaylist(result.playlists));
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+};
