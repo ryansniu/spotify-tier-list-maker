@@ -7,7 +7,7 @@ export default class RedirectPage extends React.Component {
     const { setExpiryTime, history, location } = this.props;
     try {
       if (_.isEmpty(location.hash)) {
-        return history.push('/dashboard');
+        return history.push('/spotify-tier-list-maker/dashboard');
       }
       const access_token = getParamValues(location.hash);
       const expiryTime = new Date().getTime() + access_token.expires_in * 1000;
