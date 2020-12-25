@@ -21,7 +21,7 @@ const Home = (props) => {
   return (
     <React.Fragment>
       {isValidSession() ? (
-        <Redirect to="/spotify-tier-list-maker/dashboard"/>
+        <Redirect to="/dashboard"/>
       ) : (
         <div className="login">
           <Header />

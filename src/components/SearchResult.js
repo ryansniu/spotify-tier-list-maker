@@ -14,7 +14,7 @@ const SearchResult = (props) => {
     return (
       <Redirect
         to={{
-          pathname: '/spotify-tier-list-maker/',
+          pathname: '/',
           state: {
             session_expired: true
           }

@@ -35,14 +35,14 @@ class AppRouter extends React.Component {
         <div className="main">
           <Switch>
             <Route exact
-              path="/spotify-tier-list-maker/"
+              path="/"
               exact={true}
               render={(props) => (
                 <Home isValidSession={this.isValidSession} {...props} />
               )}
             />
             <Route exact
-              path="/spotify-tier-list-maker/redirect"
+              path="/redirect"
               render={(props) => (
                 <RedirectPage
                   isValidSession={this.isValidSession}
@@ -52,7 +52,7 @@ class AppRouter extends React.Component {
               )}
             />
             <Route exact
-              path="/spotify-tier-list-maker/dashboard"
+              path="/dashboard"
               render={(props) => (
                 <Dashboard isValidSession={this.isValidSession} {...props} />
               )}
