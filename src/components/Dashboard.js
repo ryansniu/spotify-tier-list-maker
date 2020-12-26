@@ -26,7 +26,7 @@ const Dashboard = (props) => {
       });
     } else {
       history.push({
-        pathname: '/',
+        pathname: '/spotify-tier-list-maker',
         state: {
           session_expired: true
         }
@@ -53,7 +53,7 @@ const Dashboard = (props) => {
       setIsLoading(false);
     } else {
       history.push({
-        pathname: '/',
+        pathname: '/spotify-tier-list-maker',
         state: {
           session_expired: true
         }
@@ -86,7 +86,7 @@ const Dashboard = (props) => {
       ) : (
         <Redirect
           to={{
-            pathname: '/',
+            pathname: '/spotify-tier-list-maker',
             state: {
               session_expired: true
             }

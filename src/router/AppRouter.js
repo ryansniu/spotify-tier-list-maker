@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from '../components/Home';
 import RedirectPage from '../components/RedirectPage';
 import Dashboard from '../components/Dashboard';
@@ -9,6 +9,7 @@ class AppRouter extends React.Component {
   state = {
     expiryTime: '0'
   };
+
   componentDidMount() {
     let expiryTime;
     try {
@@ -18,9 +19,11 @@ class AppRouter extends React.Component {
     }
     this.setState({ expiryTime });
   }
+
   setExpiryTime = (expiryTime) => {
     this.setState({ expiryTime });
   };
+  
   isValidSession = () => {
     const currentTime = new Date().getTime();
     const expiryTime = this.state.expiryTime;
@@ -31,18 +34,18 @@ class AppRouter extends React.Component {
 
   render() {
     return (
-      <HashRouter>
+      <BrowserRouter>
         <div className="main">
           <Switch>
-            <Route exact
-              path="/"
+            <Route
+              path="/spotify-tier-list-maker"
               exact={true}
               render={(props) => (
                 <Home isValidSession={this.isValidSession} {...props} />
               )}
             />
-            <Route exact
-              path="/redirect"
+            <Route
+              path="/spotify-tier-list-maker/redirect"
               render={(props) => (
                 <RedirectPage
                   isValidSession={this.isValidSession}
@@ -51,8 +54,8 @@ class AppRouter extends React.Component {
                 />
               )}
             />
-            <Route exact
-              path="/dashboard"
+            <Route
+              path="/spotify-tier-list-maker/dashboard"
               render={(props) => (
                 <Dashboard isValidSession={this.isValidSession} {...props} />
               )}
@@ -60,7 +63,7 @@ class AppRouter extends React.Component {
             <Route component={NotFoundPage} />
           </Switch>
         </div>
-      </HashRouter>
+      </BrowserRouter>
     );
   }
 }
