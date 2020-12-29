@@ -12,18 +12,22 @@ export const setAlbums = (albums) => ({
   type: SET_ALBUMS,
   albums
 });
+
 export const addAlbums = (albums) => ({
   type: ADD_ALBUMS,
   albums
 });
+
 export const setArtists = (artists) => ({
   type: SET_ARTISTS,
   artists
 });
+
 export const addArtists = (artists) => ({
   type: ADD_ARTISTS,
   artists
 });
+
 export const setPlayList = (playlists) => ({
   type: SET_PLAYLIST,
   playlists
@@ -32,6 +36,7 @@ export const addPlaylist = (playlists) => ({
   type: ADD_PLAYLIST,
   playlists
 });
+
 export const initiateGetResult = (searchTerm) => {
   return async (dispatch) => {
     try {
@@ -49,6 +54,7 @@ export const initiateGetResult = (searchTerm) => {
     }
   };
 };
+
 export const initiateLoadMoreAlbums = (url) => {
   return async (dispatch) => {
     try {
@@ -61,6 +67,7 @@ export const initiateLoadMoreAlbums = (url) => {
     }
   };
 };
+
 export const initiateLoadMoreArtists = (url) => {
   return async (dispatch) => {
     try {
@@ -73,6 +80,7 @@ export const initiateLoadMoreArtists = (url) => {
     }
   };
 };
+
 export const initiateLoadMorePlaylist = (url) => {
   return async (dispatch) => {
     try {

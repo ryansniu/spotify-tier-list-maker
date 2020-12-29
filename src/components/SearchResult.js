@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { Redirect } from 'react-router-dom';
 import _ from 'lodash';
 import AlbumsList from './AlbumsList';
 import ArtistsList from './ArtistsList';
@@ -11,16 +10,7 @@ const SearchResult = (props) => {
   const { albums, artists, playlist } = result;
 
   if (!isValidSession()) {
-    return (
-      <Redirect
-        to={{
-          pathname: '/spotify-tier-list-maker',
-          state: {
-            session_expired: true
-          }
-        }}
-      />
-    );
+
   }
 
   return (

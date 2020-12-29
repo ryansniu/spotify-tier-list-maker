@@ -17,7 +17,7 @@ export const setAuthHeader = () => {
     if (params) {
       axios.defaults.headers.common[
         'Authorization'
-      ] = `Bearer ${params.access_token}`;
+      ] = `Bearer ${params}`;
     }
   } catch (error) {
     console.log('Error setting auth', error);
