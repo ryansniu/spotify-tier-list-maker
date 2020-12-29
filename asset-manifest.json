@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/spotify-tier-list-maker/static/css/main.bf9af78e.chunk.css",
-    "main.js": "/spotify-tier-list-maker/static/js/main.1778f858.chunk.js",
-    "main.js.map": "/spotify-tier-list-maker/static/js/main.1778f858.chunk.js.map",
+    "main.js": "/spotify-tier-list-maker/static/js/main.e503075c.chunk.js",
+    "main.js.map": "/spotify-tier-list-maker/static/js/main.e503075c.chunk.js.map",
     "runtime-main.js": "/spotify-tier-list-maker/static/js/runtime-main.f1401b79.js",
     "runtime-main.js.map": "/spotify-tier-list-maker/static/js/runtime-main.f1401b79.js.map",
     "static/css/2.ce2397d7.chunk.css": "/spotify-tier-list-maker/static/css/2.ce2397d7.chunk.css",
-    "static/js/2.571750e6.chunk.js": "/spotify-tier-list-maker/static/js/2.571750e6.chunk.js",
-    "static/js/2.571750e6.chunk.js.map": "/spotify-tier-list-maker/static/js/2.571750e6.chunk.js.map",
+    "static/js/2.9c91b491.chunk.js": "/spotify-tier-list-maker/static/js/2.9c91b491.chunk.js",
+    "static/js/2.9c91b491.chunk.js.map": "/spotify-tier-list-maker/static/js/2.9c91b491.chunk.js.map",
     "index.html": "/spotify-tier-list-maker/index.html",
     "static/css/2.ce2397d7.chunk.css.map": "/spotify-tier-list-maker/static/css/2.ce2397d7.chunk.css.map",
     "static/css/main.bf9af78e.chunk.css.map": "/spotify-tier-list-maker/static/css/main.bf9af78e.chunk.css.map",
-    "static/js/2.571750e6.chunk.js.LICENSE.txt": "/spotify-tier-list-maker/static/js/2.571750e6.chunk.js.LICENSE.txt",
+    "static/js/2.9c91b491.chunk.js.LICENSE.txt": "/spotify-tier-list-maker/static/js/2.9c91b491.chunk.js.LICENSE.txt",
     "static/media/music.b2fe7d4d.jpeg": "/spotify-tier-list-maker/static/media/music.b2fe7d4d.jpeg"
   },
   "entrypoints": [
     "static/js/runtime-main.f1401b79.js",
     "static/css/2.ce2397d7.chunk.css",
-    "static/js/2.571750e6.chunk.js",
+    "static/js/2.9c91b491.chunk.js",
     "static/css/main.bf9af78e.chunk.css",
-    "static/js/main.1778f858.chunk.js"
+    "static/js/main.e503075c.chunk.js"
   ]
 }
