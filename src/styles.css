@@ -8,26 +8,15 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background: #f3f4f6;
+  background: #191414;
   font-family: 'Montserrat', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
   letter-spacing: 1px;
-  color: #778298;
+  color: #fff;
 }
   
 .btn {
   letter-spacing: 1px;
-}
-  
-.login {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-  
-.login .btn {
-  font-size: 1.2rem;
 }
   
 .main {
@@ -41,6 +30,7 @@ body {
   
 .main-heading {
   margin: 2rem 0;
+  color: #1DB954;
 }
   
 .hide {
@@ -48,7 +38,7 @@ body {
 }
   
 .active {
-  border: 2px solid #566273;
+  border: 2px solid #1DB954;
 }
   
 .loading {
@@ -122,7 +112,7 @@ body {
   font-size: 1.2rem;
   letter-spacing: 1px;
   font-weight: bold;
-  color: #778298;
+  color: #fff;
 }
   
 .search-buttons .btn:focus {
@@ -135,11 +125,13 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  color:#fff;
 }
   
 .card {
   margin: 1rem;
-  box-shadow: 0 2px 7px 3px #949ca5;
+  background:#191414;
+  box-shadow: 0px 0px 2px 2px #444;
 }
   
 .card .card-image-link {

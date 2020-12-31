@@ -17,8 +17,11 @@ const Dashboard = (props) => {
   const { isValidSession, refreshSession } = props;
 
   const handleSearch = async (searchTerm) => {
-    if (!isValidSession()) await refreshSession();
     setIsLoading(true);
+    if (!isValidSession()) {
+      try { await refreshSession(); } 
+      catch(error) { console.log(error); }
+    }
     props.dispatch(initiateGetResult(searchTerm)).then(() => {
       setIsLoading(false);
       setSelectedCategory('albums');
@@ -26,9 +29,12 @@ const Dashboard = (props) => {
   };
 
   const loadMore = async (type) => {
-    if (!isValidSession()) await refreshSession();
     const { dispatch, albums, artists, playlist } = props;
     setIsLoading(true);
+    if (!isValidSession()) {
+      try { await refreshSession(); }
+      catch(error) { console.log(error); }
+    }
     switch (type) {
       case 'albums':
         await dispatch(initiateLoadMoreAlbums(albums.next));
@@ -44,9 +50,7 @@ const Dashboard = (props) => {
     setIsLoading(false);
   };
 
-  const setCategory = (category) => {
-    setSelectedCategory(category);
-  };
+  const setCategory = (category) => { setSelectedCategory(category); };
 
   const { albums, artists, playlist } = props;
   const result = { albums, artists, playlist };
@@ -62,7 +66,6 @@ const Dashboard = (props) => {
           loadMore={loadMore}
           setCategory={setCategory}
           selectedCategory={selectedCategory}
-          isValidSession={isValidSession}
         />
       </div>
     </React.Fragment>
