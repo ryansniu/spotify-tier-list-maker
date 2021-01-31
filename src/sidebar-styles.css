@@ -3,24 +3,24 @@
   padding: 0;
   box-sizing: border-box;
 }
-  
+
 body {
   margin: 0;
   padding: 0;
+  background: linear-gradient(0deg, #121212 0%, #121212 calc(100% - 216px), #424242 100%) no-repeat, #121212;
   box-sizing: border-box;
-  background: #191414;
   font-family: 'Montserrat', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
   letter-spacing: 1px;
   color: #fff;
 }
-  
+
 .btn {
   letter-spacing: 1px;
 }
   
-.main {
-  width: 90%;
+.sidebar-search {
+  width: 48rem;
   margin: 2rem auto;
 }
   
@@ -49,7 +49,7 @@ body {
   margin-top: 10%;
   font-size: 150%;
 }
-  
+
 .load-more {
   display: flex;
   justify-content: center;
@@ -101,7 +101,7 @@ body {
 }
   
 .search-buttons {
-  margin: 2rem 0;
+  margin-bottom: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -119,29 +119,54 @@ body {
   box-shadow: none;
 }
   
+.tracks,
 .albums,
 .artists,
 .playlist {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: left;
   color:#fff;
 }
-  
+
 .card {
-  margin: 1rem;
-  background:#191414;
-  box-shadow: 0px 0px 2px 2px #444;
+  background: none;
+  border: none;
+  width: 24rem;
+  max-height: 6rem;
+  line-height: 1.2rem;
+  margin-bottom: 1rem;
 }
-  
+
+.card small {
+  color:#A4A4A4;
+}
+.card-title {
+  margin: 0;
+}
+.card small, .card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  padding-bottom: 0.1rem;
+  user-select: none;
+}
+
+.card-body {
+  padding-top: 0.1rem;
+  padding-right: 0;
+  max-width: 16rem;
+}
+
 .card .card-image-link {
-  padding: 1rem;
   text-align: center;
 }
   
 .card img {
-  max-width: 250px;
-  height: 250px;
+  width: 6rem;
+  height: 6rem;
 }
   
 @media screen and (max-width: 400px) {

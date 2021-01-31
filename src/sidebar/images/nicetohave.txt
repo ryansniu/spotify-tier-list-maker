@@ -1,0 +1,5 @@
+icons for each missing
+song
+artist
+album
+playlist

@@ -1,17 +1,28 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import _ from 'lodash';
+import TracksList from './TracksList';
 import AlbumsList from './AlbumsList';
 import ArtistsList from './ArtistsList';
 import PlayList from './PlayList';
 
 const SearchResult = (props) => {
   const { loadMore, result, setCategory, selectedCategory } = props;
-  const { albums, artists, playlist } = result;
+  const { tracks, albums, artists, playlist } = result;
 
   return (
     <React.Fragment>
       <div className="search-buttons">
+        {!_.isEmpty(tracks.items) && (
+          <button
+            className={`${
+              selectedCategory === 'tracks' ? 'btn active' : 'btn'
+            }`}
+            onClick={() => setCategory('tracks')}
+          >
+            Songs
+          </button>
+        )}
         {!_.isEmpty(albums.items) && (
           <button
             className={`${
@@ -44,6 +55,9 @@ const SearchResult = (props) => {
         )}
       </div>
 
+      <div className={`${selectedCategory === 'tracks' ? '' : 'hide'}`}>
+        {albums && <TracksList tracks={tracks} />}
+      </div>
       <div className={`${selectedCategory === 'albums' ? '' : 'hide'}`}>
         {albums && <AlbumsList albums={albums} />}
       </div>
@@ -56,8 +70,8 @@ const SearchResult = (props) => {
 
       {!_.isEmpty(result[selectedCategory]) &&
        !_.isEmpty(result[selectedCategory].next) && (
-        <div className="load-more" onClick={() => loadMore(selectedCategory)}>
-          <Button variant="info" type="button">
+        <div className="load-more">
+          <Button variant="info" type="button" onClick={() => loadMore(selectedCategory)}>
             Load More
           </Button>
         </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import Dashboard from './Dashboard';
-import { getAuthToken } from '../utils/api';
+import Dashboard from './components/Dashboard';
+import { getAuthToken } from './utils/api';
 
-class Main extends React.Component {
+class SidebarSearch extends React.Component {
     constructor(props) {
       super(props);
       this.state = { loaded: false };
@@ -36,17 +36,17 @@ class Main extends React.Component {
         if(!this.isValidSession()) {
           this.refreshSession();
           return (
-            <div className="main">
+            <div className="sidebar-search">
               Loading...
             </div>
           );
         }
         return (
-          <div className="main">
+          <div className="sidebar-search">
             <Dashboard isValidSession={this.isValidSession} refreshSession={this.refreshSession} />
           </div>
         );
     }
 }
 
-export default Main;
+export default SidebarSearch;
