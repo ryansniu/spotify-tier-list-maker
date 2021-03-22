@@ -20,8 +20,8 @@ body {
 }
   
 .sidebar-search {
-  width: 48rem;
-  margin: 2rem auto;
+  width: 26rem;
+  margin: auto;
 }
   
 .form-control {
@@ -31,6 +31,7 @@ body {
 .main-heading {
   margin: 2rem 0;
   color: #1DB954;
+  text-align: center;
 }
   
 .hide {
@@ -108,7 +109,8 @@ body {
 }
   
 .search-buttons .btn {
-  margin: 0.8rem;
+  margin: 0.2rem;
+  margin-bottom: 0.8rem;
   font-size: 1.2rem;
   letter-spacing: 1px;
   font-weight: bold;
@@ -158,10 +160,6 @@ body {
   padding-top: 0.1rem;
   padding-right: 0;
   max-width: 16rem;
-}
-
-.card .card-image-link {
-  text-align: center;
 }
   
 .card img {

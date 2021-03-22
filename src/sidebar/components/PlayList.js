@@ -19,7 +19,6 @@ const PlayList = ({ playlist }) => {
                           target="_blank"
                           href={item.external_urls.spotify}
                           rel="noopener noreferrer"
-                          className="card-image-link"
                         >
                           {!_.isEmpty(item.images) ? (
                             <Card.Img src={item.images[0].url} alt="" />
