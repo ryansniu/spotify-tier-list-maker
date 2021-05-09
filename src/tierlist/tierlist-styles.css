@@ -1,3 +1,15 @@
-.tier-col {
-    background: darkblue
+#color-toggle {
+    background-color: transparent;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    margin-left: 8px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+}
+#color-toggle:after {
+    display: none;
 }
