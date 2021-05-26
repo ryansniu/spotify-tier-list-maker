@@ -44,7 +44,7 @@ export default class Column extends React.Component {
         {provided => (
           <Container {...provided.draggableProps} ref={provided.innerRef}>
             <div {...provided.dragHandleProps}>
-              <Title colData={this.props.column} updateHeader={this.props.updateHeader} />
+              <Title colData={this.props.column} updateHeader={this.props.updateHeader} deleteHandler={this.props.deleteHandler} />
             </div>
             <Droppable droppableId={this.props.column.id} type="task">
               {(provided, snapshot) => (

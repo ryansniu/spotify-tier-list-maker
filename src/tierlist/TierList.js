@@ -12,9 +12,9 @@ const Container = styled.div`
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, taskMap, index, updateHeader } = this.props;
+    const { column, taskMap, index, updateHeader, deleteHandler } = this.props;
     const tasks = column.taskIds.map(taskId => taskMap[taskId]);
-    return <Column column={column} tasks={tasks} index={index} updateHeader={updateHeader} />;
+    return <Column column={column} tasks={tasks} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler}/>;
   }
 }
 
@@ -34,6 +34,26 @@ class TierList extends React.Component {
         ...this.state.columns,
         [id]: newHeader
       }
+    };
+    this.setState(newState);
+  }
+
+  removeCol = (id) => {
+    const newColumnOrder = Array.from(this.state.columnOrder);
+    newColumnOrder.splice(newColumnOrder.indexOf(id), 1);
+
+    const oldColumns = this.state.columns;
+    const newColumns = Object.keys(oldColumns).reduce((object, key) => {
+      if (key !== id) {
+        object[key] = oldColumns[key]
+      }
+      return object
+    }, {})
+
+    const newState = {
+      ...this.state,
+      columns: newColumns,
+      columnOrder: newColumnOrder,
     };
     this.setState(newState);
   }
@@ -110,7 +130,8 @@ class TierList extends React.Component {
 
   render() {
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+      <div>
+        <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="tiers" direction="horizontal" type="column">
             {provided => (
               <Container
@@ -126,6 +147,7 @@ class TierList extends React.Component {
                       taskMap={this.state.tasks}
                       index={index}
                       updateHeader={this.updateColHeader}
+                      deleteHandler={this.removeCol}
                     />
                   );
                 })}
@@ -133,7 +155,28 @@ class TierList extends React.Component {
               </Container>
             )}
           </Droppable>
-      </DragDropContext>
+        </DragDropContext>
+        <button
+          type="button"
+          onClick={() => {
+            const ID = `column-${new Date().getTime()}`;
+            const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
+            const newState = {
+              ...this.state,
+              columnOrder: newColumnOrder
+            };
+            newState['columns'][ID] = {
+              id: ID,
+              title: 'NEW',
+              color: '#1DB954',
+              taskIds: [],
+            };
+            this.setState(newState);
+          }}
+        >
+          Add new group
+        </button>
+      </div>
     );
   }
 }

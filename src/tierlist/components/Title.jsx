@@ -13,6 +13,7 @@ const TitleStyle = styled.h3`
     display: flex;
 `;
 
+// how tf do i make this full height when editing
 const InputStyle = styled.textarea`
     flex-grow: 1;
     overflow: hidden;
@@ -42,6 +43,7 @@ const Title = props => {
   const [color, setColor] = useState(props.colData.color);
   const [inputVisible, setInputVisible] = useState(false);
   const update = props.updateHeader;
+  const deleteHandler = props.deleteHandler;
 
   function onClickOutSide(e) {
     if (inputRef.current && !inputRef.current.contains(e.target)) setInputVisible(false);
@@ -74,6 +76,8 @@ const Title = props => {
                 <Dropdown.Item style={{backgroundColor: "purple"}} onClick={() => { setColor('purple'); update(id, title, 'purple'); }}>Purple</Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item style={{backgroundColor: "#1DB954"}} onClick={() => { setColor('#1DB954'); update(id, title, '#1DB954'); }}>Default</Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={() => { deleteHandler(id); }}>DELETE THIS</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </form>
