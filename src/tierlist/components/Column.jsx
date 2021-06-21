@@ -9,13 +9,11 @@ const Container = styled.div`
   border: 1px solid lightgrey;
   background-color: none;
   border-radius: 2px;
-  width: 220px;
-
   display: flex;
   flex-direction: column;
 `;
 
-const TaskList = styled.div`
+const ItemList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
   background-color: ${props => props.isDraggingOver ? 'lightgrey' : 'none'};
@@ -25,14 +23,14 @@ const TaskList = styled.div`
 
 class InnerList extends React.Component {
   shouldComponentUpdate(nextProps) {
-    if (nextProps.tasks === this.props.tasks) {
+    if (nextProps.items === this.props.items) {
       return false;
     }
     return true;
   }
   render() {
-    return this.props.tasks.map((task, index) => (
-      <Item key={task.id} task={task} index={index} />
+    return this.props.items.map((item, index) => (
+      <Item key={item.id} item={item} index={index} />
     ));
   }
 }
@@ -46,16 +44,16 @@ export default class Column extends React.Component {
             <div {...provided.dragHandleProps}>
               <Title colData={this.props.column} updateHeader={this.props.updateHeader} deleteHandler={this.props.deleteHandler} />
             </div>
-            <Droppable droppableId={this.props.column.id} type="task">
+            <Droppable droppableId={this.props.column.id} type="item">
               {(provided, snapshot) => (
-                <TaskList
+                <ItemList
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   isDraggingOver={snapshot.isDraggingOver}
                 >
-                  <InnerList tasks={this.props.tasks} />
+                  <InnerList items={this.props.items} />
                   {provided.placeholder}
-                </TaskList>
+                </ItemList>
               )}
             </Droppable>
           </Container>

@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'Gotham';
+  src: url('./fonts/Gotham-Medium.eot');
+  src: local('Gotham Medium'), local('Gotham-Medium'),
+      url('./fonts/Gotham-Medium.eot?#iefix') format('embedded-opentype'),
+      url('./fonts/Gotham-Medium.woff2') format('woff2'),
+      url('./fonts/Gotham-Medium.woff') format('woff'),
+      url('./fonts/Gotham-Medium.ttf') format('truetype'),
+      url('./fonts/Gotham-Medium.svg#Gotham-Medium') format('svg');
+  font-weight: 500;
+  font-style: normal;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,8 +22,8 @@ body {
   padding: 0;
   background: linear-gradient(0deg, #121212 0%, #121212 calc(100% - 216px), #424242 100%) no-repeat, #121212;
   box-sizing: border-box;
-  font-family: 'Montserrat', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 20px;
+  font-family: 'Gotham', 'Monsterrat', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
   letter-spacing: 1px;
   color: #fff;
 }
@@ -127,44 +140,51 @@ body {
 .playlist {
   display: flex;
   flex-wrap: wrap;
-  justify-content: left;
+  justify-content: center;
   color:#fff;
 }
 
 .card {
   background: none;
   border: none;
-  width: 24rem;
-  max-height: 6rem;
-  line-height: 1.2rem;
-  margin-bottom: 1rem;
+  width: 20rem;
+  max-width: 20rem;
+  max-height: 4rem;
+  line-height: normal;
+  letter-spacing: normal;
+  margin-bottom: 8px;
+}
+
+.container {
+  padding: 0;
 }
 
 .card small {
   color:#A4A4A4;
+  margin-top: 0;
 }
 .card-title {
   margin: 0;
 }
 .card small, .card-title {
+  height: auto;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  padding-bottom: 0.1rem;
+  padding-bottom: 0;
   user-select: none;
 }
 
 .card-body {
-  padding-top: 0.1rem;
-  padding-right: 0;
+  padding: 0 0 0 0.5rem;
   max-width: 16rem;
 }
   
 .card img {
-  width: 6rem;
-  height: 6rem;
+  width: 4rem;
+  height: 4rem;
 }
   
 @media screen and (max-width: 400px) {

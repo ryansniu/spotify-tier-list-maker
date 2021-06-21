@@ -36,7 +36,6 @@ const ButtonStyle = styled.button`
 `;
 
 const Title = props => {
-  // We use hooks to declare "initial" states
   const inputRef = useRef(null);
   const [id] = useState(props.colData.id);
   const [title, setTitle] = useState(props.colData.title);

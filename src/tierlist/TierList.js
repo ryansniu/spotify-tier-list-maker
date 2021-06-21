@@ -12,9 +12,9 @@ const Container = styled.div`
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, taskMap, index, updateHeader, deleteHandler } = this.props;
-    const tasks = column.taskIds.map(taskId => taskMap[taskId]);
-    return <Column column={column} tasks={tasks} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler}/>;
+    const { column, itemMap, index, updateHeader, deleteHandler } = this.props;
+    const items = column.itemIds.map(itemId => itemMap[itemId]);
+    return <Column column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler}/>;
   }
 }
 
@@ -81,13 +81,13 @@ class TierList extends React.Component {
     const foreign = this.state.columns[destination.droppableId];
 
     if (home === foreign) {
-      const newTaskIds = Array.from(home.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
+      const newitemIds = Array.from(home.itemIds);
+      newitemIds.splice(source.index, 1);
+      newitemIds.splice(destination.index, 0, draggableId);
 
       const newHome = {
         ...home,
-        taskIds: newTaskIds
+        itemIds: newitemIds
       };
 
       const newState = {
@@ -103,18 +103,18 @@ class TierList extends React.Component {
     }
 
     // moving from one list to another
-    const homeTaskIds = Array.from(home.taskIds);
-    homeTaskIds.splice(source.index, 1);
+    const homeitemIds = Array.from(home.itemIds);
+    homeitemIds.splice(source.index, 1);
     const newHome = {
       ...home,
-      taskIds: homeTaskIds,
+      itemIds: homeitemIds,
     };
 
-    const foreignTaskIds = Array.from(foreign.taskIds);
-    foreignTaskIds.splice(destination.index, 0, draggableId);
+    const foreignitemIds = Array.from(foreign.itemIds);
+    foreignitemIds.splice(destination.index, 0, draggableId);
     const newForeign = {
       ...foreign,
-      taskIds: foreignTaskIds,
+      itemIds: foreignitemIds,
     };
 
     const newState = {
@@ -144,7 +144,7 @@ class TierList extends React.Component {
                     <InnerList
                       key={column.id}
                       column={column}
-                      taskMap={this.state.tasks}
+                      itemMap={this.state.items}
                       index={index}
                       updateHeader={this.updateColHeader}
                       deleteHandler={this.removeCol}
@@ -169,7 +169,7 @@ class TierList extends React.Component {
               id: ID,
               title: 'NEW',
               color: '#1DB954',
-              taskIds: [],
+              itemIds: [],
             };
             this.setState(newState);
           }}
