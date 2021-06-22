@@ -150,7 +150,6 @@ body {
   width: 20rem;
   max-width: 20rem;
   max-height: 4rem;
-  line-height: normal;
   letter-spacing: normal;
   margin-bottom: 8px;
 }
@@ -180,6 +179,8 @@ body {
 .card-body {
   padding: 0 0 0 0.5rem;
   max-width: 16rem;
+  max-height: 4rem;
+  overflow: hidden;
 }
   
 .card img {

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Dropdown, DropdownButton, ButtonGroup } from 'react-bootstrap'
+import { Image, Dropdown, ButtonGroup } from 'react-bootstrap'
 import styled from 'styled-components';
 import tool from '../imgs/tool.svg'
 import palette from '../imgs/palette.svg'
@@ -11,6 +11,7 @@ const TitleStyle = styled.h3`
     padding: 8px;
     margin-bottom: 0;
     display: flex;
+    max-width: 21rem;
 `;
 
 // how tf do i make this full height when editing
@@ -19,6 +20,7 @@ const InputStyle = styled.textarea`
     overflow: hidden;
     word-break: break-all;
     min-height: 40px;
+    max-width: 17rem;
     height: 40px;
     resize: both;
 `;
