@@ -6,7 +6,7 @@ import Title from './Title'
 
 const Container = styled.div`
   margin: 8px;
-  border: 1px solid lightgrey;
+  border: 1px solid #1DB954;
   background-color: none;
   border-radius: 2px;
   display: flex;

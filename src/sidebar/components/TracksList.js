@@ -15,6 +15,10 @@ const TracksList = ({ tracks }) => {
                   <Container>
                     <Row noGutters>
                       <Col xs="auto">
+                        <button>+</button>
+                        <button>v</button>
+                      </Col>
+                      <Col xs="auto">
                         <a
                           target="_blank"
                           href={track.external_urls.spotify}

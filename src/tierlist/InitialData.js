@@ -11,7 +11,7 @@ const initialData = {
         id: 'column-1',
         title: 'S',
         color: '#1DB954',
-        itemIds: ['item-1', 'item-2', 'item-3', 'item-4', 'item-5'],
+        itemIds: ['item-1', 'item-2', 'item-3', 'item-4'],
       },
       'column-2': {
         id: 'column-2',
@@ -19,6 +19,10 @@ const initialData = {
         color: '#1DB954',
         itemIds: [],
       },
+      'item-pool': {
+        id: 'item-pool',
+        itemIds: ['item-5'],
+      }
     },
     columnOrder: ['column-1', 'column-2']
 };

@@ -1,9 +1,10 @@
 import React from 'react';
 import '@atlaskit/css-reset';
 import styled from 'styled-components';
-import Column from './components/Column'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import initialData from './InitialData';
+import Column from './components/Column';
+import ItemPool from './components/ItemPool';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import './tierlist-styles.css';
 
 const Container = styled.div`
@@ -155,6 +156,9 @@ class TierList extends React.Component {
               </Container>
             )}
           </Droppable>
+          <Container>
+            <ItemPool items ={this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
+          </Container>
         </DragDropContext>
         <button
           type="button"
