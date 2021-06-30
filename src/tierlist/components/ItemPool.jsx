@@ -38,20 +38,23 @@ class InnerList extends React.Component {
 export default class ItemPool extends React.Component {
   render() {
     return (
-      <Container>
-        <Droppable droppableId="item-pool" type="item">
-          {(provided, snapshot) => (
-            <ItemList
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              isDraggingOver={snapshot.isDraggingOver}
-            >
-              <InnerList items={this.props.items} />
-              {provided.placeholder}
-            </ItemList>
-          )}
-        </Droppable>
-      </Container>
+      <div>
+        <h1 className="main-heading">Items</h1>
+        <Container>
+          <Droppable droppableId="item-pool" type="item">
+            {(provided, snapshot) => (
+              <ItemList
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                <InnerList items={this.props.items} />
+                {provided.placeholder}
+              </ItemList>
+            )}
+          </Droppable>
+        </Container>
+      </div>
     );
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 import music from '../images/music.jpeg';
+import { TierListContext } from '../../tierlist/TierListContext';
 
 const TracksList = ({ tracks }) => {
   return (
@@ -9,41 +10,51 @@ const TracksList = ({ tracks }) => {
       {Object.keys(tracks).length > 0 && (
         <div className="tracks">
           {tracks.items.map((track, index) => {
+            let id = track.id, songURL = track.external_urls.spotify, title = track.name, subtitle = track.artists.map((artist) => artist.name).join(', ');
+            let imgURL = !_.isEmpty(track.album.images) ? track.album.images[0].url : null;
             return (
               <React.Fragment key={index}>
-                <Card>
-                  <Container>
-                    <Row noGutters>
-                      <Col xs="auto">
-                        <button>+</button>
-                        <button>v</button>
-                      </Col>
-                      <Col xs="auto">
-                        <a
-                          target="_blank"
-                          href={track.external_urls.spotify}
-                          rel="noopener noreferrer"
-                        >
-                          {!_.isEmpty(track.album.images) ? (
-                            <Card.Img src={track.album.images[0].url} alt="" />
-                          ) : (
-                            <img src={music} alt="" />
-                          )}
-                        </a>
-                      </Col>
-                      <Col>
-                        <Card.Body>
-                          <Card.Title>{track.name}</Card.Title>
-                          <Card.Text>
-                            <small>
-                              {track.artists.map((artist) => artist.name).join(', ')}
-                            </small>
-                          </Card.Text>
-                        </Card.Body>
-                      </Col>
-                    </Row>
-                  </Container>
-                </Card>
+                <TierListContext.Consumer>
+                  {({containsItem, addToItemPool}) => (
+                    <Card style={{maxWidth: "22rem", width: "22rem", marginLeft: "0.5rem", marginRight: "0.5rem"}}>
+                      <Container>
+                        <Row noGutters>
+                          <Col xs="auto">
+                            <a
+                              target="_blank"
+                              href={songURL}
+                              rel="noopener noreferrer"
+                            >
+                              {!_.isEmpty(track.album.images) ? (
+                                <Card.Img src={imgURL} alt="" />
+                              ) : (
+                                <img src={music} alt="" />
+                              )}
+                            </a>
+                          </Col>
+                          <Col>
+                            <Card.Body>
+                              <Card.Title>{title}</Card.Title>
+                              <Card.Text>
+                                <small>{subtitle}</small>
+                              </Card.Text>
+                            </Card.Body>
+                          </Col>
+                          <Col xs="auto">
+                            <div>
+                              {containsItem(id) ? (
+                                <button disabled className="item-buttons">x</button>
+                              ) : (
+                                <button className="item-buttons" onClick={() => addToItemPool(id, songURL, imgURL, title, subtitle)}>+</button>
+                              )}
+                              <button className="item-buttons">v</button>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Container>
+                    </Card>
+                  )}
+                </TierListContext.Consumer>
               </React.Fragment>
             );
           })}

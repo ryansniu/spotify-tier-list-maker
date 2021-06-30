@@ -1,10 +1,11 @@
 import React from 'react';
 import '@atlaskit/css-reset';
 import styled from 'styled-components';
-import initialData from './InitialData';
 import Column from './components/Column';
 import ItemPool from './components/ItemPool';
+import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import SidebarSearch from '../sidebar/SidebarSearch'
 import './tierlist-styles.css';
 
 const Container = styled.div`
@@ -20,7 +21,45 @@ class InnerList extends React.PureComponent {
 }
 
 class TierList extends React.Component {
-  state = initialData;
+  static contextType = TierListContext;
+  state = this.context.data;
+
+  componentDidMount() {
+    this.context.containsItem = (id) => {
+      return id in this.state.items;
+    };
+    this.context.addToItemPool = (id, songURL, imgURL, title, subtitle) => {
+      if(id in this.state.items) return; // do nothing
+      const newItems = {
+        ...this.state.items,
+        [id]: {
+          id: id,
+          songURL: songURL,
+          imgURL: imgURL,
+          title: title,
+          subtitle: subtitle
+        }
+      }
+      const newItemIds = Array.from(this.state.columns['item-pool'].itemIds).concat(id);
+      const newItemPool = {
+        ...this.state.columns['item-pool'],
+        itemIds: newItemIds
+      }
+      const newState = {
+        ...this.state,
+        items: newItems,
+        columns: {
+          ...this.state.columns,
+          'item-pool': newItemPool
+        }
+      };
+      this.setState(newState);
+    };
+  }
+
+  deleteItem = (id) => {
+    // TO-DO
+  }
 
   updateColHeader = (id, newTitle, newColor) => {
     const oldHeader = this.state.columns[id];
@@ -132,34 +171,6 @@ class TierList extends React.Component {
   render() {
     return (
       <div>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          <Droppable droppableId="tiers" direction="horizontal" type="column">
-            {provided => (
-              <Container
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {this.state.columnOrder.map((columnId, index) => {
-                  const column = this.state.columns[columnId];
-                  return (
-                    <InnerList
-                      key={column.id}
-                      column={column}
-                      itemMap={this.state.items}
-                      index={index}
-                      updateHeader={this.updateColHeader}
-                      deleteHandler={this.removeCol}
-                    />
-                  );
-                })}
-                {provided.placeholder}
-              </Container>
-            )}
-          </Droppable>
-          <Container>
-            <ItemPool items ={this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
-          </Container>
-        </DragDropContext>
         <button
           type="button"
           onClick={() => {
@@ -180,6 +191,37 @@ class TierList extends React.Component {
         >
           Add new group
         </button>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Container>
+            <Droppable droppableId="tiers" direction="horizontal" type="column">
+              {provided => (
+                <Container
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {this.state.columnOrder.map((columnId, index) => {
+                    const column = this.state.columns[columnId];
+                    return (
+                      <InnerList
+                        key={column.id}
+                        column={column}
+                        itemMap={this.state.items}
+                        index={index}
+                        updateHeader={this.updateColHeader}
+                        deleteHandler={this.removeCol}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </Container>
+              )}
+            </Droppable>
+          </Container>
+          <Container>
+            <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
+            <SidebarSearch />
+          </Container>
+        </DragDropContext>
       </div>
     );
   }

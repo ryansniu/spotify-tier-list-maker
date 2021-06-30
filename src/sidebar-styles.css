@@ -33,8 +33,8 @@ body {
 }
   
 .sidebar-search {
-  width: 26rem;
-  margin: auto;
+  width: 100%;
+  padding: 0 1rem;
 }
   
 .form-control {
@@ -42,7 +42,7 @@ body {
 }
   
 .main-heading {
-  margin: 2rem 0;
+  margin: 3rem auto auto auto;
   color: #1DB954;
   text-align: center;
 }
@@ -186,6 +186,17 @@ body {
 .card img {
   width: 4rem;
   height: 4rem;
+}
+
+.item-buttons {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+}
+
+.item-buttons:disabled {
+  background-color: red;
+  color: black;
 }
   
 @media screen and (max-width: 400px) {

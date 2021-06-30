@@ -12,6 +12,7 @@ const TitleStyle = styled.h3`
     margin-bottom: 0;
     display: flex;
     max-width: 21rem;
+    user-select: none;
 `;
 
 // how tf do i make this full height when editing
