@@ -18,7 +18,8 @@ const ItemList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => props.isDraggingOver ? 'lightgrey' : 'none'};
   flex-grow: 1;
-  min-height: 400px;
+  min-width: 8rem;
+  min-height: 25rem;
 `;
 
 class InnerList extends React.Component {

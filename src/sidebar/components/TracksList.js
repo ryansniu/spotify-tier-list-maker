@@ -47,7 +47,6 @@ const TracksList = ({ tracks }) => {
                               ) : (
                                 <button className="item-buttons" onClick={() => addToItemPool(id, songURL, imgURL, title, subtitle)}>+</button>
                               )}
-                              <button className="item-buttons">v</button>
                             </div>
                           </Col>
                         </Row>

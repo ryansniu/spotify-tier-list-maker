@@ -3,6 +3,7 @@ import '@atlaskit/css-reset';
 import styled from 'styled-components';
 import Column from './components/Column';
 import ItemPool from './components/ItemPool';
+import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import SidebarSearch from '../sidebar/SidebarSearch'
@@ -57,8 +58,32 @@ class TierList extends React.Component {
     };
   }
 
-  deleteItem = (id) => {
-    // TO-DO
+  deleteItem = (id, source, home) => {
+    const homeitemIds = Array.from(home.itemIds);
+    homeitemIds.splice(source.index, 1);
+    const newHome = {
+      ...home,
+      itemIds: homeitemIds,
+    };
+
+    const oldItems = this.state.items;
+    const newItems = Object.keys(oldItems).reduce((object, key) => {
+      if (key !== id) {
+        object[key] = oldItems[key];
+      }
+      return object;
+    }, {});
+
+    const newState = {
+      ...this.state,
+      items: newItems,
+      columns: {
+        ...this.state.columns,
+        [newHome.id]: newHome,
+      },
+    };
+
+    this.setState(newState);
   }
 
   updateColHeader = (id, newTitle, newColor) => {
@@ -85,10 +110,10 @@ class TierList extends React.Component {
     const oldColumns = this.state.columns;
     const newColumns = Object.keys(oldColumns).reduce((object, key) => {
       if (key !== id) {
-        object[key] = oldColumns[key]
+        object[key] = oldColumns[key];
       }
-      return object
-    }, {})
+      return object;
+    }, {});
 
     const newState = {
       ...this.state,
@@ -119,6 +144,11 @@ class TierList extends React.Component {
 
     const home = this.state.columns[source.droppableId];
     const foreign = this.state.columns[destination.droppableId];
+    
+    if (destination.droppableId === 'trash-can') {
+      this.deleteItem(draggableId, source, home);
+      return;
+    }
 
     if (home === foreign) {
       const newitemIds = Array.from(home.itemIds);
@@ -193,6 +223,7 @@ class TierList extends React.Component {
         </button>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Container>
+            <TrashCan />
             <Droppable droppableId="tiers" direction="horizontal" type="column">
               {provided => (
                 <Container
