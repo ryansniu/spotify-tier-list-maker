@@ -26,15 +26,19 @@ class TierList extends React.Component {
   state = this.context.data;
 
   componentDidMount() {
-    this.context.containsItem = (id) => {
-      return id in this.state.items;
+    this.context.containsItem = (id, type) => {
+      if(id in this.state.items) {
+        return this.state.items[id]['type'] === type;
+      }
+      return false;
     };
-    this.context.addToItemPool = (id, songURL, imgURL, title, subtitle) => {
-      if(id in this.state.items) return; // do nothing
+    this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle) => {
+      if(this.context.containsItem(id, type)) return; // do nothing
       const newItems = {
         ...this.state.items,
         [id]: {
           id: id,
+          type: type,
           songURL: songURL,
           imgURL: imgURL,
           title: title,
@@ -54,6 +58,75 @@ class TierList extends React.Component {
           'item-pool': newItemPool
         }
       };
+      this.setState(newState);
+    };
+  }
+
+  importFromJson = e => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      const newState = JSON.parse(e.target.result);
+
+      // check if the required keys exist and the item-pool and trash-can exists in column and has the correct format
+      if(!('columnOrder' in newState && 'items' in newState && 'columns' in newState
+      && 'item-pool' in newState.columns && 'trash-can' in newState.columns
+      && 'id' in newState.columns['item-pool'] && newState.columns['item-pool'].id === 'item-pool'
+      && 'itemIds' in newState.columns['item-pool'] && Array.isArray(newState.columns['item-pool'].itemIds)
+      && 'id' in newState.columns['trash-can'] && newState.columns['trash-can'].id === 'trash-can')) {
+        console.log('missing required information!');
+        return;
+      }
+
+      // check if every column has the correct format
+      let hasValidColumns = true;
+      const requiredColumnKeys = ['id', 'title', 'color', 'itemIds'];
+      Object.keys(newState.columns).forEach(function(key) {
+        if(!hasValidColumns || key === 'item-pool' || key === 'trash-can') return;
+        const columnKeys = Object.keys(newState.columns[key]);
+        hasValidColumns = columnKeys.length === requiredColumnKeys.length && columnKeys.every(function(v, i) { return v === requiredColumnKeys[i]});
+      });
+      if(!hasValidColumns) {
+        console.log('missing required column information!');
+        return;
+      }
+
+      // check if every column in columnOrder exists in column (and no extra besides item-pool and trash-can)
+      const columnOrder = newState.columnOrder;
+      let allColumns = Object.keys(newState.columns);
+      allColumns.splice(allColumns.indexOf('item-pool'), 1);
+      allColumns.splice(allColumns.indexOf('trash-can'), 1);
+      if(!(columnOrder.length === allColumns.length && columnOrder.every(el => allColumns.includes(el)))) {
+        console.log('columnOrder and columns don\'t match!');
+        return;
+      }
+
+      // check if every item in items has the correct format
+      let hasValidItems = true;
+      const requiredItemKeys = ['id', 'type', 'songURL', 'imgURL', 'title', 'subtitle'];
+      Object.keys(newState.items).forEach(function(key) {
+        if(!hasValidItems) return;
+        const itemKeys = Object.keys(newState.items[key]);
+        hasValidItems = itemKeys.length === requiredItemKeys.length && itemKeys.every(function(v, i) { return v === requiredItemKeys[i]});
+      });
+      if(!hasValidItems) {
+        console.log('missing required item information!');
+        return;
+      }
+
+      // check if every itemIDs exists in items (and no extra)
+      const allItems = Object.keys(newState.items);
+      let itemIds = [];
+      Object.keys(newState.columns).forEach(function(key) {
+        if(key === 'trash-can') return;
+        itemIds = itemIds.concat(newState.columns[key].itemIds);
+      });
+      if(!(itemIds.length === allItems.length && itemIds.every(el => allItems.includes(el)))) {
+        console.log('items and itemIds don\'t match!');
+        return;
+      }
+
+      // success
       this.setState(newState);
     };
   }
@@ -221,6 +294,19 @@ class TierList extends React.Component {
         >
           Add new group
         </button>
+        <a
+          href={`data:text/json;charset=utf-8,${encodeURIComponent(
+            JSON.stringify(this.state)
+          )}`}
+          download="tierlist.json"
+        >
+          {`Export as Json`}
+        </a>
+
+        <div>
+          <label htmlFor="import_tierlist">Import from Json</label>
+          <input type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
+        </div>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Container>
             <TrashCan />

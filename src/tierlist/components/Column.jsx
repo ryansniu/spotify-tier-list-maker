@@ -18,7 +18,7 @@ const ItemList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => props.isDraggingOver ? 'lightgrey' : 'none'};
   flex-grow: 1;
-  min-width: 8rem;
+  min-width: 12rem;
   min-height: 25rem;
 `;
 

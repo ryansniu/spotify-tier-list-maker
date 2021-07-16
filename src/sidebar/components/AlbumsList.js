@@ -10,7 +10,7 @@ const AlbumsList = ({ albums }) => {
       {Object.keys(albums).length > 0 && (
         <div className="albums">
           {albums.items.map((album, index) => {
-            let id = album.id, songURL = album.external_urls.spotify, title = album.name, subtitle = album.artists.map((artist) => artist.name).join(', ');
+            let id = album.id, type = 'album', songURL = album.external_urls.spotify, title = album.name, subtitle = album.artists.map((artist) => artist.name).join(', ');
             let imgURL = !_.isEmpty(album.images) ? album.images[0].url : null;
             return (
               <React.Fragment key={index}>
@@ -42,10 +42,10 @@ const AlbumsList = ({ albums }) => {
                           </Col>
                           <Col xs="auto">
                             <div>
-                              {containsItem(id) ? (
+                              {containsItem(id, type) ? (
                                 <button disabled className="item-buttons">x</button>
                               ) : (
-                                <button className="item-buttons" onClick={() => addToItemPool(id, songURL, imgURL, title, subtitle)}>+</button>
+                                <button className="item-buttons" onClick={() => addToItemPool(id, type, songURL, imgURL, title, subtitle)}>+</button>
                               )}
                               <button className="item-buttons">v</button>
                             </div>
