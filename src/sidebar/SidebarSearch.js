@@ -5,7 +5,15 @@ import { getAuthToken } from './utils/api';
 class SidebarSearch extends React.Component {
     constructor(props) {
       super(props);
-      this.state = { loaded: false };
+      this.state = { loaded: false, selectedCategory: 'tracks' };
+    }
+
+    updateCategory = (category) => {
+      const newState = {
+        ...this.state,
+        selectedCategory: category
+      };
+      this.setState(newState);
     }
     
     refreshSession = async () => {
@@ -33,7 +41,6 @@ class SidebarSearch extends React.Component {
     };
 
     render() {
-        console.log(this.props);
         if(!this.isValidSession()) {
           this.refreshSession();
           return (
@@ -44,7 +51,8 @@ class SidebarSearch extends React.Component {
         }
         return (
           <div className="sidebar-search">
-            <Dashboard key={`${new Date().getTime()}`} isValidSession={this.isValidSession} refreshSession={this.refreshSession} />
+            <Dashboard key={`${new Date().getTime()}`} isValidSession={this.isValidSession} refreshSession={this.refreshSession}
+              selectedCategory={this.state.selectedCategory} updateCategory={this.updateCategory} />
           </div>
         );
     }

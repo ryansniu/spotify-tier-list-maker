@@ -14,7 +14,7 @@ import Loader from './Loader';
 
 const Dashboard = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('tracks');
+  const [selectedCategory, setSelectedCategory] = [props.selectedCategory, props.updateCategory];
   const { isValidSession, refreshSession } = props;
 
   const handleSearch = async (searchTerm) => {
@@ -58,7 +58,6 @@ const Dashboard = (props) => {
   const { tracks, albums, artists, playlist } = props;
   const result = { tracks, albums, artists, playlist };
   
-  console.log("yup");
   return (
     <React.Fragment>
       <div>
