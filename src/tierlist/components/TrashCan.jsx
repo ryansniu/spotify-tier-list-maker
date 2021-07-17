@@ -32,7 +32,9 @@ export default class TrashCan extends React.Component {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   isDraggingOver={snapshot.isDraggingOver}
-                />
+                >
+                  {provided.placeholder}
+                </ItemList>
             )}
           </Droppable>
         </Container>

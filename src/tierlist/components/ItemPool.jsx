@@ -10,7 +10,7 @@ const Container = styled.div`
   border-radius: 2px;
   display: flex;
   flex-direction: column;
-  min-width: 21.2rem;
+  min-width: 21.125rem;
 `;
 
 const ItemList = styled.div`

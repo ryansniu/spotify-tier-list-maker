@@ -62,12 +62,12 @@ class TierList extends React.Component {
     };
   }
 
+  // uh-oh this might be buggy
   importFromJson = e => {
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
       const newState = JSON.parse(e.target.result);
-
       // check if the required keys exist and the item-pool and trash-can exists in column and has the correct format
       if(!('columnOrder' in newState && 'items' in newState && 'columns' in newState
       && 'item-pool' in newState.columns && 'trash-can' in newState.columns
@@ -128,6 +128,7 @@ class TierList extends React.Component {
 
       // success
       this.setState(newState);
+      console.log(this.state);
     };
   }
 

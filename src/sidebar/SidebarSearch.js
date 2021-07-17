@@ -33,6 +33,7 @@ class SidebarSearch extends React.Component {
     };
 
     render() {
+        console.log(this.props);
         if(!this.isValidSession()) {
           this.refreshSession();
           return (
@@ -43,7 +44,7 @@ class SidebarSearch extends React.Component {
         }
         return (
           <div className="sidebar-search">
-            <Dashboard isValidSession={this.isValidSession} refreshSession={this.refreshSession} />
+            <Dashboard key={`${new Date().getTime()}`} isValidSession={this.isValidSession} refreshSession={this.refreshSession} />
           </div>
         );
     }

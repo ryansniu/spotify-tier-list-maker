@@ -5,7 +5,6 @@ import tool from '../imgs/tool.svg'
 import palette from '../imgs/palette.svg'
 import '../tierlist-styles.css'
 
-
 const TitleStyle = styled.h3`
     background-color: ${props => props.color};
     padding: 8px;
@@ -40,7 +39,7 @@ const ButtonStyle = styled.button`
 
 const Title = props => {
   const inputRef = useRef(null);
-  const [id] = useState(props.colData.id);
+  const [id, setID] = useState(props.colData.id);
   const [title, setTitle] = useState(props.colData.title);
   const [color, setColor] = useState(props.colData.color);
   const [inputVisible, setInputVisible] = useState(false);
@@ -55,6 +54,12 @@ const Title = props => {
     if (inputVisible) document.addEventListener("mousedown", onClickOutSide);
     return () => { document.removeEventListener("mousedown", onClickOutSide); };  //apparently happens when the button is clicked as well
   });
+
+  useEffect(() => {
+    setID(props.colData.id);
+    setTitle(props.colData.title);
+    setColor(props.colData.color);
+  }, [props.colData]);
 
   return (
     <TitleStyle color={color}>

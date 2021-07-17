@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 import music from '../images/music.jpeg';
 import { TierListContext } from '../../tierlist/TierListContext';
 
 const TracksList = ({ tracks }) => {
+  const [updater, setUpdater] = useState(false);
   return (
     <React.Fragment>
       {Object.keys(tracks).length > 0 && (
@@ -45,7 +46,10 @@ const TracksList = ({ tracks }) => {
                               {containsItem(id, type) ? (
                                 <button disabled className="item-buttons">x</button>
                               ) : (
-                                <button className="item-buttons" onClick={() => addToItemPool(id, type, songURL, imgURL, title, subtitle)}>+</button>
+                                <button className="item-buttons" onClick={() => {
+                                  addToItemPool(id, type, songURL, imgURL, title, subtitle);
+                                  setUpdater(!updater);
+                                }}>+</button>
                               )}
                             </div>
                           </Col>

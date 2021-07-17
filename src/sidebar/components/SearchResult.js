@@ -9,7 +9,7 @@ import PlayList from './PlayList';
 const SearchResult = (props) => {
   const { loadMore, result, setCategory, selectedCategory } = props;
   const { tracks, albums, artists, playlist } = result;
-
+  
   return (
     <React.Fragment>
       <div className="search-buttons">

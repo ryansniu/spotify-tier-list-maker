@@ -57,7 +57,8 @@ const Dashboard = (props) => {
 
   const { tracks, albums, artists, playlist } = props;
   const result = { tracks, albums, artists, playlist };
-
+  
+  console.log("yup");
   return (
     <React.Fragment>
       <div>
