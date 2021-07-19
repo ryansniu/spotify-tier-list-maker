@@ -14,10 +14,10 @@
     display: none;
 }
 #color-dropdown {
-    background-color: none;
+    background-color: transparent;
     padding: 0;
     border: none;
-    border-radius: 0;
+    border-radius: 0 0 0.5rem 0.5rem;
 }
 
 #delete-col-item {
