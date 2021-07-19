@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/spotify-tier-list-maker/static/css/main.b47e1e7c.chunk.css",
-    "main.js": "/spotify-tier-list-maker/static/js/main.d5c5c146.chunk.js",
-    "main.js.map": "/spotify-tier-list-maker/static/js/main.d5c5c146.chunk.js.map",
+    "main.css": "/spotify-tier-list-maker/static/css/main.ac5a650f.chunk.css",
+    "main.js": "/spotify-tier-list-maker/static/js/main.bc9360b7.chunk.js",
+    "main.js.map": "/spotify-tier-list-maker/static/js/main.bc9360b7.chunk.js.map",
     "runtime-main.js": "/spotify-tier-list-maker/static/js/runtime-main.f1401b79.js",
     "runtime-main.js.map": "/spotify-tier-list-maker/static/js/runtime-main.f1401b79.js.map",
-    "static/css/2.c5f0df20.chunk.css": "/spotify-tier-list-maker/static/css/2.c5f0df20.chunk.css",
-    "static/js/2.7e62e0f5.chunk.js": "/spotify-tier-list-maker/static/js/2.7e62e0f5.chunk.js",
-    "static/js/2.7e62e0f5.chunk.js.map": "/spotify-tier-list-maker/static/js/2.7e62e0f5.chunk.js.map",
+    "static/css/2.f73e9c9f.chunk.css": "/spotify-tier-list-maker/static/css/2.f73e9c9f.chunk.css",
+    "static/js/2.a5d59ec1.chunk.js": "/spotify-tier-list-maker/static/js/2.a5d59ec1.chunk.js",
+    "static/js/2.a5d59ec1.chunk.js.map": "/spotify-tier-list-maker/static/js/2.a5d59ec1.chunk.js.map",
     "index.html": "/spotify-tier-list-maker/index.html",
-    "static/css/2.c5f0df20.chunk.css.map": "/spotify-tier-list-maker/static/css/2.c5f0df20.chunk.css.map",
-    "static/css/main.b47e1e7c.chunk.css.map": "/spotify-tier-list-maker/static/css/main.b47e1e7c.chunk.css.map",
-    "static/js/2.7e62e0f5.chunk.js.LICENSE.txt": "/spotify-tier-list-maker/static/js/2.7e62e0f5.chunk.js.LICENSE.txt",
+    "static/css/2.f73e9c9f.chunk.css.map": "/spotify-tier-list-maker/static/css/2.f73e9c9f.chunk.css.map",
+    "static/css/main.ac5a650f.chunk.css.map": "/spotify-tier-list-maker/static/css/main.ac5a650f.chunk.css.map",
+    "static/js/2.a5d59ec1.chunk.js.LICENSE.txt": "/spotify-tier-list-maker/static/js/2.a5d59ec1.chunk.js.LICENSE.txt",
     "static/media/sidebar-styles.css": "/spotify-tier-list-maker/static/media/Gotham-Medium.e5cbb8d1.svg",
     "static/media/music.b2fe7d4d.jpeg": "/spotify-tier-list-maker/static/media/music.b2fe7d4d.jpeg",
     "static/media/palette.c614a1c8.svg": "/spotify-tier-list-maker/static/media/palette.c614a1c8.svg",
@@ -19,9 +19,9 @@
   },
   "entrypoints": [
     "static/js/runtime-main.f1401b79.js",
-    "static/css/2.c5f0df20.chunk.css",
-    "static/js/2.7e62e0f5.chunk.js",
-    "static/css/main.b47e1e7c.chunk.css",
-    "static/js/main.d5c5c146.chunk.js"
+    "static/css/2.f73e9c9f.chunk.css",
+    "static/js/2.a5d59ec1.chunk.js",
+    "static/css/main.ac5a650f.chunk.css",
+    "static/js/main.bc9360b7.chunk.js"
   ]
 }
