@@ -13,3 +13,33 @@
 #color-toggle:after {
     display: none;
 }
+#color-dropdown {
+    background-color: #181818;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}
+
+#delete-col-item {
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 0.5rem 0;
+    color: darkred;
+    background-color: #181818;
+    text-align: center;
+}
+#delete-col-item:hover {
+    color: red;
+    background-color: #1d0000;
+}
+
+.rcp, .rcp-saturation {
+    border: none;
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+.rcp-fields-element-label, .rcp-fields-element-input {
+    letter-spacing: inherit;
+    font-size: 1rem;
+}
+.rcp-body {
+    padding: 1rem 1rem 0 1rem;
+}

@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Dropdown, ButtonGroup } from 'react-bootstrap'
+import { Image, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { ColumnColorPicker } from "./ColumnColorPicker"
 import styled from 'styled-components';
 import tool from '../imgs/tool.svg'
 import palette from '../imgs/palette.svg'
+import "react-color-palette/lib/css/styles.css";
 import '../tierlist-styles.css'
 
 const TitleStyle = styled.h3`
@@ -46,6 +48,10 @@ const Title = props => {
   const update = props.updateHeader;
   const deleteHandler = props.deleteHandler;
 
+  function updateColor(newColor) {
+    setColor(newColor);
+    update(id, title, newColor);
+  }
   function onClickOutSide(e) {
     if (inputRef.current && !inputRef.current.contains(e.target)) setInputVisible(false);
   }
@@ -73,18 +79,13 @@ const Title = props => {
                 update(id, e.target.value, color);
               }}
             />
-            <Dropdown as={ButtonGroup} drop="right">
-              <Dropdown.Toggle id='color-toggle'>
+             <Dropdown as={ButtonGroup} drop="right">
+              <Dropdown.Toggle id='color-toggle' variant="secondary">
                 <Image src={palette} fluid alt='colors' style={{width: "100%", height: "100%"}}/>
               </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item style={{backgroundColor: "gray"}} onClick={() => { setColor('gray'); update(id, title, 'gray'); }}>Gray</Dropdown.Item>
-                <Dropdown.Item style={{backgroundColor: "blue"}} onClick={() => { setColor('blue'); update(id, title, 'blue'); }}>Blue</Dropdown.Item>
-                <Dropdown.Item style={{backgroundColor: "purple"}} onClick={() => { setColor('purple'); update(id, title, 'purple'); }}>Purple</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item style={{backgroundColor: "#1DB954"}} onClick={() => { setColor('#1DB954'); update(id, title, '#1DB954'); }}>Default</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={() => { deleteHandler(id); }}>DELETE THIS</Dropdown.Item>
+              <Dropdown.Menu id='color-dropdown' variant="dark">
+                <ColumnColorPicker color={color} updateColor={updateColor}/>
+                <Dropdown.Item id="delete-col-item" onClick={() => { deleteHandler(id); }}>DELETE COLUMN</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </form>
