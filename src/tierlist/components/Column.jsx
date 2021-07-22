@@ -37,13 +37,23 @@ class InnerList extends React.Component {
 }
 
 export default class Column extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isEditing: false
+    }
+  }
   render() {
     return (
-      <Draggable draggableId={this.props.column.id} index={this.props.index}>
+      <Draggable draggableId={this.props.column.id} index={this.props.index} isDragDisabled={this.state.isEditing}>
         {provided => (
           <Container {...provided.draggableProps} ref={provided.innerRef}>
             <div {...provided.dragHandleProps}>
-              <Title colData={this.props.column} updateHeader={this.props.updateHeader} deleteHandler={this.props.deleteHandler} />
+              <Title
+                colData={this.props.column}
+                updateHeader={this.props.updateHeader}
+                deleteHandler={this.props.deleteHandler}
+                setEditing={(e) => this.setState({ isEditing: e })}/>
             </div>
             <Droppable droppableId={this.props.column.id} type="item">
               {(provided, snapshot) => (

@@ -19,7 +19,7 @@ const ArtistsList = ({ artists }) => {
                   {({containsItem, addToItemPool}) => (
                     <Card style={{maxWidth: "22rem", width: "22rem", marginLeft: "0.5rem", marginRight: "0.5rem"}}>
                       <Container>
-                        <Row noGutters>
+                        <Row>
                           <Col xs="auto">
                             <a
                               target="_blank"

@@ -7,14 +7,15 @@ import palette from '../imgs/palette.svg'
 import "react-color-palette/lib/css/styles.css";
 import '../tierlist-styles.css'
 
-const TitleStyle = styled.h3`
-    background-color: ${props => props.color};
-    padding: 8px;
-    margin-bottom: 0;
-    display: flex;
-    max-width: 21rem;
-    user-select: none;
-`;
+const TitleStyle = styled.h3.attrs(props => ({
+  style: {
+    backgroundColor: props.color,
+  },
+}))`padding: 8px;
+margin-bottom: 0;
+display: flex;
+max-width: 21rem;
+user-select: none;`
 
 // how tf do i make this full height when editing
 const InputStyle = styled.textarea`
@@ -53,12 +54,15 @@ const Title = props => {
     update(id, title, newColor);
   }
   function onClickOutSide(e) {
-    if (inputRef.current && !inputRef.current.contains(e.target)) setInputVisible(false);
+    if (inputRef.current && !inputRef.current.contains(e.target)) {
+      setInputVisible(false);
+      props.setEditing(false);
+    }
   }
 
   useEffect(() => {
     if (inputVisible) document.addEventListener("mousedown", onClickOutSide);
-    return () => { document.removeEventListener("mousedown", onClickOutSide); };  //apparently happens when the button is clicked as well
+    return () => { document.removeEventListener("mousedown", onClickOutSide); };
   });
 
   useEffect(() => {
@@ -71,7 +75,7 @@ const Title = props => {
     <TitleStyle color={color}>
       <React.Fragment>
         {inputVisible ? (
-          <form style={{width: "100%", display: "flex", alignItems: "center"}} onSubmit={() => setInputVisible(false)} ref={inputRef}>
+          <form style={{width: "100%", display: "flex", alignItems: "center"}} onSubmit={() => { setInputVisible(false); props.setEditing(false); }} ref={inputRef}>
             <InputStyle
               value={title}
               onChange={e => {
@@ -79,7 +83,7 @@ const Title = props => {
                 update(id, e.target.value, color);
               }}
             />
-             <Dropdown as={ButtonGroup} drop="right">
+             <Dropdown autoClose="inside" as={ButtonGroup} drop="right" >
               <Dropdown.Toggle id='color-toggle' variant="secondary">
                 <Image src={palette} fluid alt='colors' style={{width: "100%", height: "100%"}}/>
               </Dropdown.Toggle>
@@ -92,7 +96,7 @@ const Title = props => {
         ) : (
           <div style={{width: "100%", display: "flex", alignItems: "center"}}>
             <div style={{color: "white", textShadow: "0 0 4px black", wordBreak: "break-all", flexGrow: "1", overflow: "hidden"}}>{title}</div>
-            <ButtonStyle onClick={() => setInputVisible(true)}>
+            <ButtonStyle onClick={() => { setInputVisible(true); props.setEditing(true); }}>
               <Image src={tool} fluid alt='settings' style={{width: "100%", height: "100%"}}/>
             </ButtonStyle> 
           </div>

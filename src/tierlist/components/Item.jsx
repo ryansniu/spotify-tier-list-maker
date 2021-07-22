@@ -22,7 +22,7 @@ export default class Item extends React.Component {
             >
               <Card style={{ margin: 0 }}>
                 <Container>
-                  <Row noGutters>
+                  <Row>
                     <Col xs="auto">
                       <a
                         target="_blank"
