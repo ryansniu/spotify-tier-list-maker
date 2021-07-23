@@ -4,11 +4,10 @@ import _ from 'lodash';
 import TracksList from './TracksList';
 import AlbumsList from './AlbumsList';
 import ArtistsList from './ArtistsList';
-import PlayList from './PlayList';
 
 const SearchResult = (props) => {
   const { loadMore, result, setCategory, selectedCategory } = props;
-  const { tracks, albums, artists, playlist } = result;
+  const { tracks, albums, artists } = result;
   
   return (
     <React.Fragment>
@@ -43,16 +42,6 @@ const SearchResult = (props) => {
             Artists
           </button>
         )}
-        {!_.isEmpty(playlist.items) && (
-          <button
-            className={`${
-              selectedCategory === 'playlist' ? 'btn active' : 'btn'
-            }`}
-            onClick={() => setCategory('playlist')}
-          >
-            PlayLists
-          </button>
-        )}
       </div>
 
       <div className={`${selectedCategory === 'tracks' ? '' : 'hide'}`}>
@@ -63,9 +52,6 @@ const SearchResult = (props) => {
       </div>
       <div className={`${selectedCategory === 'artists' ? '' : 'hide'}`}>
         {artists && <ArtistsList artists={artists} />}
-      </div>
-      <div className={`${selectedCategory === 'playlist' ? '' : 'hide'}`}>
-        {playlist && <PlayList playlist={playlist} />}
       </div>
 
       {!_.isEmpty(result[selectedCategory]) &&

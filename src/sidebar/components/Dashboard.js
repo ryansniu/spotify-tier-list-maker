@@ -3,7 +3,6 @@ import {
   initiateGetResult,
   initiateLoadMoreTracks,
   initiateLoadMoreAlbums,
-  initiateLoadMorePlaylist,
   initiateLoadMoreArtists
 } from '../actions/result';
 import { connect } from 'react-redux';
@@ -29,7 +28,7 @@ const Dashboard = (props) => {
   };
 
   const loadMore = async (type) => {
-    const { dispatch, tracks, albums, artists, playlist } = props;
+    const { dispatch, tracks, albums, artists } = props;
     setIsLoading(true);
     if (!isValidSession()) {
       try { await refreshSession(); }
@@ -45,9 +44,6 @@ const Dashboard = (props) => {
       case 'artists':
         await dispatch(initiateLoadMoreArtists(artists.next));
         break;
-      case 'playlist':
-        await dispatch(initiateLoadMorePlaylist(playlist.next));
-        break;
       default:
     }
     setIsLoading(false);
@@ -55,8 +51,8 @@ const Dashboard = (props) => {
 
   const setCategory = (category) => { setSelectedCategory(category); };
 
-  const { tracks, albums, artists, playlist } = props;
-  const result = { tracks, albums, artists, playlist };
+  const { tracks, albums, artists } = props;
+  const result = { tracks, albums, artists };
   
   return (
     <React.Fragment>
@@ -79,8 +75,7 @@ const mapStateToProps = (state) => {
   return {
     tracks: state.tracks,
     albums: state.albums,
-    artists: state.artists,
-    playlist: state.playlist
+    artists: state.artists
   };
 };
 

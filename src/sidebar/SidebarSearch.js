@@ -51,7 +51,7 @@ class SidebarSearch extends React.Component {
         }
         return (
           <div className="sidebar-search">
-            <Dashboard key={`${new Date().getTime()}`} isValidSession={this.isValidSession} refreshSession={this.refreshSession}
+            <Dashboard key={this.props.refreshItems} isValidSession={this.isValidSession} refreshSession={this.refreshSession}
               selectedCategory={this.state.selectedCategory} updateCategory={this.updateCategory} />
           </div>
         );

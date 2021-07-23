@@ -136,8 +136,7 @@ body {
   
 .tracks,
 .albums,
-.artists,
-.playlist {
+.artists {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -156,6 +155,9 @@ body {
 
 .container {
   padding: 0;
+}
+.row {
+  --bs-gutter-x: 0;
 }
 
 .card small {

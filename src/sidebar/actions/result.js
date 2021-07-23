@@ -3,8 +3,6 @@ import {
   ADD_ALBUMS,
   SET_ARTISTS,
   ADD_ARTISTS,
-  SET_PLAYLIST,
-  ADD_PLAYLIST,
   SET_TRACKS,
   ADD_TRACKS
 } from '../utils/constants';
@@ -37,28 +35,18 @@ export const addArtists = (artists) => ({
   artists
 });
 
-export const setPlayList = (playlists) => ({
-  type: SET_PLAYLIST,
-  playlists
-});
-export const addPlaylist = (playlists) => ({
-  type: ADD_PLAYLIST,
-  playlists
-});
-
 export const initiateGetResult = (searchTerm) => {
   return async (dispatch) => {
     try {
       const API_URL = `https://api.spotify.com/v1/search?query=${encodeURIComponent(
         searchTerm
-      )}&type=track,album,artist,playlist&limit=24`;
+      )}&type=track,album,artist&limit=24`;
       const result = await get(API_URL);
       console.log(result);
-      const { tracks, albums, artists, playlists } = result;
+      const { tracks, albums, artists } = result;
       dispatch(setTracks(tracks));
       dispatch(setAlbums(albums));
-      dispatch(setArtists(artists));
-      return dispatch(setPlayList(playlists));
+      return dispatch(setArtists(artists));
     } catch (error) {
       console.log('error', error);
     }
@@ -70,7 +58,7 @@ export const initiateLoadMoreTracks = (url) => {
     try {
       console.log('url', url);
       const result = await get(url);
-      console.log('categoriess', result);
+      console.log('categories', result);
       return dispatch(addTracks(result.tracks));
     } catch (error) {
       console.log('error', error);
@@ -83,7 +71,7 @@ export const initiateLoadMoreAlbums = (url) => {
     try {
       console.log('url', url);
       const result = await get(url);
-      console.log('categoriess', result);
+      console.log('categories', result);
       return dispatch(addAlbums(result.albums));
     } catch (error) {
       console.log('error', error);
@@ -96,24 +84,10 @@ export const initiateLoadMoreArtists = (url) => {
     try {
       console.log('url', url);
       const result = await get(url);
-      console.log('categoriess', result);
+      console.log('categories', result);
       return dispatch(addArtists(result.artists));
     } catch (error) {
       console.log('error', error);
     }
   };
 };
-
-export const initiateLoadMorePlaylist = (url) => {
-  return async (dispatch) => {
-    try {
-      console.log('url', url);
-      const result = await get(url);
-      console.log('categoriess', result);
-      return dispatch(addPlaylist(result.playlists));
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-};
-

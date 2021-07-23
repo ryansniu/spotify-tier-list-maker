@@ -21,6 +21,8 @@ class InnerList extends React.PureComponent {
   }
 }
 
+let refreshItems = false;
+
 class TierList extends React.Component {
   static contextType = TierListContext;
   state = this.context.data;
@@ -127,6 +129,7 @@ class TierList extends React.Component {
       }
 
       // success
+      refreshItems = !refreshItems;
       this.setState(newState);
       console.log(this.state);
     };
@@ -157,6 +160,7 @@ class TierList extends React.Component {
       },
     };
 
+    refreshItems = !refreshItems;
     this.setState(newState);
   }
 
@@ -337,7 +341,7 @@ class TierList extends React.Component {
           </Container>
           <Container>
             <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
-            <SidebarSearch />
+            <SidebarSearch refreshItems={refreshItems}/>
           </Container>
         </DragDropContext>
       </div>
