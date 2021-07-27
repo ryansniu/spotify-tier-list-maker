@@ -9,7 +9,7 @@ const Container = styled.div`
   border-radius: 2px;
   display: flex;
   flex-direction: column;
-  min-width: 21.2rem;
+  width: 21.2rem;
 `;
 
 const ItemList = styled.div`
@@ -24,7 +24,7 @@ export default class TrashCan extends React.Component {
   render() {
     return (
       <div>
-      <h1 className="main-heading">Trash Can</h1>
+        <h1 className="main-heading">Trash Can</h1>
         <Container>
           <Droppable droppableId="trash-can" type="item">
             {(provided, snapshot) => (

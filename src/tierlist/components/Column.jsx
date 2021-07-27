@@ -6,9 +6,9 @@ import Title from './Title'
 
 const Container = styled.div`
   margin: 8px;
-  border: 1px solid #1DB954;
+  border: 3px solid black;
   background-color: none;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
 `;
@@ -18,8 +18,8 @@ const ItemList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => props.isDraggingOver ? 'lightgrey' : 'none'};
   flex-grow: 1;
-  min-width: 12rem;
-  min-height: 25rem;
+  min-width: 21rem;
+  min-height: 24rem;
 `;
 
 class InnerList extends React.Component {

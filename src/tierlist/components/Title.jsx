@@ -89,7 +89,7 @@ const Title = props => {
               </Dropdown.Toggle>
               <Dropdown.Menu id='color-dropdown' variant="dark">
                 <ColumnColorPicker color={color} updateColor={updateColor}/>
-                <Dropdown.Item id="delete-col-item" onClick={() => { deleteHandler(id); }}>DELETE COLUMN</Dropdown.Item>
+                <Dropdown.Item id="delete-col-item" onClick={() => { deleteHandler(id); }}>🗑️ DELETE COLUMN</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </form>

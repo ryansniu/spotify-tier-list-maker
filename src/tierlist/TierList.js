@@ -6,6 +6,7 @@ import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { toSvg } from 'html-to-image';
 import SidebarSearch from '../sidebar/SidebarSearch'
 import './tierlist-styles.css';
 
@@ -26,6 +27,19 @@ let refreshItems = false;
 class TierList extends React.Component {
   static contextType = TierListContext;
   state = this.context.data;
+
+  saveAsSVG() {
+    toSvg(document.getElementById('tierlist_all'), {backgroundColor: '#121212'})
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = 'tierlist.svg';
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   componentDidMount() {
     this.context.containsItem = (id, type) => {
@@ -63,7 +77,6 @@ class TierList extends React.Component {
       this.setState(newState);
     };
   }
-
   // uh-oh this might be buggy
   importFromJson = e => {
     const fileReader = new FileReader();
@@ -279,47 +292,53 @@ class TierList extends React.Component {
   render() {
     return (
       <div>
-        <button
-          type="button"
-          onClick={() => {
-            const ID = `column-${new Date().getTime()}`;
-            const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
-            const newState = {
-              ...this.state,
-              columnOrder: newColumnOrder
-            };
-            newState['columns'][ID] = {
-              id: ID,
-              title: 'NEW',
-              color: '#1DB954',
-              itemIds: [],
-            };
-            this.setState(newState);
-          }}
-        >
-          Add new group
-        </button>
-        <a
-          href={`data:text/json;charset=utf-8,${encodeURIComponent(
-            JSON.stringify(this.state)
-          )}`}
-          download="tierlist.json"
-        >
-          {`Export as Json`}
-        </a>
-
-        <div>
-          <label htmlFor="import_tierlist">Import from Json</label>
-          <input type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
-        </div>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Container>
+            <button
+              type="button"
+              onClick={() => {
+                const ID = `column-${new Date().getTime()}`;
+                const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
+                const newState = {
+                  ...this.state,
+                  columnOrder: newColumnOrder
+                };
+                newState['columns'][ID] = {
+                  id: ID,
+                  title: 'NEW',
+                  color: '#1DB954',
+                  itemIds: [],
+                };
+                this.setState(newState);
+              }}
+            >
+              Add new group
+            </button>
+            
+            <a
+              href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                JSON.stringify(this.state)
+              )}`}
+              download="tierlist.json"
+            >
+              {`Export as Json`}
+            </a>
+
+            <div>
+              <label htmlFor="import_tierlist">Import from Json</label>
+              <input type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
+            </div>
+            <button onClick={this.saveAsSVG}>Save as .svg</button>
             <TrashCan />
+          </Container>
+
+          <Container>
             <Droppable droppableId="tiers" direction="horizontal" type="column">
               {provided => (
                 <Container
                   {...provided.droppableProps}
                   ref={provided.innerRef}
+                  id="tierlist_all"
                 >
                   {this.state.columnOrder.map((columnId, index) => {
                     const column = this.state.columns[columnId];
@@ -339,6 +358,7 @@ class TierList extends React.Component {
               )}
             </Droppable>
           </Container>
+
           <Container>
             <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
             <SidebarSearch refreshItems={refreshItems}/>

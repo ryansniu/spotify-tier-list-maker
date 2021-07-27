@@ -30,6 +30,7 @@
 #delete-col-item:hover {
     color: red;
     background-color: #1d0000;
+    text-decoration: none;
 }
 
 .rcp, .rcp-saturation {

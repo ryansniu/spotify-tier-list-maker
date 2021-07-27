@@ -6,7 +6,8 @@ import music from '../../sidebar/images/music.jpeg';
 
 const ItemContent = styled.div`
   margin-bottom: 8px;
-  background-color: ${props => (props.isDragging ? 'lightgreen' : 'none')};
+  background-color: ${props => (props.isDragging ? '#1DB954' : 'none')};
+  border-radius: 4px;
 `;
 
 export default class Item extends React.Component {
