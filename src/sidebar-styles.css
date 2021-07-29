@@ -200,6 +200,14 @@ body {
   background-color: red;
   color: black;
 }
+
+.remove-buttons {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  background-color: red;
+  color: black;
+}
   
 @media screen and (max-width: 400px) {
   .search-buttons {

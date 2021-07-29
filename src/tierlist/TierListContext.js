@@ -39,7 +39,8 @@ export const initialData = {
     columnOrder: ['column-1', 'column-2', 'column-3','column-4']
   },
   containsItem: (id) => {},
-  addToItemPool: (id, songURL, imgURL, title, subtitle) => {},
+  addToItemPool: (id, type, songURL, imgURL, title, subtitle) => {},
+  deleteFromItemPool: (id, type) => {}
 }
 
 export const TierListContext = React.createContext(initialData);

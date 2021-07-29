@@ -16,7 +16,7 @@ const AlbumsList = ({ albums }) => {
             return (
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
-                  {({containsItem, addToItemPool}) => (
+                  {({containsItem, addToItemPool, deleteFromItemPool}) => (
                     <Card style={{maxWidth: "22rem", width: "22rem", marginLeft: "0.5rem", marginRight: "0.5rem"}}>
                       <Container>
                         <Row>
@@ -44,7 +44,10 @@ const AlbumsList = ({ albums }) => {
                           <Col xs="auto">
                             <div>
                               {containsItem(id, type) ? (
-                                <button disabled className="item-buttons">x</button>
+                                <button className="remove-buttons" onClick={() => {
+                                  deleteFromItemPool(id, type);
+                                  setUpdater(!updater);
+                                }}>x</button>
                               ) : (
                                 <button className="item-buttons" onClick={() => {
                                   addToItemPool(id, type, songURL, imgURL, title, subtitle);

@@ -22,24 +22,12 @@ class InnerList extends React.PureComponent {
   }
 }
 
-let refreshItems = false;
+let refreshSidebar = false;
+let refreshColumns = false;
 
 class TierList extends React.Component {
   static contextType = TierListContext;
   state = this.context.data;
-
-  saveAsSVG() {
-    toSvg(document.getElementById('tierlist_all'), {backgroundColor: '#121212'})
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.download = 'tierlist.svg';
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
 
   componentDidMount() {
     this.context.containsItem = (id, type) => {
@@ -48,6 +36,7 @@ class TierList extends React.Component {
       }
       return false;
     };
+
     this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle) => {
       if(this.context.containsItem(id, type)) return; // do nothing
       const newItems = {
@@ -76,7 +65,30 @@ class TierList extends React.Component {
       };
       this.setState(newState);
     };
+    
+    this.context.deleteFromItemPool = (id, type) => {
+      if(!this.context.containsItem(id, type)) return; // do nothing
+      let newItems = this.state.items;
+      delete newItems[id];
+
+      let newColumns = this.state.columns;
+      Object.keys(newColumns).forEach(function(key) {
+        if(key === 'trash-can') return;
+        const delIndex = newColumns[key].itemIds.indexOf(id);
+        if(delIndex !== -1) newColumns[key].itemIds.splice(delIndex, 1);
+      });
+
+      const newState = {
+        ...this.state,
+        items: newItems,
+        columns: newColumns
+      }
+      console.log(newState);
+      refreshColumns = !refreshColumns;
+      this.setState(newState);
+    }
   }
+
   // uh-oh this might be buggy
   importFromJson = e => {
     const fileReader = new FileReader();
@@ -142,10 +154,23 @@ class TierList extends React.Component {
       }
 
       // success
-      refreshItems = !refreshItems;
+      refreshSidebar = !refreshSidebar;
       this.setState(newState);
       console.log(this.state);
     };
+  }
+
+  saveAsSVG() {
+    toSvg(document.getElementById('tierlist_all'), {backgroundColor: '#121212'})
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = 'tierlist.svg';
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   deleteItem = (id, source, home) => {
@@ -173,7 +198,7 @@ class TierList extends React.Component {
       },
     };
 
-    refreshItems = !refreshItems;
+    refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
 
@@ -289,32 +314,146 @@ class TierList extends React.Component {
     this.setState(newState);
   };
 
+  addNewGroup = () => {
+    const ID = `column-${new Date().getTime()}`;
+    const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
+    const newState = {
+      ...this.state,
+      columnOrder: newColumnOrder
+    };
+    newState['columns'][ID] = {
+      id: ID,
+      title: 'NEW',
+      color: '#1DB954',
+      itemIds: [],
+    };
+    this.setState(newState);
+  }
+
+  resetAllItems = () => {
+    let newColumns = this.state.columns;
+    Object.keys(newColumns).forEach(function(key) {
+      if(key === 'trash-can' || key === 'item-pool') return;
+      newColumns['item-pool'].itemIds = newColumns['item-pool'].itemIds.concat(newColumns[key].itemIds);
+      newColumns[key].itemIds = [];
+    });
+
+    const newState = {
+      ...this.state,
+      columns: newColumns
+    };
+    refreshColumns = !refreshColumns;
+    this.setState(newState);
+  }
+
+  removeAllItems = () => {
+    this.resetAllItems();
+    const newState = {
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        'item-pool': {
+          id: 'item-pool',
+          itemIds: [],
+        }
+      },
+      items: {},
+    };
+    refreshSidebar = !refreshSidebar;
+    this.setState(newState);
+  }
+
+  resetAllColumns = () => {
+    this.resetAllItems();
+    const newState = {
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        'column-1': {
+          id: 'column-1',
+          title: 'S',
+          color: 'purple',
+          itemIds: [],
+        },
+        'column-2': {
+          id: 'column-2',
+          title: 'A',
+          color: '#1DB954',
+          itemIds: [],
+        },
+        'column-3': {
+          id: 'column-3',
+          title: 'B',
+          color: 'blue',
+          itemIds: [],
+        },
+        'column-4': {
+          id: 'column-4',
+          title: 'C',
+          color: 'grey',
+          itemIds: [],
+        }
+      },
+      columnOrder: ['column-1', 'column-2', 'column-3','column-4']
+    }
+    refreshColumns = !refreshColumns;
+    this.setState(newState);
+  }
+
+  resetTierList = () => {
+    this.resetAllItems();
+    const newState = {
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        'column-1': {
+          id: 'column-1',
+          title: 'S',
+          color: 'purple',
+          itemIds: [],
+        },
+        'column-2': {
+          id: 'column-2',
+          title: 'A',
+          color: '#1DB954',
+          itemIds: [],
+        },
+        'column-3': {
+          id: 'column-3',
+          title: 'B',
+          color: 'blue',
+          itemIds: [],
+        },
+        'column-4': {
+          id: 'column-4',
+          title: 'C',
+          color: 'grey',
+          itemIds: [],
+        },
+        'item-pool': {
+          id: 'item-pool',
+          itemIds: [],
+        }
+      },
+      items: {},
+      columnOrder: ['column-1', 'column-2', 'column-3','column-4']
+    };
+    
+    refreshColumns = !refreshColumns;
+    refreshSidebar = !refreshSidebar;
+    this.setState(newState);
+  }
+
   render() {
     return (
       <div>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Container>
-            <button
-              type="button"
-              onClick={() => {
-                const ID = `column-${new Date().getTime()}`;
-                const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
-                const newState = {
-                  ...this.state,
-                  columnOrder: newColumnOrder
-                };
-                newState['columns'][ID] = {
-                  id: ID,
-                  title: 'NEW',
-                  color: '#1DB954',
-                  itemIds: [],
-                };
-                this.setState(newState);
-              }}
-            >
-              Add new group
-            </button>
-            
+            <button type="button" onClick={this.addNewGroup}>Add new group</button>
+            <button type="button" onClick={this.resetAllItems}>Reset All Items</button>
+            <button type="button" onClick={this.removeAllItems}>Remove All Items</button>
+            <button type="button" onClick={this.resetAllColumns}>Reset All Columns</button>
+            <button type="button" onClick={this.resetTierList}>Reset TierList</button>
             <a
               href={`data:text/json;charset=utf-8,${encodeURIComponent(
                 JSON.stringify(this.state)
@@ -323,12 +462,11 @@ class TierList extends React.Component {
             >
               {`Export as Json`}
             </a>
-
             <div>
               <label htmlFor="import_tierlist">Import from Json</label>
               <input type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
             </div>
-            <button onClick={this.saveAsSVG}>Save as .svg</button>
+            <button type="button" onClick={this.saveAsSVG}>Save as .svg</button>
             <TrashCan />
           </Container>
 
@@ -339,6 +477,7 @@ class TierList extends React.Component {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   id="tierlist_all"
+                  key={refreshColumns}
                 >
                   {this.state.columnOrder.map((columnId, index) => {
                     const column = this.state.columns[columnId];
@@ -361,7 +500,7 @@ class TierList extends React.Component {
 
           <Container>
             <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
-            <SidebarSearch refreshItems={refreshItems}/>
+            <SidebarSearch refreshSidebar={refreshSidebar}/>
           </Container>
         </DragDropContext>
       </div>
