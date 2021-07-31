@@ -8,7 +8,6 @@ import {
 import { connect } from 'react-redux';
 import SearchResult from './SearchResult';
 import SearchForm from './SearchForm';
-import Header from './Header';
 import Loader from './Loader';
 
 const Dashboard = (props) => {
@@ -57,7 +56,6 @@ const Dashboard = (props) => {
   return (
     <React.Fragment>
       <div>
-        <Header />
         <SearchForm handleSearch={handleSearch} />
         <Loader show={isLoading}>Loading...</Loader>
         <SearchResult

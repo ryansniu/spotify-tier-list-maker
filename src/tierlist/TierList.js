@@ -6,8 +6,10 @@ import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { Offcanvas } from 'react-bootstrap';
 import { toSvg } from 'html-to-image';
 import SidebarSearch from '../sidebar/SidebarSearch'
+import Header from '../sidebar/components/Header';
 import './tierlist-styles.css';
 
 const Container = styled.div`
@@ -24,6 +26,8 @@ class InnerList extends React.PureComponent {
 
 let refreshSidebar = false;
 let refreshColumns = false;
+let showSearchbar = false;
+let showItempool = false;
 
 class TierList extends React.Component {
   static contextType = TierListContext;
@@ -444,6 +448,11 @@ class TierList extends React.Component {
     this.setState(newState);
   }
 
+  showSearch = (show) => {
+    showSearchbar = show;
+    this.setState(this.state);
+  }
+
   render() {
     return (
       <div>
@@ -467,7 +476,7 @@ class TierList extends React.Component {
               <input type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
             </div>
             <button type="button" onClick={this.saveAsSVG}>Save as .svg</button>
-            <TrashCan />
+            <button type="button" onClick={() => this.showSearch(true)}>Search</button>
           </Container>
 
           <Container>
@@ -499,9 +508,18 @@ class TierList extends React.Component {
           </Container>
 
           <Container>
+            <TrashCan />
             <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
-            <SidebarSearch refreshSidebar={refreshSidebar}/>
           </Container>
+
+          <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'}>
+            <Offcanvas.Header closeButton closeVariant='white'>
+              <Offcanvas.Title><Header /></Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body style={{padding: 0, overflowY: 'scroll'}}>
+              <SidebarSearch refreshSidebar={refreshSidebar}/>
+            </Offcanvas.Body>
+          </Offcanvas>
         </DragDropContext>
       </div>
     );

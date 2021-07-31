@@ -41,8 +41,17 @@ body {
   font-size: 1.2rem;
 }
   
+.title-heading {
+  font-size: 3.75rem;
+  margin: 1rem;
+  padding-top: 0.5rem;
+  color: #1DB954;
+  text-align: center;
+}
+
 .main-heading {
-  margin: 3rem auto auto auto;
+  font-size: 3rem;
+  margin: 0;
   color: #1DB954;
   text-align: center;
 }
@@ -115,15 +124,13 @@ body {
 }
   
 .search-buttons {
-  margin-bottom: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
   
 .search-buttons .btn {
-  margin: 0.2rem;
-  margin-bottom: 0.8rem;
+  margin: 0.75rem 0.25rem 1.25rem 0.25rem;
   font-size: 1.2rem;
   letter-spacing: 1px;
   font-weight: bold;

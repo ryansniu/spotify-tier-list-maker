@@ -33,6 +33,11 @@
     text-decoration: none;
 }
 
+#sidebar-overlay {
+    background-color: #181818;
+    min-width: 26rem;
+}
+
 .rcp, .rcp-saturation {
     border: none;
     border-radius: 0.5rem 0.5rem 0 0 !important;

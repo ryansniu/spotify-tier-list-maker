@@ -51,7 +51,6 @@ const ArtistsList = ({ artists }) => {
                                   setUpdater(!updater);
                                 }}>+</button>
                               )}
-                              <button className="item-buttons">v</button>
                             </div>
                           </Col>
                         </Row>

@@ -9,7 +9,7 @@ import './sidebar-styles.css';
 
 ReactDOM.render(
   <TierListContext.Provider value = {initialData}>
-    <h1 className="main-heading">Spotify Tier List Maker (under construction)</h1>
+    <h1 className="title-heading">Spotify Tier List Maker</h1>
     <Provider store={store}>
       <TierList/>
     </Provider>

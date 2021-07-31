@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { Image, Dropdown, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { ColumnColorPicker } from "./ColumnColorPicker"
 import styled from 'styled-components';
 import tool from '../imgs/tool.svg'
@@ -83,10 +83,15 @@ const Title = props => {
                 update(id, e.target.value, color);
               }}
             />
-             <Dropdown autoClose="inside" as={ButtonGroup} drop="right" >
-              <Dropdown.Toggle id='color-toggle' variant="secondary">
-                <Image src={palette} fluid alt='colors' style={{width: "100%", height: "100%"}}/>
-              </Dropdown.Toggle>
+             <Dropdown autoClose="inside" as={ButtonGroup} drop="right">
+              <OverlayTrigger
+                placement={'top'}
+                overlay={<Tooltip>Edit Color/Delete Column</Tooltip>}
+              >
+                <Dropdown.Toggle id='color-toggle' variant="secondary">
+                  <Image src={palette} fluid alt='colors' style={{width: "100%", height: "100%"}}/>
+                </Dropdown.Toggle>
+              </OverlayTrigger>
               <Dropdown.Menu id='color-dropdown' variant="dark">
                 <ColumnColorPicker color={color} updateColor={updateColor}/>
                 <Dropdown.Item id="delete-col-item" onClick={() => { deleteHandler(id); }}>🗑️ DELETE COLUMN</Dropdown.Item>
@@ -96,9 +101,14 @@ const Title = props => {
         ) : (
           <div style={{width: "100%", display: "flex", alignItems: "center"}}>
             <div style={{color: "white", textShadow: "0 0 4px black", wordBreak: "break-all", flexGrow: "1", overflow: "hidden"}}>{title}</div>
-            <ButtonStyle onClick={() => { setInputVisible(true); props.setEditing(true); }}>
-              <Image src={tool} fluid alt='settings' style={{width: "100%", height: "100%"}}/>
-            </ButtonStyle> 
+            <OverlayTrigger
+              placement={'top'}
+              overlay={<Tooltip>Edit Column</Tooltip>}
+            >
+              <ButtonStyle onClick={() => { setInputVisible(true); props.setEditing(true); }}>
+                <Image src={tool} fluid alt='settings' style={{width: "100%", height: "100%"}}/>
+              </ButtonStyle> 
+            </OverlayTrigger>
           </div>
         )}
       </React.Fragment>
