@@ -6,6 +6,7 @@ import {
   initiateLoadMoreArtists
 } from '../actions/result';
 import { connect } from 'react-redux';
+import { Spinner } from 'react-bootstrap';
 import SearchResult from './SearchResult';
 import SearchForm from './SearchForm';
 import Loader from './Loader';
@@ -57,7 +58,10 @@ const Dashboard = (props) => {
     <React.Fragment>
       <div>
         <SearchForm handleSearch={handleSearch} />
-        <Loader show={isLoading}>Loading...</Loader>
+        <Loader show={isLoading}>
+          <Spinner animation="border" role="status" style={{marginRight: '0.5rem'}}/>
+          Loading...
+        </Loader>
         <SearchResult
           result={result}
           loadMore={loadMore}
