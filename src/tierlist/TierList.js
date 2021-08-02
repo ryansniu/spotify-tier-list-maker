@@ -513,10 +513,10 @@ class TierList extends React.Component {
           </Container>
 
           <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'}>
-            <Offcanvas.Header closeButton closeVariant='white'>
+            <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
               <Offcanvas.Title><Header /></Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body style={{padding: 0, overflowY: 'scroll'}}>
+            <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
               <SidebarSearch refreshSidebar={refreshSidebar}/>
             </Offcanvas.Body>
           </Offcanvas>

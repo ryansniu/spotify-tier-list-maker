@@ -27,10 +27,6 @@ body {
   letter-spacing: 1px;
   color: #fff;
 }
-
-.btn {
-  letter-spacing: 1px;
-}
   
 .sidebar-search {
   width: 100%;
@@ -39,6 +35,12 @@ body {
   
 .form-control {
   font-size: 1.2rem;
+  border-color: #1DB954;
+}
+
+.form-control:focus {
+  border-color: #1DB954;
+  box-shadow: 0 0 0 .125rem #1db95480;
 }
   
 .title-heading {
@@ -60,10 +62,6 @@ body {
   display: none;
 }
   
-.active {
-  border: 2px solid #1DB954;
-}
-  
 .loading {
   display: flex;
   justify-content: center;
@@ -76,17 +74,30 @@ body {
 .load-more {
   display: flex;
   justify-content: center;
-  margin: 2rem 0;
+  margin: 1rem 0;
 }
   
 .load-more button {
   border: none;
-  color: #fff;
-  border-radius: 10px;
-  padding: 10px;
-  letter-spacing: 1px;
+  color: black;
+  background-color: #1DB954;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
   outline: none;
 }
+
+.load-more button:focus {
+  color: black;
+  background-color: #1DB954;
+  box-shadow: 0 0 0 .25rem #1db95480;
+}
+
+.load-more button:hover {
+  color: white;
+  background-color: #1DB954;
+}
+
+
   
 #loader {
   width: 100%;
@@ -106,10 +117,8 @@ body {
   position: relative;
   font-size: 150%;
   top: 50%;
-  left: 50%;
-  transform: translateX(-10%);
+  left: 40%;
   color: #fff;
-  letter-spacing: 1px;
 }
   
 .loader-open {
@@ -132,9 +141,13 @@ body {
 .search-buttons .btn {
   margin: 0.75rem 0.25rem 1.25rem 0.25rem;
   font-size: 1.2rem;
-  letter-spacing: 1px;
   font-weight: bold;
   color: #fff;
+  border: 2px solid transparent;
+}
+
+.search-buttons .active {
+  border: 2px solid #1DB954;
 }
   
 .search-buttons .btn:focus {
@@ -170,9 +183,11 @@ body {
 .card small {
   color:#A4A4A4;
   margin-top: 0;
+  line-height: 1.4;
 }
 .card-title {
   margin: 0;
+  line-height: 1.125;
 }
 .card small, .card-title {
   height: auto;
