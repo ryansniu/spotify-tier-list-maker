@@ -224,6 +224,14 @@ class TierList extends React.Component {
   }
 
   removeCol = (id) => {
+    const oldItems = this.state.items;
+    const newItems = Object.keys(this.state.items).reduce((object, key) => {
+      if(!this.state.columns[id].itemIds.includes(key)) {
+        object[key] = oldItems[key];
+      }
+      return object;
+    }, {});
+
     const newColumnOrder = Array.from(this.state.columnOrder);
     newColumnOrder.splice(newColumnOrder.indexOf(id), 1);
 
@@ -237,9 +245,11 @@ class TierList extends React.Component {
 
     const newState = {
       ...this.state,
+      items: newItems,
       columns: newColumns,
       columnOrder: newColumnOrder,
     };
+    refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
 
@@ -248,6 +258,12 @@ class TierList extends React.Component {
 
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+
+    if (destination.droppableId === 'trash-can') {
+      if(type === 'column') ;
+      else ;
+      return;
+    }
 
     if (type === 'column') {
       const newColumnOrder = Array.from(this.state.columnOrder);
@@ -264,11 +280,6 @@ class TierList extends React.Component {
 
     const home = this.state.columns[source.droppableId];
     const foreign = this.state.columns[destination.droppableId];
-    
-    if (destination.droppableId === 'trash-can') {
-      this.deleteItem(draggableId, source, home);
-      return;
-    }
 
     if (home === foreign) {
       const newitemIds = Array.from(home.itemIds);
@@ -512,7 +523,7 @@ class TierList extends React.Component {
             <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
           </Container>
 
-          <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'}>
+          <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
             <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
               <Offcanvas.Title><Header /></Offcanvas.Title>
             </Offcanvas.Header>

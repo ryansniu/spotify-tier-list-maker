@@ -17,7 +17,7 @@ const ArtistsList = ({ artists }) => {
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
                   {({containsItem, addToItemPool, deleteFromItemPool}) => (
-                    <Card style={{maxWidth: "22rem", width: "22rem", marginLeft: "0.5rem", marginRight: "0.5rem"}}>
+                    <Card style={{marginLeft: "0.5rem", marginRight: "0.5rem"}}>
                       <Container>
                         <Row>
                           <Col xs="auto">
@@ -36,22 +36,20 @@ const ArtistsList = ({ artists }) => {
                           <Col>
                             <Card.Body>
                               <Card.Title style={{margin: '0'}}>{title}</Card.Title>
+                              <div>
+                                {containsItem(id, type) ? (
+                                  <button className="remove-buttons" onClick={() => {
+                                    deleteFromItemPool(id, type);
+                                    setUpdater(!updater);
+                                  }}>×</button>
+                                ) : (
+                                  <button className="item-buttons" onClick={() => {
+                                    addToItemPool(id, type, songURL, imgURL, title, subtitle);
+                                    setUpdater(!updater);
+                                  }}>+</button>
+                                )}
+                              </div>
                             </Card.Body>
-                          </Col>
-                          <Col xs="auto">
-                            <div>
-                              {containsItem(id, type) ? (
-                                <button className="remove-buttons" onClick={() => {
-                                  deleteFromItemPool(id, type);
-                                  setUpdater(!updater);
-                                }}>x</button>
-                              ) : (
-                                <button className="item-buttons" onClick={() => {
-                                  addToItemPool(id, type, songURL, imgURL, title, subtitle);
-                                  setUpdater(!updater);
-                                }}>+</button>
-                              )}
-                            </div>
                           </Col>
                         </Row>
                       </Container>

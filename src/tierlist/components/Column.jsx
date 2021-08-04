@@ -16,10 +16,10 @@ const Container = styled.div`
 const ItemList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props => props.isDraggingOver ? 'lightgrey' : 'none'};
+  background-color: ${props => props.isDraggingOver ? '#535353' : 'none'};
   flex-grow: 1;
-  min-width: 21rem;
-  min-height: 24rem;
+  min-width: 18.25rem;
+  min-height: 20rem;
 `;
 
 class InnerList extends React.Component {
@@ -43,6 +43,7 @@ export default class Column extends React.Component {
       isEditing: false
     }
   }
+
   render() {
     return (
       <Draggable draggableId={this.props.column.id} index={this.props.index} isDragDisabled={this.state.isEditing}>
@@ -53,7 +54,8 @@ export default class Column extends React.Component {
                 colData={this.props.column}
                 updateHeader={this.props.updateHeader}
                 deleteHandler={this.props.deleteHandler}
-                setEditing={(e) => this.setState({ isEditing: e })}/>
+                setEditing={(e) => this.setState({ isEditing: e })}
+              />
             </div>
             <Droppable droppableId={this.props.column.id} type="item">
               {(provided, snapshot) => (

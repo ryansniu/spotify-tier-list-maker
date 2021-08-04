@@ -5,9 +5,12 @@ import { Draggable } from 'react-beautiful-dnd'
 import music from '../../sidebar/images/music.jpeg';
 
 const ItemContent = styled.div`
-  margin-bottom: 8px;
-  background-color: ${props => (props.isDragging ? '#1DB954' : 'none')};
+  background-color: ${props => (props.isDragging ? '#535353' : 'none')};
   border-radius: 4px;
+`;
+
+const ItemSmall = styled.small`
+  color: ${props => (props.isDragging ? 'white !important' : '#A4A4A4')};
 `;
 
 export default class Item extends React.Component {
@@ -42,9 +45,9 @@ export default class Item extends React.Component {
                         <Card.Title>{this.props.item.title}</Card.Title>
                         {this.props.item.subtitle &&
                           <Card.Text>
-                            <small>
+                            <ItemSmall isDragging={snapshot.isDragging}>
                               {this.props.item.subtitle}
-                            </small>
+                            </ItemSmall>
                           </Card.Text>
                         }
                       </Card.Body>
