@@ -17,7 +17,7 @@ const TracksList = ({ tracks }) => {
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
                   {({containsItem, addToItemPool, deleteFromItemPool}) => (
-                    <Card style={{marginLeft: "0.5rem", marginRight: "0.5rem"}}>
+                    <Card className="search-card" style={{margin: "0.25rem 0", backgroundColor: containsItem(id, type) ? "black" : ""}}>
                       <Container>
                         <Row>
                           <Col xs="auto">
@@ -25,19 +25,20 @@ const TracksList = ({ tracks }) => {
                               target="_blank"
                               href={songURL}
                               rel="noopener noreferrer"
+                              style={{filter: containsItem(id, type) ? "brightness(50%)" : "brightness(100%)"}}
                             >
                               {!_.isEmpty(track.album.images) ? (
-                                <Card.Img src={imgURL} alt="" />
+                                <Card.Img src={imgURL} alt="track album cover" />
                               ) : (
-                                <img src={music} alt="" />
+                                <img src={music} alt="default album cover" />
                               )}
                             </a>
                           </Col>
                           <Col>
                             <Card.Body>
-                              <Card.Title>{title}</Card.Title>
+                              <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
                               <Card.Text>
-                                <small>{subtitle}</small>
+                                <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
                               </Card.Text>
                               <div>
                                 {containsItem(id, type) ? (

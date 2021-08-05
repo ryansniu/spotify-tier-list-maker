@@ -259,12 +259,6 @@ class TierList extends React.Component {
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    if (destination.droppableId === 'trash-can') {
-      if(type === 'column') ;
-      else ;
-      return;
-    }
-
     if (type === 'column') {
       const newColumnOrder = Array.from(this.state.columnOrder);
       newColumnOrder.splice(source.index, 1);
@@ -280,6 +274,12 @@ class TierList extends React.Component {
 
     const home = this.state.columns[source.droppableId];
     const foreign = this.state.columns[destination.droppableId];
+
+    if (destination.droppableId === 'trash-can') {
+      if(type === 'column') ;
+      else this.deleteItem(draggableId, source, home);
+      return;
+    }
 
     if (home === foreign) {
       const newitemIds = Array.from(home.itemIds);

@@ -15,7 +15,7 @@ const Container = styled.div`
 const ItemList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props => props.isDraggingOver ? 'pink' : 'none'};
+  background-color: ${props => props.isDraggingOver ? 'darkred' : 'none'};
   flex-grow: 1;
   height: 4.75rem;
 `;

@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { toColor } from "react-color-palette";
 import Item from './Item';
 import Title from './Title'
 
 const Container = styled.div`
+  border: 4px solid black;
   margin: 8px;
-  border: 3px solid black;
   background-color: none;
   border-radius: 4px;
   display: flex;
@@ -16,7 +17,7 @@ const Container = styled.div`
 const ItemList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props => props.isDraggingOver ? '#535353' : 'none'};
+  background-color: ${props => props.isDraggingOver ? props.bgColor : 'none'};
   flex-grow: 1;
   min-width: 18.25rem;
   min-height: 20rem;
@@ -44,6 +45,13 @@ export default class Column extends React.Component {
     }
   }
 
+  getBodyColor(color) {
+    let newColor = toColor("hex", color).hsv;
+    newColor.v = newColor.v / 2;
+    newColor.a = 0.5;
+    return toColor("hsv", newColor).hex;
+  }
+
   render() {
     return (
       <Draggable draggableId={this.props.column.id} index={this.props.index} isDragDisabled={this.state.isEditing}>
@@ -63,6 +71,7 @@ export default class Column extends React.Component {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   isDraggingOver={snapshot.isDraggingOver}
+                  bgColor={this.getBodyColor(this.props.column.color)}
                 >
                   <InnerList items={this.props.items} />
                   {provided.placeholder}
