@@ -20,17 +20,11 @@
     border-radius: 0;
 }
 
-#delete-col-item {
+#preset-colors {
     border-radius: 0 0 0.5rem 0.5rem;
     padding: 0.25rem 0;
-    color: darkred;
     background-color: #181818;
     text-align: center;
-}
-#delete-col-item:hover {
-    color: red;
-    background-color: #1d0000;
-    text-decoration: none;
 }
 
 #sidebar-overlay {

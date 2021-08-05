@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Column from './components/Column';
 import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
+import TrashCan2 from './components/TrashCan2';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Offcanvas } from 'react-bootstrap';
@@ -18,9 +19,9 @@ const Container = styled.div`
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, itemMap, index, updateHeader, deleteHandler } = this.props;
+    const { column, itemMap, index, updateHeader } = this.props;
     const items = column.itemIds.map(itemId => itemMap[itemId]);
-    return <Column column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler}/>;
+    return <Column column={column} items={items} index={index} updateHeader={updateHeader} />;
   }
 }
 
@@ -77,7 +78,6 @@ class TierList extends React.Component {
 
       let newColumns = this.state.columns;
       Object.keys(newColumns).forEach(function(key) {
-        if(key === 'trash-can') return;
         const delIndex = newColumns[key].itemIds.indexOf(id);
         if(delIndex !== -1) newColumns[key].itemIds.splice(delIndex, 1);
       });
@@ -99,13 +99,11 @@ class TierList extends React.Component {
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
       const newState = JSON.parse(e.target.result);
-      // check if the required keys exist and the item-pool and trash-can exists in column and has the correct format
-      if(!('columnOrder' in newState && 'items' in newState && 'columns' in newState
-      && 'item-pool' in newState.columns && 'trash-can' in newState.columns
+      // check if the required keys exist and the item-pool exists in column and has the correct format
+      if(!('columnOrder' in newState && 'items' in newState && 'columns' in newState && 'item-pool' in newState.columns
       && 'id' in newState.columns['item-pool'] && newState.columns['item-pool'].id === 'item-pool'
-      && 'itemIds' in newState.columns['item-pool'] && Array.isArray(newState.columns['item-pool'].itemIds)
-      && 'id' in newState.columns['trash-can'] && newState.columns['trash-can'].id === 'trash-can')) {
-        console.log('missing required information!');
+      && 'itemIds' in newState.columns['item-pool'] && Array.isArray(newState.columns['item-pool'].itemIds))) {
+        console.log('missing item pool!');
         return;
       }
 
@@ -113,7 +111,7 @@ class TierList extends React.Component {
       let hasValidColumns = true;
       const requiredColumnKeys = ['id', 'title', 'color', 'itemIds'];
       Object.keys(newState.columns).forEach(function(key) {
-        if(!hasValidColumns || key === 'item-pool' || key === 'trash-can') return;
+        if(!hasValidColumns || key === 'item-pool') return;
         const columnKeys = Object.keys(newState.columns[key]);
         hasValidColumns = columnKeys.length === requiredColumnKeys.length && columnKeys.every(function(v, i) { return v === requiredColumnKeys[i]});
       });
@@ -122,11 +120,10 @@ class TierList extends React.Component {
         return;
       }
 
-      // check if every column in columnOrder exists in column (and no extra besides item-pool and trash-can)
+      // check if every column in columnOrder exists in column (and no extra besides item-pool)
       const columnOrder = newState.columnOrder;
       let allColumns = Object.keys(newState.columns);
       allColumns.splice(allColumns.indexOf('item-pool'), 1);
-      allColumns.splice(allColumns.indexOf('trash-can'), 1);
       if(!(columnOrder.length === allColumns.length && columnOrder.every(el => allColumns.includes(el)))) {
         console.log('columnOrder and columns don\'t match!');
         return;
@@ -149,7 +146,6 @@ class TierList extends React.Component {
       const allItems = Object.keys(newState.items);
       let itemIds = [];
       Object.keys(newState.columns).forEach(function(key) {
-        if(key === 'trash-can') return;
         itemIds = itemIds.concat(newState.columns[key].itemIds);
       });
       if(!(itemIds.length === allItems.length && itemIds.every(el => allItems.includes(el)))) {
@@ -225,7 +221,7 @@ class TierList extends React.Component {
 
   removeCol = (id) => {
     const oldItems = this.state.items;
-    const newItems = Object.keys(this.state.items).reduce((object, key) => {
+    const newItems = Object.keys(oldItems).reduce((object, key) => {
       if(!this.state.columns[id].itemIds.includes(key)) {
         object[key] = oldItems[key];
       }
@@ -259,6 +255,11 @@ class TierList extends React.Component {
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
+    if (destination.droppableId === 'trash-can-2') {
+      this.removeCol(draggableId);
+      return;
+    }
+
     if (type === 'column') {
       const newColumnOrder = Array.from(this.state.columnOrder);
       newColumnOrder.splice(source.index, 1);
@@ -276,8 +277,7 @@ class TierList extends React.Component {
     const foreign = this.state.columns[destination.droppableId];
 
     if (destination.droppableId === 'trash-can') {
-      if(type === 'column') ;
-      else this.deleteItem(draggableId, source, home);
+      this.deleteItem(draggableId, source, home);
       return;
     }
 
@@ -348,7 +348,7 @@ class TierList extends React.Component {
   resetAllItems = () => {
     let newColumns = this.state.columns;
     Object.keys(newColumns).forEach(function(key) {
-      if(key === 'trash-can' || key === 'item-pool') return;
+      if(key === 'item-pool') return;
       newColumns['item-pool'].itemIds = newColumns['item-pool'].itemIds.concat(newColumns[key].itemIds);
       newColumns[key].itemIds = [];
     });
@@ -508,7 +508,6 @@ class TierList extends React.Component {
                         itemMap={this.state.items}
                         index={index}
                         updateHeader={this.updateColHeader}
-                        deleteHandler={this.removeCol}
                       />
                     );
                   })}
@@ -520,6 +519,7 @@ class TierList extends React.Component {
 
           <Container>
             <TrashCan />
+            <TrashCan2 />
             <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
           </Container>
 

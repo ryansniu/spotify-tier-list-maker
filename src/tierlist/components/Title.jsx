@@ -49,7 +49,6 @@ const Title = props => {
   const [inputVisible, setInputVisible] = useState(false);
   const [colorPickerVisible, setcolorPickerVisible] = useState(false);
   const update = props.updateHeader;
-  const deleteHandler = props.deleteHandler;
 
   function onClickOutSide(e) {
     if (inputRef.current && !inputRef.current.contains(e.target)) {
@@ -108,7 +107,9 @@ const Title = props => {
                   }
                   setColor_P(e);
                 }} hideRGB dark />
-                <Dropdown.Item id="delete-col-item" onClick={() => { deleteHandler(id); }}>🗑️ DELETE COLUMN</Dropdown.Item>
+                <div id="preset-colors">
+                  hi
+                </div>
               </Dropdown.Menu>
             </Dropdown>
           </form>

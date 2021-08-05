@@ -31,9 +31,6 @@ export const initialData = {
       'item-pool': {
         id: 'item-pool',
         itemIds: [],
-      },
-      'trash-can': {
-        id: 'trash-can'
       }
     },
     columnOrder: ['column-1', 'column-2', 'column-3','column-4']
