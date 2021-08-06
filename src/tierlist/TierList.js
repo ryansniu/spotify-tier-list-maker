@@ -8,27 +8,33 @@ import TrashCan2 from './components/TrashCan2';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Offcanvas } from 'react-bootstrap';
-import { toSvg } from 'html-to-image';
+import { toJpeg, toPng, toSvg } from 'html-to-image';
 import SidebarSearch from '../sidebar/SidebarSearch'
 import Header from '../sidebar/components/Header';
 import './tierlist-styles.css';
 
 const Container = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
 `;
+
+const presetColors = ["#F63E02", "#F5B700", "#1DB954", "#4D9DE0", "#360568", "#DC3CA0"];
 
 class InnerList extends React.PureComponent {
   render() {
     const { column, itemMap, index, updateHeader } = this.props;
     const items = column.itemIds.map(itemId => itemMap[itemId]);
-    return <Column column={column} items={items} index={index} updateHeader={updateHeader} />;
+    return <Column column={column} items={items} index={index} updateHeader={updateHeader} presetColors={presetColors} />;
   }
 }
 
 let refreshSidebar = false;
 let refreshColumns = false;
 let showSearchbar = false;
-let showItempool = false;
+let showItemPool = false;
+
+const saveFileTypes = ["jpeg", "png", "svg"];
 
 class TierList extends React.Component {
   static contextType = TierListContext;
@@ -93,7 +99,7 @@ class TierList extends React.Component {
     }
   }
 
-  // uh-oh this might be buggy
+  // absolutely cursed
   importFromJson = e => {
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
@@ -160,17 +166,26 @@ class TierList extends React.Component {
     };
   }
 
-  saveAsSVG() {
-    toSvg(document.getElementById('tierlist_all'), {backgroundColor: '#121212'})
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.download = 'tierlist.svg';
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  saveAsIMG (fileType) {
+    const saveIMG = (dataUrl) => {
+      const link = document.createElement('a');
+      link.download = 'tierlist.'.concat(fileType);
+      link.href = dataUrl;
+      link.click();
+    }
+
+    if(fileType === "jpeg") {
+      toJpeg(document.getElementById('tierlist_all'), {backgroundColor: '#121212', pixelRatio: 2})
+        .then(saveIMG).catch((err) => { console.log(err); });
+    }
+    if(fileType === "png") {
+      toPng(document.getElementById('tierlist_all'), {backgroundColor: '#121212', pixelRatio: 2})
+        .then(saveIMG).catch((err) => { console.log(err); });
+    }
+    if(fileType === "svg") {
+      toSvg(document.getElementById('tierlist_all'), {backgroundColor: '#121212'})
+        .then(saveIMG).catch((err) => { console.log(err); });
+    }
   }
 
   deleteItem = (id, source, home) => {
@@ -339,7 +354,7 @@ class TierList extends React.Component {
     newState['columns'][ID] = {
       id: ID,
       title: 'NEW',
-      color: '#1DB954',
+      color: 'gray',
       itemIds: [],
     };
     this.setState(newState);
@@ -387,25 +402,25 @@ class TierList extends React.Component {
         'column-1': {
           id: 'column-1',
           title: 'S',
-          color: 'purple',
+          color: '#DC3CA0',
           itemIds: [],
         },
         'column-2': {
           id: 'column-2',
           title: 'A',
-          color: '#1DB954',
+          color: '#F63E02',
           itemIds: [],
         },
         'column-3': {
           id: 'column-3',
           title: 'B',
-          color: 'blue',
+          color: '#F5B700',
           itemIds: [],
         },
         'column-4': {
           id: 'column-4',
           title: 'C',
-          color: 'grey',
+          color: '#1DB954',
           itemIds: [],
         }
       },
@@ -424,25 +439,25 @@ class TierList extends React.Component {
         'column-1': {
           id: 'column-1',
           title: 'S',
-          color: 'purple',
+          color: '#DC3CA0',
           itemIds: [],
         },
         'column-2': {
           id: 'column-2',
           title: 'A',
-          color: '#1DB954',
+          color: '#F63E02',
           itemIds: [],
         },
         'column-3': {
           id: 'column-3',
           title: 'B',
-          color: 'blue',
+          color: '#F5B700',
           itemIds: [],
         },
         'column-4': {
           id: 'column-4',
           title: 'C',
-          color: 'grey',
+          color: '#1DB954',
           itemIds: [],
         },
         'item-pool': {
@@ -464,11 +479,17 @@ class TierList extends React.Component {
     this.setState(this.state);
   }
 
+  showItems = (show) => {
+    showItemPool = show;
+    this.setState(this.state);
+  }
+
   render() {
     return (
       <div>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Container>
+            <button type="button" onClick={() => this.showItems(true)}>Items</button>
             <button type="button" onClick={this.addNewGroup}>Add new group</button>
             <button type="button" onClick={this.resetAllItems}>Reset All Items</button>
             <button type="button" onClick={this.removeAllItems}>Remove All Items</button>
@@ -486,42 +507,51 @@ class TierList extends React.Component {
               <label htmlFor="import_tierlist">Import from Json</label>
               <input type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
             </div>
-            <button type="button" onClick={this.saveAsSVG}>Save as .svg</button>
+            {saveFileTypes.map((fileType) => (
+              <button key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</button>
+            ))}
             <button type="button" onClick={() => this.showSearch(true)}>Search</button>
           </Container>
 
-          <Container>
-            <Droppable droppableId="tiers" direction="horizontal" type="column">
-              {provided => (
-                <Container
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  id="tierlist_all"
-                  key={refreshColumns}
-                >
-                  {this.state.columnOrder.map((columnId, index) => {
-                    const column = this.state.columns[columnId];
-                    return (
-                      <InnerList
-                        key={column.id}
-                        column={column}
-                        itemMap={this.state.items}
-                        index={index}
-                        updateHeader={this.updateColHeader}
-                      />
-                    );
-                  })}
-                  {provided.placeholder}
-                </Container>
-              )}
-            </Droppable>
+          <Container style={{overflow: 'scroll'}}>
+            <div id="tierlist_holder">
+              <Droppable  droppableId="tiers" direction="horizontal" type="column">
+                {provided => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    key={refreshColumns}
+                    id="tierlist_all"
+                  >
+                    {this.state.columnOrder.map((columnId, index) => {
+                      const column = this.state.columns[columnId];
+                      return (
+                        <InnerList
+                          key={column.id}
+                          column={column}
+                          itemMap={this.state.items}
+                          index={index}
+                          updateHeader={this.updateColHeader}
+                        />
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </div>
           </Container>
 
-          <Container>
-            <TrashCan />
-            <TrashCan2 />
-            <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
-          </Container>
+          <Offcanvas id="itempool-overlay" show={showItemPool} onHide={() => this.showItems(false)} placement={'start'} scroll backdrop={false}>
+            <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
+              <Offcanvas.Title><h1 className="main-heading">Items</h1></Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
+              <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
+              <TrashCan />
+              <TrashCan2 />
+            </Offcanvas.Body>
+          </Offcanvas>
 
           <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
             <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>

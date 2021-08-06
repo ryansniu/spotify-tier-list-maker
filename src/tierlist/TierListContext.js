@@ -7,25 +7,25 @@ export const initialData = {
       'column-1': {
         id: 'column-1',
         title: 'S',
-        color: 'purple',
+        color: '#DC3CA0',
         itemIds: [],
       },
       'column-2': {
         id: 'column-2',
         title: 'A',
-        color: '#1DB954',
+        color: '#F63E02',
         itemIds: [],
       },
       'column-3': {
         id: 'column-3',
         title: 'B',
-        color: 'blue',
+        color: '#F5B700',
         itemIds: [],
       },
       'column-4': {
         id: 'column-4',
         title: 'C',
-        color: 'grey',
+        color: '#1DB954',
         itemIds: [],
       },
       'item-pool': {

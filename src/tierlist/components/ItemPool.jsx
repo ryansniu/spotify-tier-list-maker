@@ -10,7 +10,7 @@ const Container = styled.div`
   border-radius: 2px;
   display: flex;
   flex-direction: column;
-  min-width: 18.375rem;
+  width: 18.375rem;
 `;
 
 const ItemList = styled.div`
@@ -39,7 +39,6 @@ export default class ItemPool extends React.Component {
   render() {
     return (
       <div>
-        <h1 className="main-heading">Items</h1>
         <Container>
           <Droppable droppableId="item-pool" type="item">
             {(provided, snapshot) => (

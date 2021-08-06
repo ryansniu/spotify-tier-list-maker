@@ -9,7 +9,7 @@ const Container = styled.div`
   border-radius: 2px;
   display: flex;
   flex-direction: column;
-  min-width: 20rem;
+  min-width: 21rem;
 `;
 
 const ItemList = styled.div`
@@ -17,7 +17,7 @@ const ItemList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => props.isDraggingOver ? 'darkred' : 'none'};
   flex-grow: 1;
-  min-height: 22rem;
+  min-height: 4.75rem;
 `;
 
 export default class TrashCan2 extends React.Component {

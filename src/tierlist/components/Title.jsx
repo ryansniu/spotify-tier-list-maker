@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Dropdown, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Image, Dropdown, ButtonGroup, OverlayTrigger, Tooltip, ToggleButton } from 'react-bootstrap';
 import { ColorPicker, useColor, toColor } from "react-color-palette";
 import styled from 'styled-components';
 import tool from '../imgs/tool.svg'
@@ -23,7 +23,7 @@ const InputStyle = styled.textarea`
     overflow: hidden;
     word-break: break-all;
     min-height: 40px;
-    max-width: 14rem;
+    max-width: 14.25rem;
     height: 40px;
     resize: both;
 `;
@@ -49,6 +49,8 @@ const Title = props => {
   const [inputVisible, setInputVisible] = useState(false);
   const [colorPickerVisible, setcolorPickerVisible] = useState(false);
   const update = props.updateHeader;
+  const presetColors = props.presetColors;
+
 
   function onClickOutSide(e) {
     if (inputRef.current && !inputRef.current.contains(e.target)) {
@@ -106,9 +108,20 @@ const Title = props => {
                     e = toColor("hsv", newHSV);
                   }
                   setColor_P(e);
-                }} hideRGB dark />
+                }} hideRGB hideHSV dark />
+
                 <div id="preset-colors">
-                  hi
+                  {presetColors.map((color, idx) => (
+                    <ToggleButton
+                      key={idx}
+                      className = "preset-color-button"
+                      id={`color-${idx}`}
+                      type="radio"
+                      variant="light"
+                      style={{backgroundColor: color}}
+                      onChange={(e) => setColor_P(toColor("hex", color))}
+                    />
+                  ))}
                 </div>
               </Dropdown.Menu>
             </Dropdown>

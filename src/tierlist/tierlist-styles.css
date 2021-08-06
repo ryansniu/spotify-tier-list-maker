@@ -10,6 +10,9 @@
     display: flex;
     align-items: center;
 }
+.btn-secondary.dropdown-toggle:focus {
+    box-shadow: 0 0 0 .125rem rgba(255,255,255,.5) !important;
+}
 #color-toggle:after {
     display: none;
 }
@@ -24,12 +27,47 @@
     border-radius: 0 0 0.5rem 0.5rem;
     padding: 0.25rem 0;
     background-color: #181818;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 240px;
+}
+
+.preset-color-button {
+    border: 3px solid #333 !important;
+    margin: 0 3px;
+    border-radius: 50% !important;
+    padding: 0.25rem  !important;
+    width: 2rem;
+    height: 2rem;
+}
+
+.preset-color-button:hover {
+    border-color: rgba(255, 255, 255, 0.8)  !important;
+    scale: 1.1;
+}
+
+.btn-check:focus + .btn-light {
+    box-shadow: none !important;
+    border-color: rgba(255, 255, 255, 0.4)  !important;
+    scale: 1.1;
 }
 
 #sidebar-overlay {
     background-color: black;
     width: 21rem;
+}
+#itempool-overlay {
+    background-color: black;
+    width: 24rem;
+}
+
+#tierlist_holder {
+    max-width: 100%;
+}
+
+#tierlist_all {
+    display: flex;
 }
 
 .rcp, .rcp-saturation {
