@@ -37,9 +37,17 @@ const saveFileTypes = ["jpeg", "png", "svg"];
 
 class TierList extends React.Component {
   static contextType = TierListContext;
-  state = this.context.data;
+  state = localStorage.getItem('saveState') !== null ? JSON.parse(localStorage.getItem('saveState')) : this.context.data;
+
+  saveStateInLocalStorage = () => localStorage.setItem('saveState', JSON.stringify(this.state));
+
+  componentWillUnmount() {
+    window.removeEventListener("beforeunload", this.saveStateInLocalStorage);
+  }
 
   componentDidMount() {
+    window.addEventListener("beforeunload", this.saveStateInLocalStorage);
+
     this.context.containsItem = (id, type) => {
       if(id in this.state.items) {
         return this.state.items[id]['type'] === type;
