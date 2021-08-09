@@ -4,10 +4,9 @@ import styled from 'styled-components';
 import Column from './components/Column';
 import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
-import TrashCan2 from './components/TrashCan2';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Offcanvas } from 'react-bootstrap';
+import { Button, ButtonGroup, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import SidebarSearch from '../sidebar/SidebarSearch'
 import Header from '../sidebar/components/Header';
@@ -174,16 +173,21 @@ class TierList extends React.Component {
       link.click();
     }
 
+    let tierlist = document.getElementById('tierlist_inner');
+    let displayWidth = tierlist.getBoundingClientRect().width;
+    let fullWidth = tierlist.scrollWidth, fullHeight = tierlist.scrollHeight;
+    if(fullWidth > displayWidth) fullWidth += 8;
+    
     if(fileType === "jpeg") {
-      toJpeg(document.getElementById('tierlist_all'), {backgroundColor: '#121212', pixelRatio: 2})
+      toJpeg(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
         .then(saveIMG).catch((err) => { console.log(err); });
     }
     if(fileType === "png") {
-      toPng(document.getElementById('tierlist_all'), {backgroundColor: '#121212', pixelRatio: 2})
+      toPng(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
         .then(saveIMG).catch((err) => { console.log(err); });
     }
     if(fileType === "svg") {
-      toSvg(document.getElementById('tierlist_all'), {backgroundColor: '#121212'})
+      toSvg(tierlist, {backgroundColor: '#121212', width: fullWidth, height: fullHeight})
         .then(saveIMG).catch((err) => { console.log(err); });
     }
   }
@@ -234,6 +238,22 @@ class TierList extends React.Component {
     this.setState(newState);
   }
 
+  addNewGroup = () => {
+    const ID = `column-${new Date().getTime()}`;
+    const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
+    const newState = {
+      ...this.state,
+      columnOrder: newColumnOrder
+    };
+    newState['columns'][ID] = {
+      id: ID,
+      title: 'NEW',
+      color: 'gray',
+      itemIds: [],
+    };
+    this.setState(newState);
+  }
+
   removeCol = (id) => {
     const oldItems = this.state.items;
     const newItems = Object.keys(oldItems).reduce((object, key) => {
@@ -261,102 +281,6 @@ class TierList extends React.Component {
       columnOrder: newColumnOrder,
     };
     refreshSidebar = !refreshSidebar;
-    this.setState(newState);
-  }
-
-  onDragEnd = result => {
-    const { destination, source, draggableId, type } = result;
-
-    if (!destination) return;
-    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
-
-    if (destination.droppableId === 'trash-can-2') {
-      this.removeCol(draggableId);
-      return;
-    }
-
-    if (type === 'column') {
-      const newColumnOrder = Array.from(this.state.columnOrder);
-      newColumnOrder.splice(source.index, 1);
-      newColumnOrder.splice(destination.index, 0, draggableId);
-
-      const newState = {
-        ...this.state,
-        columnOrder: newColumnOrder
-      };
-      this.setState(newState);
-      return;
-    }
-
-    const home = this.state.columns[source.droppableId];
-    const foreign = this.state.columns[destination.droppableId];
-
-    if (destination.droppableId === 'trash-can') {
-      this.deleteItem(draggableId, source, home);
-      return;
-    }
-
-    if (home === foreign) {
-      const newitemIds = Array.from(home.itemIds);
-      newitemIds.splice(source.index, 1);
-      newitemIds.splice(destination.index, 0, draggableId);
-
-      const newHome = {
-        ...home,
-        itemIds: newitemIds
-      };
-
-      const newState = {
-        ...this.state,
-        columns: {
-          ...this.state.columns,
-          [newHome.id]: newHome
-        }
-      };
-
-      this.setState(newState);
-      return;
-    }
-
-    // moving from one list to another
-    const homeitemIds = Array.from(home.itemIds);
-    homeitemIds.splice(source.index, 1);
-    const newHome = {
-      ...home,
-      itemIds: homeitemIds,
-    };
-
-    const foreignitemIds = Array.from(foreign.itemIds);
-    foreignitemIds.splice(destination.index, 0, draggableId);
-    const newForeign = {
-      ...foreign,
-      itemIds: foreignitemIds,
-    };
-
-    const newState = {
-      ...this.state,
-      columns: {
-        ...this.state.columns,
-        [newHome.id]: newHome,
-        [newForeign.id]: newForeign,
-      },
-    };
-    this.setState(newState);
-  };
-
-  addNewGroup = () => {
-    const ID = `column-${new Date().getTime()}`;
-    const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
-    const newState = {
-      ...this.state,
-      columnOrder: newColumnOrder
-    };
-    newState['columns'][ID] = {
-      id: ID,
-      title: 'NEW',
-      color: 'gray',
-      itemIds: [],
-    };
     this.setState(newState);
   }
 
@@ -484,44 +408,180 @@ class TierList extends React.Component {
     this.setState(this.state);
   }
 
+  onDragEnd = result => {
+    const { destination, source, draggableId, type } = result;
+
+    if (!destination) return;
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+
+    if (type === 'column') {
+      const newColumnOrder = Array.from(this.state.columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
+
+      const newState = {
+        ...this.state,
+        columnOrder: newColumnOrder
+      };
+      this.setState(newState);
+      return;
+    }
+
+    const home = this.state.columns[source.droppableId];
+    const foreign = this.state.columns[destination.droppableId];
+
+    if (destination.droppableId === 'trash-can') {
+      this.deleteItem(draggableId, source, home);
+      return;
+    }
+
+    if (home === foreign) {
+      const newitemIds = Array.from(home.itemIds);
+      newitemIds.splice(source.index, 1);
+      newitemIds.splice(destination.index, 0, draggableId);
+
+      const newHome = {
+        ...home,
+        itemIds: newitemIds
+      };
+
+      const newState = {
+        ...this.state,
+        columns: {
+          ...this.state.columns,
+          [newHome.id]: newHome
+        }
+      };
+
+      this.setState(newState);
+      return;
+    }
+
+    // moving from one list to another
+    const homeitemIds = Array.from(home.itemIds);
+    homeitemIds.splice(source.index, 1);
+    const newHome = {
+      ...home,
+      itemIds: homeitemIds,
+    };
+
+    const foreignitemIds = Array.from(foreign.itemIds);
+    foreignitemIds.splice(destination.index, 0, draggableId);
+    const newForeign = {
+      ...foreign,
+      itemIds: foreignitemIds,
+    };
+
+    const newState = {
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        [newHome.id]: newHome,
+        [newForeign.id]: newForeign,
+      },
+    };
+    this.setState(newState);
+  };
+
   render() {
     return (
-      <div>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          <Container>
-            <button type="button" onClick={() => this.showItems(true)}>Items</button>
-            <button type="button" onClick={this.addNewGroup}>Add new group</button>
-            <button type="button" onClick={this.resetAllItems}>Reset All Items</button>
-            <button type="button" onClick={this.removeAllItems}>Remove All Items</button>
-            <button type="button" onClick={this.resetAllColumns}>Reset All Columns</button>
-            <button type="button" onClick={this.resetTierList}>Reset TierList</button>
-            <a
-              href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                JSON.stringify(this.state)
-              )}`}
-              download="tierlist.json"
-            >
-              {`Export as Json`}
-            </a>
-            <div>
-              <label htmlFor="import_tierlist">Import from Json</label>
-              <input type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
-            </div>
-            {saveFileTypes.map((fileType) => (
-              <button key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</button>
-            ))}
-            <button type="button" onClick={() => this.showSearch(true)}>Search</button>
-          </Container>
+      <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+        <Container style={{margin: '1.5rem 0 0.5rem 0'}}>
+          <h1 className="title-heading">Spotify Tier List Maker</h1>
+          <button type="button" onClick={() => this.showItems(true)}>Items</button>
 
-          <Container style={{overflow: 'scroll'}}>
+          <ButtonGroup className="toolbar-button">
+            <OverlayTrigger
+              placement={'top'}
+              overlay={<Tooltip>Add Columns</Tooltip>}
+            >
+              <Button size="lg" variant="outline-secondary" onClick={this.addNewGroup}>Add</Button>
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement={'top'}
+              overlay={<Tooltip>Delete Columns</Tooltip>}
+            >
+              <Button size="lg" variant="outline-secondary" onClick={this.addNewGroup}>Delete</Button>
+            </OverlayTrigger>
+          </ButtonGroup>
+          
+          <OverlayTrigger
+            placement={'top'}
+            overlay={<Tooltip>Reset Placements</Tooltip>}
+          >
+            <DropdownButton
+              className="toolbar-dropdown"
+              size="lg"
+              variant="outline-secondary"
+              menuVariant="dark"
+              title="Reset"
+              menuRole="Reset placements"
+            >
+              <Dropdown.Item as="button" onClick={this.resetAllItems}>Reset All Items</Dropdown.Item>
+              <Dropdown.Item as="button" onClick={this.removeAllItems}>Delete All Items</Dropdown.Item>
+              <Dropdown.Item as="button" onClick={this.resetAllColumns}>Reset All Columns</Dropdown.Item>
+              <Dropdown.Item as="button" onClick={this.resetTierList}>Reset Tier List</Dropdown.Item>
+            </DropdownButton>
+          </OverlayTrigger>
+
+          <OverlayTrigger
+            placement={'top'}
+            overlay={<Tooltip>Save Image</Tooltip>}
+          >
+            <DropdownButton
+              className="toolbar-dropdown"
+              size="lg"
+              variant="outline-secondary"
+              menuVariant="dark"
+              title="Save"
+              menuRole="Save as image"
+            >
+              {saveFileTypes.map((fileType) => (
+                <Dropdown.Item as="button" key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</Dropdown.Item>
+              ))}
+            </DropdownButton>
+          </OverlayTrigger>
+
+          <OverlayTrigger
+            placement={'top'}
+            overlay={<Tooltip>Import/Export Data</Tooltip>}
+          >
+            <DropdownButton
+              className="toolbar-dropdown"
+              size="lg"
+              variant="outline-secondary"
+              menuVariant="dark"
+              title="Data"
+              menuRole="Import/export .json data"
+            >
+              <Dropdown.Item
+                href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
+                download="tierlist.json"
+                id="export-data"
+              >
+                Export as Json
+              </Dropdown.Item>
+              <Dropdown.ItemText id="import-data">
+                <label style={{width: '100%'}} htmlFor="import_tierlist">Import from Json</label>
+                <br/>
+                <input style={{display: 'flex'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
+              </Dropdown.ItemText>
+            </DropdownButton>
+          </OverlayTrigger>
+
+          <button type="button" onClick={() => this.showSearch(true)}>Search</button>
+        </Container>
+
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <div id="tierlist_outer">
             <div id="tierlist_holder">
-              <Droppable  droppableId="tiers" direction="horizontal" type="column">
+              <Droppable droppableId="tiers" direction="horizontal" type="column">
                 {provided => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                     key={refreshColumns}
-                    id="tierlist_all"
+                    id="tierlist_inner"
                   >
                     {this.state.columnOrder.map((columnId, index) => {
                       const column = this.state.columns[columnId];
@@ -540,28 +600,27 @@ class TierList extends React.Component {
                 )}
               </Droppable>
             </div>
-          </Container>
+          </div>
 
           <Offcanvas id="itempool-overlay" show={showItemPool} onHide={() => this.showItems(false)} placement={'start'} scroll backdrop={false}>
             <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
               <Offcanvas.Title><h1 className="main-heading">Items</h1></Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
+            <Offcanvas.Body style={{padding: "0.5rem 0 0 0"}}>
               <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
               <TrashCan />
-              <TrashCan2 />
-            </Offcanvas.Body>
-          </Offcanvas>
-
-          <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
-            <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
-              <Offcanvas.Title><Header /></Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
-              <SidebarSearch refreshSidebar={refreshSidebar}/>
             </Offcanvas.Body>
           </Offcanvas>
         </DragDropContext>
+
+        <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
+          <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
+            <Offcanvas.Title><Header /></Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
+            <SidebarSearch refreshSidebar={refreshSidebar}/>
+          </Offcanvas.Body>
+        </Offcanvas>
       </div>
     );
   }

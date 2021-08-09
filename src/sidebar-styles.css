@@ -44,9 +44,8 @@ body {
 }
   
 .title-heading {
-  font-size: 3.75rem;
-  margin: 1rem;
-  padding-top: 0.5rem;
+  font-size: 4.25rem;
+  margin: 0 1.5rem 0 0 !important;
   color: #1DB954;
   text-align: center;
 }

@@ -6,7 +6,8 @@ import Item from './Item';
 import Title from './Title'
 
 const Container = styled.div`
-  border: 4px solid black;
+  border: 4px solid ${props => props.isDragging ? props.bgColor : 'black'};
+  transition: border 0.2s ease;
   margin: 8px;
   background-color: none;
   border-radius: 4px;
@@ -45,6 +46,13 @@ export default class Column extends React.Component {
     }
   }
 
+  getBorderColor(color) {
+    let newColor = toColor("hex", color).hsv;
+    newColor.v = 75;
+    newColor.a = 0.75;
+    return toColor("hsv", newColor).hex;
+  }
+
   getBodyColor(color) {
     let newColor = toColor("hex", color).hsv;
     newColor.v = newColor.v / 2;
@@ -55,8 +63,13 @@ export default class Column extends React.Component {
   render() {
     return (
       <Draggable draggableId={this.props.column.id} index={this.props.index} isDragDisabled={this.state.isEditing}>
-        {provided => (
-          <Container {...provided.draggableProps} ref={provided.innerRef}>
+        {(provided, snapshot) => (
+          <Container
+            {...provided.draggableProps}
+            ref={provided.innerRef}
+            isDragging={snapshot.isDragging}
+            bgColor={this.getBorderColor(this.props.column.color)}
+          >
             <div {...provided.dragHandleProps}>
               <Title
                 colData={this.props.column}

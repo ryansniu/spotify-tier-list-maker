@@ -4,13 +4,15 @@ import { Droppable } from 'react-beautiful-dnd';
 import Item from './Item';
 
 const Container = styled.div`
-  margin: 8px;
+  margin: 0 auto;
   border: 1px solid #1DB954;
   background-color: none;
   border-radius: 2px;
   display: flex;
   flex-direction: column;
-  width: 18.375rem;
+  width: 19.43rem;
+  height: calc(100vh - 11.5rem);
+  overflow-y: scroll;
 `;
 
 const ItemList = styled.div`
@@ -18,7 +20,6 @@ const ItemList = styled.div`
   transition: background-color 0.2s ease;
   background-color: ${props => props.isDraggingOver ? '#282828' : 'none'};
   flex-grow: 1;
-  min-height: 16rem;
 `;
 
 class InnerList extends React.Component {
