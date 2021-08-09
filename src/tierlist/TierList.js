@@ -8,6 +8,7 @@ import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button, ButtonGroup, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
+import LZString from 'lz-string';
 import SidebarSearch from '../sidebar/SidebarSearch'
 import Header from '../sidebar/components/Header';
 import './tierlist-styles.css';
@@ -37,16 +38,16 @@ const saveFileTypes = ["jpeg", "png", "svg"];
 
 class TierList extends React.Component {
   static contextType = TierListContext;
-  state = localStorage.getItem('saveState') !== null ? JSON.parse(localStorage.getItem('saveState')) : this.context.data;
+  state = sessionStorage.getItem('saveState') !== null ? JSON.parse(LZString.decompress(sessionStorage.getItem('saveState'))) : this.context.data;
 
-  saveStateInLocalStorage = () => localStorage.setItem('saveState', JSON.stringify(this.state));
+  saveStateInSessionStorage = () => sessionStorage.setItem('saveState', LZString.compress(JSON.stringify(this.state)));
 
   componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.saveStateInLocalStorage);
+    window.removeEventListener("beforeunload", this.saveStateInSessionStorage);
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.saveStateInLocalStorage);
+    window.addEventListener("beforeunload", this.saveStateInSessionStorage);
 
     this.context.containsItem = (id, type) => {
       if(id in this.state.items) {
