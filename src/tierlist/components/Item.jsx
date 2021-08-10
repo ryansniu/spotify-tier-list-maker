@@ -2,7 +2,9 @@ import React from 'react'
 import styled from 'styled-components';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import { Draggable } from 'react-beautiful-dnd'
-import music from '../../sidebar/images/music.jpeg';
+import notrack from '../../sidebar/images/notrack.svg';
+import noalbum from '../../sidebar/images/noalbum.svg';
+import noartist from '../../sidebar/images/noartist.svg';
 
 const ItemContent = styled.div`
   background-color: ${props => (props.isDragging ? '#535353' : 'none')};
@@ -36,7 +38,7 @@ export default class Item extends React.Component {
                         {this.props.item.imgURL ? (
                           <Card.Img src={this.props.item.imgURL} alt="" />
                         ) : (
-                          <img src={music} alt="" />
+                          <Card.Img src={this.props.item.type === "track" ? notrack : this.props.item.type === "album" ? noalbum : noartist } alt="" />
                         )}
                       </a>
                     </Col>
