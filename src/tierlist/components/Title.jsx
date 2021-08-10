@@ -81,7 +81,7 @@ const Title = props => {
     <div>
       {props.showDeleteButton && (
           <div style={{position: "relative"}}>
-            <button className="column-remove-button" onClick={() => setdeleteModalShow(true)}>×</button>
+            <button className="column-remove-button" onClick={() => props.colData.itemIds.length > 0 ? setdeleteModalShow(true) : deleteCol(id, false)}>×</button>
           </div>
       )}
       <Modal id="delete-modal" show={deleteModalShow} onHide={() => setdeleteModalShow(false)} size="sm">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
-import music from '../images/music.jpeg';
+import noalbum from '../images/noalbum.svg';
 import { TierListContext } from '../../tierlist/TierListContext';
 
 const AlbumsList = ({ albums }) => {
@@ -30,7 +30,7 @@ const AlbumsList = ({ albums }) => {
                               {!_.isEmpty(album.images) ? (
                                 <Card.Img src={album.images[0].url} alt="album cover" />
                               ) : (
-                                <img src={music} alt="default album cover" />
+                                <Card.Img src={noalbum} alt="default album cover" />
                               )}
                             </a>
                           </Col>

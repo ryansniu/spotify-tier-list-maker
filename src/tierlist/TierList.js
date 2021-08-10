@@ -516,7 +516,7 @@ class TierList extends React.Component {
               placement={'top'}
               overlay={<Tooltip>Add Column</Tooltip>}
             >
-              <Button size="lg" variant="outline-secondary" onClick={this.addNewGroup}>Add</Button>
+              <Button style={{marginRight: 0}} size="lg" variant="outline-secondary" onClick={() => { this.addNewGroup(); showDeleteButton = false; this.setState(this.state); }}>Add</Button>
             </OverlayTrigger>
             <OverlayTrigger
               placement={'top'}
