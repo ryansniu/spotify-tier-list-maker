@@ -70,18 +70,16 @@
     display: flex;
     overflow: scroll;
     flex: 1;
+    padding: 0.5rem 0.5rem 0 0.5rem;
 }
 
 #tierlist_holder {
-    max-width: 100%;
-    max-height: 100%;
     margin: 0 auto;
 }
 
 #tierlist_inner {
     display: flex;
 }
-
 
 .rcp, .rcp-saturation {
     background-color: black;
@@ -142,4 +140,87 @@
 }
 #import-data label:hover {
     cursor: pointer;
+}
+
+.column-remove-button {
+    display: block;
+    position: absolute;
+    border: none;
+    box-shadow: 0 0 2px black;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    transform: translate(-0.75rem, -0.75rem);
+    transition: 0.175s ease-out;
+    z-index: 999;
+    text-align: center;
+    background-color: #f21e08;
+    color: black;
+}
+.column-remove-button:hover {
+    scale: 1.2;
+    transition: 0s !important;
+}
+.column-remove-button:active {
+    scale: 1.1;
+}
+
+#delete-modal .modal-content{
+    background-color: #161616;
+    border: 2px solid #333;
+}
+
+#delete-modal .modal-content .modal-header {
+    border-bottom: 2px solid #222;
+    padding: 0.25rem 1rem 0.25rem 0.75rem;
+    color: #1DB954;
+}
+
+#delete-modal .modal-content .modal-body {
+    padding: 0.5rem 1rem;
+    color: white;
+}
+
+#delete-modal .modal-content .modal-footer {
+    border-top: 2px solid #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+#delete-modal .modal-content .modal-footer button {
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0 auto;
+    color: white;
+    border-width: 2px;
+    border-style: outset;
+}
+
+#keep-items {
+    background-color: #0b4920;
+    border-color: #0e7030;
+}
+#keep-items:hover {
+    border-color: #1DB954;
+}
+#keep-items:active {
+    border-color: #1DB954;
+    border-style: inset !important;
+    background-color: #052c12 !important;
+}
+
+#delete-items {
+    background-color: #7e0000;
+    border-color: darkred;
+}
+#delete-items:hover {
+    border-color: red;
+}
+#delete-items:active {
+    border-color: red;
+    border-style: inset !important;
+    background-color: #530000 !important;
 }

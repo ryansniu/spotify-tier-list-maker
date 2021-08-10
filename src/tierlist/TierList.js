@@ -10,7 +10,6 @@ import { Button, ButtonGroup, Offcanvas, Dropdown, DropdownButton, OverlayTrigge
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import LZString from 'lz-string';
 import SidebarSearch from '../sidebar/SidebarSearch'
-import Header from '../sidebar/components/Header';
 import './tierlist-styles.css';
 
 const Container = styled.div`
@@ -20,12 +19,13 @@ const Container = styled.div`
 `;
 
 const presetColors = ["#F63E02", "#F5B700", "#1DB954", "#4D9DE0", "#360568", "#DC3CA0"];
+const saveFileTypes = ["jpeg", "png", "svg"];
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, itemMap, index, updateHeader } = this.props;
+    const { column, itemMap, index, updateHeader, deleteHandler, showDeleteButton } = this.props;
     const items = column.itemIds.map(itemId => itemMap[itemId]);
-    return <Column column={column} items={items} index={index} updateHeader={updateHeader} presetColors={presetColors} />;
+    return <Column column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler} presetColors={presetColors} showDeleteButton={showDeleteButton}/>;
   }
 }
 
@@ -33,21 +33,20 @@ let refreshSidebar = false;
 let refreshColumns = false;
 let showSearchbar = false;
 let showItemPool = false;
-
-const saveFileTypes = ["jpeg", "png", "svg"];
+let showDeleteButton = false;
 
 class TierList extends React.Component {
   static contextType = TierListContext;
   state = sessionStorage.getItem('saveState') !== null ? JSON.parse(LZString.decompress(sessionStorage.getItem('saveState'))) : this.context.data;
 
-  saveStateInSessionStorage = () => sessionStorage.setItem('saveState', LZString.compress(JSON.stringify(this.state)));
+  saveStateToStorage = () => sessionStorage.setItem('saveState', LZString.compress(JSON.stringify(this.state)));
 
   componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.saveStateInSessionStorage);
+    window.removeEventListener("beforeunload", this.saveStateToStorage);
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.saveStateInSessionStorage);
+    window.addEventListener("beforeunload", this.saveStateToStorage);
 
     this.context.containsItem = (id, type) => {
       if(id in this.state.items) {
@@ -168,6 +167,7 @@ class TierList extends React.Component {
       }
 
       // success
+      showDeleteButton = false;
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
       console.log(this.state);
@@ -175,30 +175,33 @@ class TierList extends React.Component {
   }
 
   saveAsIMG (fileType) {
-    const saveIMG = (dataUrl) => {
-      const link = document.createElement('a');
-      link.download = 'tierlist.'.concat(fileType);
-      link.href = dataUrl;
-      link.click();
-    }
-
-    let tierlist = document.getElementById('tierlist_inner');
-    let displayWidth = tierlist.getBoundingClientRect().width;
-    let fullWidth = tierlist.scrollWidth, fullHeight = tierlist.scrollHeight;
-    if(fullWidth > displayWidth) fullWidth += 8;
-    
-    if(fileType === "jpeg") {
-      toJpeg(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
-        .then(saveIMG).catch((err) => { console.log(err); });
-    }
-    if(fileType === "png") {
-      toPng(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
-        .then(saveIMG).catch((err) => { console.log(err); });
-    }
-    if(fileType === "svg") {
-      toSvg(tierlist, {backgroundColor: '#121212', width: fullWidth, height: fullHeight})
-        .then(saveIMG).catch((err) => { console.log(err); });
-    }
+    showDeleteButton = false;
+    this.setState(this.state, () => {
+      const saveIMG = (dataUrl) => {
+        const link = document.createElement('a');
+        link.download = 'tierlist.'.concat(fileType);
+        link.href = dataUrl;
+        link.click();
+      }
+  
+      let tierlist = document.getElementById('tierlist_inner');
+      let displayWidth = tierlist.getBoundingClientRect().width;
+      let fullWidth = tierlist.scrollWidth, fullHeight = tierlist.scrollHeight;
+      if(fullWidth > displayWidth) fullWidth += 8;
+      
+      if(fileType === "jpeg") {
+        toJpeg(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
+          .then(saveIMG).catch((err) => { console.log(err); });
+      }
+      if(fileType === "png") {
+        toPng(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
+          .then(saveIMG).catch((err) => { console.log(err); });
+      }
+      if(fileType === "svg") {
+        toSvg(tierlist, {backgroundColor: '#121212', width: fullWidth, height: fullHeight})
+          .then(saveIMG).catch((err) => { console.log(err); });
+      }
+    });
   }
 
   deleteItem = (id, source, home) => {
@@ -263,9 +266,9 @@ class TierList extends React.Component {
     this.setState(newState);
   }
 
-  removeCol = (id) => {
+  removeCol = (id, keepItems) => {
     const oldItems = this.state.items;
-    const newItems = Object.keys(oldItems).reduce((object, key) => {
+    const newItems = keepItems ? oldItems : Object.keys(oldItems).reduce((object, key) => {
       if(!this.state.columns[id].itemIds.includes(key)) {
         object[key] = oldItems[key];
       }
@@ -276,6 +279,7 @@ class TierList extends React.Component {
     newColumnOrder.splice(newColumnOrder.indexOf(id), 1);
 
     const oldColumns = this.state.columns;
+    if(keepItems) oldColumns['item-pool'].itemIds = oldColumns['item-pool'].itemIds.concat(oldColumns[id].itemIds);
     const newColumns = Object.keys(oldColumns).reduce((object, key) => {
       if (key !== id) {
         object[key] = oldColumns[key];
@@ -289,6 +293,7 @@ class TierList extends React.Component {
       columns: newColumns,
       columnOrder: newColumnOrder,
     };
+
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
@@ -305,6 +310,8 @@ class TierList extends React.Component {
       ...this.state,
       columns: newColumns
     };
+    
+    showDeleteButton = false;
     refreshColumns = !refreshColumns;
     this.setState(newState);
   }
@@ -322,6 +329,8 @@ class TierList extends React.Component {
       },
       items: {},
     };
+
+    showDeleteButton = false;
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
@@ -359,6 +368,8 @@ class TierList extends React.Component {
       },
       columnOrder: ['column-1', 'column-2', 'column-3','column-4']
     }
+
+    showDeleteButton = false;
     refreshColumns = !refreshColumns;
     this.setState(newState);
   }
@@ -402,6 +413,7 @@ class TierList extends React.Component {
       columnOrder: ['column-1', 'column-2', 'column-3','column-4']
     };
     
+    showDeleteButton = false;
     refreshColumns = !refreshColumns;
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
@@ -495,22 +507,22 @@ class TierList extends React.Component {
   render() {
     return (
       <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
-        <Container style={{margin: '1.5rem 0 0.5rem 0'}}>
+        <Container style={{margin: '1.5rem 0 0 0'}}>
           <h1 className="title-heading">Spotify Tier List Maker</h1>
           <button type="button" onClick={() => this.showItems(true)}>Items</button>
 
           <ButtonGroup className="toolbar-button">
             <OverlayTrigger
               placement={'top'}
-              overlay={<Tooltip>Add Columns</Tooltip>}
+              overlay={<Tooltip>Add Column</Tooltip>}
             >
               <Button size="lg" variant="outline-secondary" onClick={this.addNewGroup}>Add</Button>
             </OverlayTrigger>
             <OverlayTrigger
               placement={'top'}
-              overlay={<Tooltip>Delete Columns</Tooltip>}
+              overlay={<Tooltip>Toggle Delete Buttons</Tooltip>}
             >
-              <Button size="lg" variant="outline-secondary" onClick={this.addNewGroup}>Delete</Button>
+              <Button style={showDeleteButton ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { showDeleteButton = !showDeleteButton; this.setState(this.state); }}>Delete</Button>
             </OverlayTrigger>
           </ButtonGroup>
           
@@ -567,6 +579,7 @@ class TierList extends React.Component {
                 href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
                 download="tierlist.json"
                 id="export-data"
+                onSelect={() => {showDeleteButton = false; this.setState(this.state); }}
               >
                 Export as Json
               </Dropdown.Item>
@@ -601,6 +614,8 @@ class TierList extends React.Component {
                           itemMap={this.state.items}
                           index={index}
                           updateHeader={this.updateColHeader}
+                          deleteHandler={this.removeCol}
+                          showDeleteButton={showDeleteButton}
                         />
                       );
                     })}
@@ -615,16 +630,16 @@ class TierList extends React.Component {
             <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
               <Offcanvas.Title><h1 className="main-heading">Items</h1></Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body style={{padding: "0.5rem 0 0 0"}}>
-              <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
+            <Offcanvas.Body style={{padding: 0}}>
               <TrashCan />
+              <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
             </Offcanvas.Body>
           </Offcanvas>
         </DragDropContext>
 
         <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
           <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
-            <Offcanvas.Title><Header /></Offcanvas.Title>
+            <Offcanvas.Title><h1 className="main-heading">Search</h1></Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
             <SidebarSearch refreshSidebar={refreshSidebar}/>

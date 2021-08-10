@@ -42,19 +42,21 @@ body {
   border-color: #1DB954;
   box-shadow: 0 0 0 .125rem #1db95480;
 }
+
+.title-heading, .main-heading {
+  color: #1DB954;
+  text-align: center;
+  user-select: none;
+}
   
 .title-heading {
   font-size: 4.25rem;
   margin: 0 1.5rem 0 0 !important;
-  color: #1DB954;
-  text-align: center;
 }
 
 .main-heading {
   font-size: 3rem;
   margin: 0;
-  color: #1DB954;
-  text-align: center;
 }
   
 .hide {
@@ -233,15 +235,14 @@ body {
 .card:hover .item-buttons, .card:hover .remove-buttons {
   opacity: 1;
   transform: translateY(-40%);
-  scale: 1.2;
   transition: 0.125s ease-out;
 }
 .item-buttons, .remove-buttons {
   display: block;
   border: none;
   opacity: 0;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
   position: absolute;
   bottom: 0;
   right: 0.5rem;
@@ -252,16 +253,21 @@ body {
   text-align: center;
 }
 .item-buttons:hover, .remove-buttons:hover {
-  scale: 1.5 !important;
+  scale: 1.2;
   transition: 0s !important;
+}
+.item-buttons:active, .remove-buttons:active {
+  scale: 1.1;
 }
 .item-buttons {
   background-color: #1DB954;
   color: white;
+  box-shadow: 0px 1px 2px #161616;
 }
 .remove-buttons {
   background-color: #f21e08;
   color: black;
+  box-shadow: 0px 1px 2px #535353;
 }
   
 @media screen and (max-width: 400px) {

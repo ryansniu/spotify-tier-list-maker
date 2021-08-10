@@ -75,6 +75,7 @@ export default class Column extends React.Component {
                 colData={this.props.column}
                 updateHeader={this.props.updateHeader}
                 deleteHandler={this.props.deleteHandler}
+                showDeleteButton={this.props.showDeleteButton}
                 presetColors={this.props.presetColors}
                 setEditing={(e) => this.setState({ isEditing: e })}
               />
