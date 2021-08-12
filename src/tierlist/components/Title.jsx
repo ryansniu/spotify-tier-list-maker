@@ -98,6 +98,9 @@ const Title = props => {
           <button id="delete-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, false);}}>
             Delete
           </button>
+          <button id="cancel-delete-btn" onClick={() => {setdeleteModalShow(false);}}>
+            Cancel
+          </button>
         </Modal.Footer>
       </Modal>
 

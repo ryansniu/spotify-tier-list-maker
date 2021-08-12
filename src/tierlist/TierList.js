@@ -264,6 +264,7 @@ class TierList extends React.Component {
       itemIds: [],
     };
     this.setState(newState);
+    console.log("wf");
   }
 
   removeCol = (id, keepItems) => {
@@ -507,91 +508,93 @@ class TierList extends React.Component {
   render() {
     return (
       <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
-        <Container style={{margin: '1.5rem 0 0 0'}}>
+        <Container style={{flexWrap: 'wrap', margin: '1rem 0 0 0'}}>
           <h1 className="title-heading">Spotify Tier List Maker</h1>
-          <button type="button" onClick={() => this.showItems(true)}>Items</button>
+          <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+            <button type="button" onClick={() => this.showItems(true)}>Items</button>
 
-          <ButtonGroup className="toolbar-button">
-            <OverlayTrigger
-              placement={'top'}
-              overlay={<Tooltip>Add Column</Tooltip>}
-            >
-              <Button style={{marginRight: 0}} size="lg" variant="outline-secondary" onClick={() => { this.addNewGroup(); showDeleteButton = false; this.setState(this.state); }}>Add</Button>
-            </OverlayTrigger>
-            <OverlayTrigger
-              placement={'top'}
-              overlay={<Tooltip>Toggle Delete Buttons</Tooltip>}
-            >
-              <Button style={showDeleteButton ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { showDeleteButton = !showDeleteButton; this.setState(this.state); }}>Delete</Button>
-            </OverlayTrigger>
-          </ButtonGroup>
-          
-          <OverlayTrigger
-            placement={'top'}
-            overlay={<Tooltip>Reset Placements</Tooltip>}
-          >
-            <DropdownButton
-              className="toolbar-dropdown"
-              size="lg"
-              variant="outline-secondary"
-              menuVariant="dark"
-              title="Reset"
-              menuRole="Reset placements"
-            >
-              <Dropdown.Item as="button" onClick={this.resetAllItems}>Reset All Items</Dropdown.Item>
-              <Dropdown.Item as="button" onClick={this.removeAllItems}>Delete All Items</Dropdown.Item>
-              <Dropdown.Item as="button" onClick={this.resetAllColumns}>Reset All Columns</Dropdown.Item>
-              <Dropdown.Item as="button" onClick={this.resetTierList}>Reset Tier List</Dropdown.Item>
-            </DropdownButton>
-          </OverlayTrigger>
-
-          <OverlayTrigger
-            placement={'top'}
-            overlay={<Tooltip>Save Image</Tooltip>}
-          >
-            <DropdownButton
-              className="toolbar-dropdown"
-              size="lg"
-              variant="outline-secondary"
-              menuVariant="dark"
-              title="Save"
-              menuRole="Save as image"
-            >
-              {saveFileTypes.map((fileType) => (
-                <Dropdown.Item as="button" key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</Dropdown.Item>
-              ))}
-            </DropdownButton>
-          </OverlayTrigger>
-
-          <OverlayTrigger
-            placement={'top'}
-            overlay={<Tooltip>Import/Export Data</Tooltip>}
-          >
-            <DropdownButton
-              className="toolbar-dropdown"
-              size="lg"
-              variant="outline-secondary"
-              menuVariant="dark"
-              title="Data"
-              menuRole="Import/export .json data"
-            >
-              <Dropdown.Item
-                href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
-                download="tierlist.json"
-                id="export-data"
-                onSelect={() => {showDeleteButton = false; this.setState(this.state); }}
+            <ButtonGroup className="toolbar-button">
+              <OverlayTrigger
+                placement={'top'}
+                overlay={<Tooltip>Add Column</Tooltip>}
               >
-                Export as Json
-              </Dropdown.Item>
-              <Dropdown.ItemText id="import-data">
-                <label style={{width: '100%'}} htmlFor="import_tierlist">Import from Json</label>
-                <br/>
-                <input style={{display: 'flex'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
-              </Dropdown.ItemText>
-            </DropdownButton>
-          </OverlayTrigger>
+                <Button style={{marginRight: 0}} size="lg" variant="outline-secondary" onClick={() => { showDeleteButton = false; this.addNewGroup(); }}>Add</Button>
+              </OverlayTrigger>
+              <OverlayTrigger
+                placement={'top'}
+                overlay={<Tooltip>Toggle Delete Buttons</Tooltip>}
+              >
+                <Button style={showDeleteButton ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { showDeleteButton = !showDeleteButton; this.setState(this.state); }}>Delete</Button>
+              </OverlayTrigger>
+            </ButtonGroup>
+            
+            <OverlayTrigger
+              placement={'top'}
+              overlay={<Tooltip>Reset Placements</Tooltip>}
+            >
+              <DropdownButton
+                className="toolbar-dropdown"
+                size="lg"
+                variant="outline-secondary"
+                menuVariant="dark"
+                title="Reset"
+                menuRole="Reset placements"
+              >
+                <Dropdown.Item as="button" onClick={this.resetAllItems}>Reset All Items</Dropdown.Item>
+                <Dropdown.Item as="button" onClick={this.removeAllItems}>Delete All Items</Dropdown.Item>
+                <Dropdown.Item as="button" onClick={this.resetAllColumns}>Reset All Columns</Dropdown.Item>
+                <Dropdown.Item as="button" onClick={this.resetTierList}>Reset Tier List</Dropdown.Item>
+              </DropdownButton>
+            </OverlayTrigger>
 
-          <button type="button" onClick={() => this.showSearch(true)}>Search</button>
+            <OverlayTrigger
+              placement={'top'}
+              overlay={<Tooltip>Save Image</Tooltip>}
+            >
+              <DropdownButton
+                className="toolbar-dropdown"
+                size="lg"
+                variant="outline-secondary"
+                menuVariant="dark"
+                title="Save"
+                menuRole="Save as image"
+              >
+                {saveFileTypes.map((fileType) => (
+                  <Dropdown.Item as="button" key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              placement={'top'}
+              overlay={<Tooltip>Import/Export Data</Tooltip>}
+            >
+              <DropdownButton
+                className="toolbar-dropdown"
+                size="lg"
+                variant="outline-secondary"
+                menuVariant="dark"
+                title="Data"
+                menuRole="Import/export .json data"
+              >
+                <Dropdown.Item
+                  href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
+                  download="tierlist.json"
+                  id="export-data"
+                  onSelect={() => { showDeleteButton = false; this.setState(this.state); }}
+                >
+                  Export as Json
+                </Dropdown.Item>
+                <Dropdown.ItemText id="import-data">
+                  <label style={{width: '100%'}} htmlFor="import_tierlist">Import from Json</label>
+                  <br/>
+                  <input style={{display: 'flex'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
+                </Dropdown.ItemText>
+              </DropdownButton>
+            </OverlayTrigger>
+
+            <button type="button" onClick={() => this.showSearch(true)}>Search</button>
+          </div>
         </Container>
 
         <DragDropContext onDragEnd={this.onDragEnd}>

@@ -70,7 +70,7 @@
     display: flex;
     overflow: scroll;
     flex: 1;
-    padding: 0.5rem 0.5rem 0 0.5rem;
+    padding: 0 0.5rem;
 }
 
 #tierlist_holder {
@@ -97,7 +97,7 @@
 }
 
 .toolbar-button button, .toolbar-dropdown .dropdown-toggle {
-    margin: 0 0.25rem;
+    margin: 0.25rem;
     border: none;
     color: black;
     background-color: #1DB954;
@@ -114,12 +114,17 @@
     box-shadow: 0 0 0 .25rem #1db95480;
 }
 
+.toolbar-button button:active, .toolbar-dropdown .dropdown-toggle:active {
+    background-color: #1DB954;
+    box-shadow: 0 0 0 .25rem #1db95480 !important;
+}
+
 .toolbar-dropdown .dropdown-menu {
     background-color: black;
 }
 
 .toolbar-dropdown .dropdown-menu button:active{
-    background-color: #535353;
+    background-color: #1db95480;
 }
 
 #export-data {
@@ -127,10 +132,9 @@
     text-decoration: none;
 }
 #export-data:active {
-    background-color: #535353;
-    border: none;
-    box-shadow: none;
+    background-color: #1db95480;
 }
+
 #import-data {
     text-align: center;
 }
@@ -223,4 +227,17 @@
     border-color: red;
     border-style: inset !important;
     background-color: #530000 !important;
+}
+
+#cancel-delete-btn {
+    background-color: #333;
+    border-color: #535353;
+}
+#cancel-delete-btn:hover {
+    border-color: #777;
+}
+#cancel-delete-btn:active {
+    border-color: #777;
+    border-style: inset !important;
+    background-color: black !important;
 }

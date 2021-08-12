@@ -47,6 +47,7 @@ body {
   color: #1DB954;
   text-align: center;
   user-select: none;
+  display: block;
 }
   
 .title-heading {
