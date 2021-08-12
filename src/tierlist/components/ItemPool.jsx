@@ -11,7 +11,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 19.43rem;
-  height: calc(100vh - 11.5rem);
+  height: calc(100vh - 12.25rem);
   overflow-y: scroll;
 `;
 
@@ -39,22 +39,20 @@ class InnerList extends React.Component {
 export default class ItemPool extends React.Component {
   render() {
     return (
-      <div>
-        <Container>
-          <Droppable droppableId="item-pool" type="item">
-            {(provided, snapshot) => (
-              <ItemList
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                isDraggingOver={snapshot.isDraggingOver}
-              >
-                <InnerList items={this.props.items} />
-                {provided.placeholder}
-              </ItemList>
-            )}
-          </Droppable>
-        </Container>
-      </div>
+      <Container>
+        <Droppable droppableId="item-pool" type="item">
+          {(provided, snapshot) => (
+            <ItemList
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              isDraggingOver={snapshot.isDraggingOver}
+            >
+              <InnerList items={this.props.items} />
+              {provided.placeholder}
+            </ItemList>
+          )}
+        </Droppable>
+      </Container>
     );
   }
 }

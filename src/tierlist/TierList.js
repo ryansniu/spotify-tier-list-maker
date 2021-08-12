@@ -184,7 +184,7 @@ class TierList extends React.Component {
         link.click();
       }
   
-      let tierlist = document.getElementById('tierlist_inner');
+      let tierlist = document.getElementById('tierlist-inner');
       let displayWidth = tierlist.getBoundingClientRect().width;
       let fullWidth = tierlist.scrollWidth, fullHeight = tierlist.scrollHeight;
       if(fullWidth > displayWidth) fullWidth += 8;
@@ -264,7 +264,6 @@ class TierList extends React.Component {
       itemIds: [],
     };
     this.setState(newState);
-    console.log("wf");
   }
 
   removeCol = (id, keepItems) => {
@@ -421,11 +420,27 @@ class TierList extends React.Component {
   }
 
   showSearch = (show) => {
+    if(show) {
+      document.getElementById("tierlist-all").classList.add("show-search");
+      document.getElementById("search-toggle").classList.add("show-search");
+    }
+    else {
+      document.getElementById("tierlist-all").classList.remove("show-search");
+      document.getElementById("search-toggle").classList.remove("show-search");
+    }
     showSearchbar = show;
     this.setState(this.state);
   }
 
   showItems = (show) => {
+    if(show) {
+      document.getElementById("tierlist-all").classList.add("show-items");
+      document.getElementById("itempool-toggle").classList.add("show-items");
+    }
+    else {
+      document.getElementById("tierlist-all").classList.remove("show-items");
+      document.getElementById("itempool-toggle").classList.remove("show-items");
+    }
     showItemPool = show;
     this.setState(this.state);
   }
@@ -507,12 +522,10 @@ class TierList extends React.Component {
 
   render() {
     return (
-      <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
-        <Container style={{flexWrap: 'wrap', margin: '1rem 0 0 0'}}>
+      <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+        <Container style={{flexWrap: 'wrap', margin: '1.5rem 3rem 0 3rem'}}>
           <h1 className="title-heading">Spotify Tier List Maker</h1>
-          <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-            <button type="button" onClick={() => this.showItems(true)}>Items</button>
-
+          <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', margin: '0 1.5rem'}}>
             <ButtonGroup className="toolbar-button">
               <OverlayTrigger
                 placement={'top'}
@@ -592,21 +605,19 @@ class TierList extends React.Component {
                 </Dropdown.ItemText>
               </DropdownButton>
             </OverlayTrigger>
-
-            <button type="button" onClick={() => this.showSearch(true)}>Search</button>
           </div>
         </Container>
 
         <DragDropContext onDragEnd={this.onDragEnd}>
-          <div id="tierlist_outer">
-            <div id="tierlist_holder">
+          <div id="tierlist-outer">
+            <div id="tierlist-holder">
               <Droppable droppableId="tiers" direction="horizontal" type="column">
                 {provided => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                     key={refreshColumns}
-                    id="tierlist_inner"
+                    id="tierlist-inner"
                   >
                     {this.state.columnOrder.map((columnId, index) => {
                       const column = this.state.columns[columnId];
@@ -629,8 +640,14 @@ class TierList extends React.Component {
             </div>
           </div>
 
+          <OverlayTrigger
+            placement={'right'}
+            overlay={<Tooltip>{showItemPool ? 'Hide' : 'Show'} Items</Tooltip>}
+          >
+            <button id="itempool-toggle" style={{backgroundColor: showItemPool ? "#009c37d7" : ""}} type="button" onClick={() => this.showItems(!showItemPool)}>🎵</button>
+          </OverlayTrigger>
           <Offcanvas id="itempool-overlay" show={showItemPool} onHide={() => this.showItems(false)} placement={'start'} scroll backdrop={false}>
-            <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
+            <Offcanvas.Header style={{justifyContent: "center", paddingBottom: "0.5rem"}}>
               <Offcanvas.Title><h1 className="main-heading">Items</h1></Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body style={{padding: 0}}>
@@ -640,8 +657,14 @@ class TierList extends React.Component {
           </Offcanvas>
         </DragDropContext>
 
+        <OverlayTrigger
+          placement={'left'}
+          overlay={<Tooltip>{showSearchbar ? 'Hide' : 'Show'} Search</Tooltip>}
+        >
+          <button id="search-toggle" style={{backgroundColor: showSearchbar ? "#009c37d7" : ""}} type="button" onClick={() => this.showSearch(!showSearchbar)}>🔍</button>
+        </OverlayTrigger>
         <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
-          <Offcanvas.Header closeButton closeVariant='white' style={{paddingBottom: "0.5rem"}}>
+          <Offcanvas.Header style={{justifyContent: "center", paddingBottom: "0.5rem"}}>
             <Offcanvas.Title><h1 className="main-heading">Search</h1></Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>

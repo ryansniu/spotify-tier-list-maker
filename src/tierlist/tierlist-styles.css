@@ -66,18 +66,48 @@
     overflow-y: hidden;
 }
 
-#tierlist_outer { 
+#itempool-toggle, #search-toggle {
+    top: 1rem;
+    font-size: 1.75rem;
+    position: absolute;
+    transition: margin 0.3s ease-in-out, background-color 0.15s;
+    background-color: #181818;
+    border-color: #2efd76;
+    border-radius: 0.25rem;
+    width: 3rem;
+    height: 3rem;
+}
+#itempool-toggle:hover, #search-toggle:hover {
+    background-color: #009c37d7;
+    border-color: #00ff40;
+}
+#itempool-toggle {
+    left: 1rem;
+}
+#search-toggle {
+    right: 1rem;
+}
+
+.show-search {
+    margin-right: 21rem !important;
+}
+.show-items {
+    margin-left: 21rem !important;
+}
+#tierlist-all {
+    transition: margin 0.3s ease-in-out;
+}
+#tierlist-outer { 
     display: flex;
     overflow: scroll;
     flex: 1;
-    padding: 0 0.5rem;
+    padding: 0.5rem 0.5rem 0 0.5rem;
 }
-
-#tierlist_holder {
+#tierlist-holder {
     margin: 0 auto;
 }
 
-#tierlist_inner {
+#tierlist-inner {
     display: flex;
 }
 
