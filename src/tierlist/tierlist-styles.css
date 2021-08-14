@@ -46,22 +46,22 @@
 
 .preset-color-button:hover {
     border-color: rgba(255, 255, 255, 0.8)  !important;
-    scale: 1.1;
+    transform: scale(1.1);
 }
 
 .btn-check:focus + .btn-light {
     box-shadow: none !important;
     border-color: rgba(255, 255, 255, 0.4)  !important;
-    scale: 1.1;
+    transform: scale(1.1);
 }
 
 #sidebar-overlay {
     background-color: black;
-    width: 21rem;
+    width: 21.5rem;
 }
 #itempool-overlay {
     background-color: black;
-    width: 21rem;
+    width: 21.5rem;
     max-height: 100%;
     overflow-y: hidden;
 }
@@ -71,15 +71,25 @@
     font-size: 1.75rem;
     position: absolute;
     transition: margin 0.3s ease-in-out, background-color 0.15s;
-    background-color: #181818;
-    border-color: #2efd76;
-    border-radius: 0.25rem;
+    background-color: #1DB954;
+    border: none;
+    border-radius: 0.5rem;
     width: 3rem;
     height: 3rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.125rem;
 }
-#itempool-toggle:hover, #search-toggle:hover {
-    background-color: #009c37d7;
-    border-color: #00ff40;
+#itempool-toggle:focus, #search-toggle:focus {
+    box-shadow: 0 0 0 .25rem #1db95480 !important;
+}
+#itempool-toggle .img-fluid, #search-toggle .img-fluid {
+    transition: filter 0.15s ease-in-out;
+}
+#itempool-toggle:hover .img-fluid, #search-toggle:hover .img-fluid{
+    filter: invert(100%);
 }
 #itempool-toggle {
     left: 1rem;
@@ -89,10 +99,10 @@
 }
 
 .show-search {
-    margin-right: 21rem !important;
+    margin-right: 21.5rem !important;
 }
 .show-items {
-    margin-left: 21rem !important;
+    margin-left: 21.5rem !important;
 }
 #tierlist-all {
     transition: margin 0.3s ease-in-out;
@@ -126,7 +136,7 @@
     padding: 1rem 1rem 0 1rem !important;
 }
 
-.toolbar-button button, .toolbar-dropdown .dropdown-toggle {
+#toolbar-button, .toolbar-dropdown .dropdown-toggle {
     margin: 0.25rem;
     border: none;
     color: black;
@@ -135,16 +145,16 @@
     outline: none;
 }
 
-.toolbar-button button:hover, .toolbar-dropdown .dropdown-toggle:hover {
+#toolbar-button:hover, .toolbar-dropdown .dropdown-toggle:hover {
     color: white;
     background-color: #1DB954;
 }
 
-.toolbar-button button:focus, .toolbar-dropdown .dropdown-toggle:focus {
+#toolbar-button:focus, .toolbar-dropdown .dropdown-toggle:focus {
     box-shadow: 0 0 0 .25rem #1db95480;
 }
 
-.toolbar-button button:active, .toolbar-dropdown .dropdown-toggle:active {
+#toolbar-button:active, .toolbar-dropdown .dropdown-toggle:active {
     background-color: #1DB954;
     box-shadow: 0 0 0 .25rem #1db95480 !important;
 }
@@ -158,45 +168,77 @@
 }
 
 #export-data {
-    text-align: center;
+    width: 12rem;
     text-decoration: none;
+    outline: none;
+    
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 #export-data:active {
     background-color: #1db95480;
 }
 
 #import-data {
-    text-align: center;
+    padding: 0;
 }
-#import-data:hover {
-    background-color: #262626;
-    color: white;
+#import-data label {
+    padding: 0.25rem 1rem;
 }
 #import-data label:hover {
+    background-color: #262626;
+    color: white;
     cursor: pointer;
+
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#import-data label:active {
+    color: white;
+    background-color: #1db95480;
 }
 
-.column-remove-button {
+.column-remove-button, .column-add-button {
     display: block;
-    position: absolute;
     border: none;
-    box-shadow: 0 0 2px black;
-    width: 1.75rem;
-    height: 1.75rem;
     border-radius: 50%;
-    transform: translate(-0.75rem, -0.75rem);
     transition: 0.175s ease-out;
     z-index: 999;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.column-remove-button {
+    width: 1.75rem;
+    height: 1.75rem;
+    position: absolute;
+    transform: translate(-0.75rem, -0.75rem);
     background-color: #f21e08;
-    color: black;
+    box-shadow: 0 0 2px black;
+}
+.column-add-button {
+    width: 3rem;
+    height: 3rem;
+    background-color: #1DB954;
+    box-shadow: 0 0 2px #535353;
 }
 .column-remove-button:hover {
-    scale: 1.2;
+    transform: translate(-0.75rem, -0.75rem) scale(1.2);
     transition: 0s !important;
 }
 .column-remove-button:active {
-    scale: 1.1;
+    transform: translate(-0.75rem, -0.75rem) scale(1.1);
+}
+.column-add-button:hover {
+    transform: scale(1.2);
+    transition: 0s !important;
+}
+.column-add-button:active {
+    transform: scale(1.1);
 }
 
 #delete-modal .modal-content{
@@ -224,50 +266,53 @@
 }
 
 #delete-modal .modal-content .modal-footer button {
+    border: none;
     border-radius: 0.25rem;
     font-size: 1rem;
     padding: 0.25rem 0.5rem;
     margin: 0 auto;
-    color: white;
-    border-width: 2px;
-    border-style: outset;
+    color: black;
+    outline: none;
 }
 
 #keep-items {
-    background-color: #0b4920;
-    border-color: #0e7030;
+    background-color: #1DB954;
 }
 #keep-items:hover {
-    border-color: #1DB954;
+    color: white !important;
+    background-color: #1DB954;
+}
+#keep-items:focus {
+    box-shadow: 0 0 0 .25rem #1db95480 !important;
 }
 #keep-items:active {
-    border-color: #1DB954;
-    border-style: inset !important;
-    background-color: #052c12 !important;
+    color: white !important;
 }
 
 #delete-items {
-    background-color: #7e0000;
-    border-color: darkred;
+    background-color: #D30000;
 }
 #delete-items:hover {
-    border-color: red;
+    color: white !important;
+    background-color: #D30000;
+}
+#delete-items:focus {
+    box-shadow: 0 0 0 .25rem #D3000080 !important;
 }
 #delete-items:active {
-    border-color: red;
-    border-style: inset !important;
-    background-color: #530000 !important;
+    color: white !important;
 }
 
 #cancel-delete-btn {
-    background-color: #333;
-    border-color: #535353;
+    background-color: #777;
 }
 #cancel-delete-btn:hover {
-    border-color: #777;
+    color: white !important;
+    background-color: #777;
+}
+#cancel-delete-btn:focus {
+    box-shadow: 0 0 0 .25rem #77777780 !important;
 }
 #cancel-delete-btn:active {
-    border-color: #777;
-    border-style: inset !important;
-    background-color: black !important;
+    color: white !important;
 }

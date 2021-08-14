@@ -17,6 +17,27 @@
   box-sizing: border-box;
 }
 
+/* Works on Firefox */
+* {
+  scrollbar-color: #333 transparent;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 17px;
+  padding: 0.5rem;
+}
+*::-webkit-scrollbar-track {
+  background: none;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 1rem;
+}
+*::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -46,8 +67,12 @@ body {
 .title-heading, .main-heading {
   color: #1DB954;
   text-align: center;
-  user-select: none;
   display: block;
+
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
   
 .title-heading {
@@ -218,6 +243,10 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   padding-bottom: 0;
+  
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
@@ -231,6 +260,10 @@ body {
 .card img {
   width: 3.25rem;
   height: 3.25rem;
+}
+
+.card-img-link:active, .card-img-link:focus {
+  outline-color: #1DB954;
 }
 
 .card:hover .item-buttons, .card:hover .remove-buttons {
@@ -251,23 +284,23 @@ body {
   transform: 0;
   transition: 0.25s ease-out;
   z-index: 999;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .item-buttons:hover, .remove-buttons:hover {
-  scale: 1.2;
+  transform: translateY(-40%) scale(1.2) !important;
   transition: 0s !important;
 }
 .item-buttons:active, .remove-buttons:active {
-  scale: 1.1;
+  transform: translateY(-40%) scale(1.1) !important;
 }
 .item-buttons {
   background-color: #1DB954;
-  color: white;
   box-shadow: 0px 1px 2px #161616;
 }
 .remove-buttons {
   background-color: #f21e08;
-  color: black;
   box-shadow: 0px 1px 2px #535353;
 }
   

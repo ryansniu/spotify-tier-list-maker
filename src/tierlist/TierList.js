@@ -2,14 +2,17 @@ import React from 'react';
 import '@atlaskit/css-reset';
 import styled from 'styled-components';
 import Column from './components/Column';
+import AddColumnButton from './components/AddColumnButton';
 import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Button, ButtonGroup, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image } from 'react-bootstrap';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import LZString from 'lz-string';
 import SidebarSearch from '../sidebar/SidebarSearch'
+import search_img from './imgs/search.svg'
+import items_img from './imgs/playlist.svg'
 import './tierlist-styles.css';
 
 const Container = styled.div`
@@ -23,9 +26,9 @@ const saveFileTypes = ["jpeg", "png", "svg"];
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, itemMap, index, updateHeader, deleteHandler, showDeleteButton } = this.props;
+    const { column, itemMap, index, updateHeader, deleteHandler, toggleEditMode } = this.props;
     const items = column.itemIds.map(itemId => itemMap[itemId]);
-    return <Column column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler} presetColors={presetColors} showDeleteButton={showDeleteButton}/>;
+    return <Column column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler} presetColors={presetColors} toggleEditMode={toggleEditMode}/>;
   }
 }
 
@@ -33,7 +36,7 @@ let refreshSidebar = false;
 let refreshColumns = false;
 let showSearchbar = false;
 let showItemPool = false;
-let showDeleteButton = false;
+let toggleEditMode = false;
 
 class TierList extends React.Component {
   static contextType = TierListContext;
@@ -167,7 +170,7 @@ class TierList extends React.Component {
       }
 
       // success
-      showDeleteButton = false;
+      toggleEditMode = false;
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
       console.log(this.state);
@@ -175,7 +178,7 @@ class TierList extends React.Component {
   }
 
   saveAsIMG (fileType) {
-    showDeleteButton = false;
+    toggleEditMode = false;
     this.setState(this.state, () => {
       const saveIMG = (dataUrl) => {
         const link = document.createElement('a');
@@ -250,9 +253,11 @@ class TierList extends React.Component {
     this.setState(newState);
   }
 
-  addNewGroup = () => {
+  addNewCol = (index) => {
     const ID = `column-${new Date().getTime()}`;
-    const newColumnOrder = Array.from(this.state.columnOrder).concat(ID);
+    let newColumnOrder = this.state.columnOrder;
+    newColumnOrder.splice(index, 0, ID);
+    
     const newState = {
       ...this.state,
       columnOrder: newColumnOrder
@@ -260,7 +265,7 @@ class TierList extends React.Component {
     newState['columns'][ID] = {
       id: ID,
       title: 'NEW',
-      color: 'gray',
+      color: '#535353',
       itemIds: [],
     };
     this.setState(newState);
@@ -311,7 +316,7 @@ class TierList extends React.Component {
       columns: newColumns
     };
     
-    showDeleteButton = false;
+    toggleEditMode = false;
     refreshColumns = !refreshColumns;
     this.setState(newState);
   }
@@ -330,7 +335,7 @@ class TierList extends React.Component {
       items: {},
     };
 
-    showDeleteButton = false;
+    toggleEditMode = false;
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
@@ -369,7 +374,7 @@ class TierList extends React.Component {
       columnOrder: ['column-1', 'column-2', 'column-3','column-4']
     }
 
-    showDeleteButton = false;
+    toggleEditMode = false;
     refreshColumns = !refreshColumns;
     this.setState(newState);
   }
@@ -413,7 +418,7 @@ class TierList extends React.Component {
       columnOrder: ['column-1', 'column-2', 'column-3','column-4']
     };
     
-    showDeleteButton = false;
+    toggleEditMode = false;
     refreshColumns = !refreshColumns;
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
@@ -526,20 +531,12 @@ class TierList extends React.Component {
         <Container style={{flexWrap: 'wrap', margin: '1.5rem 3rem 0 3rem'}}>
           <h1 className="title-heading">Spotify Tier List Maker</h1>
           <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', margin: '0 1.5rem'}}>
-            <ButtonGroup className="toolbar-button">
-              <OverlayTrigger
-                placement={'top'}
-                overlay={<Tooltip>Add Column</Tooltip>}
-              >
-                <Button style={{marginRight: 0}} size="lg" variant="outline-secondary" onClick={() => { showDeleteButton = false; this.addNewGroup(); }}>Add</Button>
-              </OverlayTrigger>
-              <OverlayTrigger
-                placement={'top'}
-                overlay={<Tooltip>Toggle Delete Buttons</Tooltip>}
-              >
-                <Button style={showDeleteButton ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { showDeleteButton = !showDeleteButton; this.setState(this.state); }}>Delete</Button>
-              </OverlayTrigger>
-            </ButtonGroup>
+            <OverlayTrigger
+              placement={'top'}
+              overlay={<Tooltip>Add/Delete Columns</Tooltip>}
+            >
+              <Button id="toolbar-button" style={toggleEditMode ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { toggleEditMode = !toggleEditMode; this.setState(this.state); }}>Edit</Button>
+            </OverlayTrigger>
             
             <OverlayTrigger
               placement={'top'}
@@ -594,14 +591,15 @@ class TierList extends React.Component {
                   href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
                   download="tierlist.json"
                   id="export-data"
-                  onSelect={() => { showDeleteButton = false; this.setState(this.state); }}
+                  onSelect={() => { toggleEditMode = false; this.setState(this.state); }}
+                  onDragStart={e => e.preventDefault()}
                 >
                   Export as Json
                 </Dropdown.Item>
                 <Dropdown.ItemText id="import-data">
-                  <label style={{width: '100%'}} htmlFor="import_tierlist">Import from Json</label>
+                  <label style={{width: '100%', height: '100%'}} htmlFor="import_tierlist">Import from Json</label>
                   <br/>
-                  <input style={{display: 'flex'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
+                  <input style={{display: 'none'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
                 </Dropdown.ItemText>
               </DropdownButton>
             </OverlayTrigger>
@@ -622,17 +620,33 @@ class TierList extends React.Component {
                     {this.state.columnOrder.map((columnId, index) => {
                       const column = this.state.columns[columnId];
                       return (
-                        <InnerList
-                          key={column.id}
-                          column={column}
-                          itemMap={this.state.items}
-                          index={index}
-                          updateHeader={this.updateColHeader}
-                          deleteHandler={this.removeCol}
-                          showDeleteButton={showDeleteButton}
-                        />
+                        <div key={index} style={{display: 'flex', flexDirection: 'row'}}>
+                          {toggleEditMode && (
+                            <AddColumnButton
+                              key={`add-btn-${index}`}
+                              index={index}
+                              addHandler={this.addNewCol}
+                            />
+                          )}
+                          <InnerList
+                            key={column.id}
+                            column={column}
+                            itemMap={this.state.items}
+                            index={index}
+                            updateHeader={this.updateColHeader}
+                            deleteHandler={this.removeCol}
+                            toggleEditMode={toggleEditMode}
+                          />
+                        </div>
                       );
                     })}
+                    {toggleEditMode && (
+                      <AddColumnButton
+                        key={`add-btn-${this.state.columnOrder.length}`}
+                        index={this.state.columnOrder.length}
+                        addHandler={this.addNewCol}
+                      />
+                    )}
                     {provided.placeholder}
                   </div>
                 )}
@@ -644,14 +658,16 @@ class TierList extends React.Component {
             placement={'right'}
             overlay={<Tooltip>{showItemPool ? 'Hide' : 'Show'} Items</Tooltip>}
           >
-            <button id="itempool-toggle" style={{backgroundColor: showItemPool ? "#009c37d7" : ""}} type="button" onClick={() => this.showItems(!showItemPool)}>🎵</button>
+            <Button id="itempool-toggle" type="button" onClick={() => this.showItems(!showItemPool)}>
+              <Image onDragStart={e => e.preventDefault()} src={items_img} fluid alt='toggle music items' style={{width: "100%", height: "100%", filter: showItemPool ? "invert(100%)" : ""}}/>
+            </Button>
           </OverlayTrigger>
           <Offcanvas id="itempool-overlay" show={showItemPool} onHide={() => this.showItems(false)} placement={'start'} scroll backdrop={false}>
-            <Offcanvas.Header style={{justifyContent: "center", paddingBottom: "0.5rem"}}>
-              <Offcanvas.Title><h1 className="main-heading">Items</h1></Offcanvas.Title>
+            <Offcanvas.Header style={{justifyContent: "center", padding: "0.5rem 1rem 0 1rem"}}>
+              <Offcanvas.Title><TrashCan /></Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body style={{padding: 0}}>
-              <TrashCan />
+              <h1 className="main-heading">Items</h1>
               <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
             </Offcanvas.Body>
           </Offcanvas>
@@ -661,7 +677,9 @@ class TierList extends React.Component {
           placement={'left'}
           overlay={<Tooltip>{showSearchbar ? 'Hide' : 'Show'} Search</Tooltip>}
         >
-          <button id="search-toggle" style={{backgroundColor: showSearchbar ? "#009c37d7" : ""}} type="button" onClick={() => this.showSearch(!showSearchbar)}>🔍</button>
+          <Button id="search-toggle" type="button" onClick={() => this.showSearch(!showSearchbar)}>
+            <Image onDragStart={e => e.preventDefault()} src={search_img} fluid alt='toggle search bar' style={{width: "100%", height: "100%", filter: showSearchbar ? "invert(100%)" : ""}}/>
+          </Button>
         </OverlayTrigger>
         <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
           <Offcanvas.Header style={{justifyContent: "center", paddingBottom: "0.5rem"}}>

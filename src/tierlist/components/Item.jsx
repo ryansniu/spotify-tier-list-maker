@@ -31,9 +31,11 @@ export default class Item extends React.Component {
                   <Row>
                     <Col xs="auto">
                       <a
+                        className="card-img-link"
                         target="_blank"
                         href={this.props.item.songURL}
                         rel="noopener noreferrer"
+                        onDragStart={e => e.preventDefault()}
                       >
                         {this.props.item.imgURL ? (
                           <Card.Img src={this.props.item.imgURL} alt="" />

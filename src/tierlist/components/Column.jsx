@@ -6,7 +6,7 @@ import Item from './Item';
 import Title from './Title'
 
 const Container = styled.div`
-  border: 4px solid ${props => props.isDragging ? props.bgColor : 'black'};
+  border: 4px solid ${props => props.isDragDisabled ? '#535353': props.isDragging ? props.bgColor : 'black'};
   transition: border 0.2s ease;
   margin: 8px;
   background-color: none;
@@ -62,12 +62,13 @@ export default class Column extends React.Component {
 
   render() {
     return (
-      <Draggable draggableId={this.props.column.id} index={this.props.index} isDragDisabled={this.state.isEditing}>
+      <Draggable draggableId={this.props.column.id} index={this.props.index} isDragDisabled={this.state.isEditing || this.props.toggleEditMode}>
         {(provided, snapshot) => (
           <Container
             {...provided.draggableProps}
             ref={provided.innerRef}
             isDragging={snapshot.isDragging}
+            isDragDisabled={this.props.toggleEditMode}
             bgColor={this.getBorderColor(this.props.column.color)}
           >
             <div {...provided.dragHandleProps}>
@@ -75,7 +76,7 @@ export default class Column extends React.Component {
                 colData={this.props.column}
                 updateHeader={this.props.updateHeader}
                 deleteHandler={this.props.deleteHandler}
-                showDeleteButton={this.props.showDeleteButton}
+                showDeleteButton={this.props.toggleEditMode}
                 presetColors={this.props.presetColors}
                 setEditing={(e) => this.setState({ isEditing: e })}
               />

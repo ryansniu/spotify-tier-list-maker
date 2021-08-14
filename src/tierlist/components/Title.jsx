@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Dropdown, ButtonGroup, OverlayTrigger, Tooltip, ToggleButton, Modal } from 'react-bootstrap';
+import { Image, Dropdown, Button, ButtonGroup, OverlayTrigger, Tooltip, ToggleButton, Modal } from 'react-bootstrap';
 import { ColorPicker, useColor, toColor } from "react-color-palette";
 import styled from 'styled-components';
-import tool from '../imgs/tool.svg'
-import palette from '../imgs/palette.svg'
+import settings_black from '../imgs/cog-black.svg'
+import palette_black from '../imgs/palette-black.svg'
+import settings_white from '../imgs/cog-white.svg'
+import palette_white from '../imgs/palette-white.svg'
+import cross from '../imgs/cross.svg'
 import "react-color-palette/lib/css/styles.css";
 import '../tierlist-styles.css'
 
@@ -33,12 +36,13 @@ const ButtonStyle = styled.button`
     width: 40px;
     min-width: 40px;
     height: 40px;
-    float: right;
     margin-left: 8px;
     outline: none;
-    background: transparent no-repeat;
+    background: transparent;
     border: none;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
 `;
 
 const Title = props => {
@@ -81,7 +85,9 @@ const Title = props => {
     <div>
       {props.showDeleteButton && (
           <div style={{position: "relative"}}>
-            <button className="column-remove-button" onClick={() => props.colData.itemIds.length > 0 ? setdeleteModalShow(true) : deleteCol(id, false)}>×</button>
+            <button className="column-remove-button" onClick={() => props.colData.itemIds.length > 0 ? setdeleteModalShow(true) : deleteCol(id, false)}>
+              <Image onDragStart={e => e.preventDefault()} src={cross} fluid alt='delete column' style={{width: "75%", height: "75%"}}/>
+            </button>
           </div>
       )}
       <Modal id="delete-modal" show={deleteModalShow} onHide={() => setdeleteModalShow(false)} size="sm">
@@ -92,15 +98,9 @@ const Title = props => {
           Do you want to keep or delete the column contents?
         </Modal.Body>
         <Modal.Footer>
-          <button id="keep-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, true);}}>
-            Keep
-          </button>
-          <button id="delete-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, false);}}>
-            Delete
-          </button>
-          <button id="cancel-delete-btn" onClick={() => {setdeleteModalShow(false);}}>
-            Cancel
-          </button>
+          <Button variant="success" id="keep-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, true);}}>Keep</Button>
+          <Button variant="danger" id="delete-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, false);}}>Delete</Button>
+          <Button variant="secondary" id="cancel-delete-btn" onClick={() => {setdeleteModalShow(false);}}>Cancel</Button>
         </Modal.Footer>
       </Modal>
 
@@ -126,7 +126,7 @@ const Title = props => {
                   overlay={<Tooltip>Edit Color</Tooltip>}
                 >
                   <Dropdown.Toggle id='color-toggle' variant="secondary">
-                    <Image src={palette} fluid alt='colors' style={{width: "100%", height: "100%"}}/>
+                    <Image onDragStart={e => e.preventDefault()} src={color_p.hsv.v < 50 ? palette_white : palette_black} fluid alt='colors' style={{width: "100%", height: "100%"}}/>
                   </Dropdown.Toggle>
                 </OverlayTrigger>
                 <Dropdown.Menu id='color-dropdown' variant="dark">
@@ -163,7 +163,7 @@ const Title = props => {
                   overlay={<Tooltip>Edit Column</Tooltip>}
                 >
                 <ButtonStyle onClick={() => { setInputVisible(true); props.setEditing(true); }}>
-                  <Image src={tool} fluid alt='settings' style={{width: "100%", height: "100%"}}/>
+                  <Image onDragStart={e => e.preventDefault()} src={color_p.hsv.v < 50 ? settings_white : settings_black} fluid alt='settings' style={{width: "100%", height: "100%"}}/>
                 </ButtonStyle> 
               </OverlayTrigger>
             </div>

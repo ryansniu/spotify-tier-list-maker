@@ -1,10 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Droppable } from 'react-beautiful-dnd';
+import { Image } from 'react-bootstrap';
+import trash from '../imgs/trash-can.svg'
 
 const Container = styled.div`
   margin: 0.5rem auto;
   border: 1px solid ${props => props.isDraggingOver ? 'red' : 'darkred'};
+  transition: border 0.2s ease;
   background-color: none;
   border-radius: 2px;
   width: 19.43rem;
@@ -25,8 +28,14 @@ const TrashHeading = styled.h1`
   position: absolute;
   left: 0;
   right: 0;
-  top: 12.5%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
+
+const defaultTrashColor = "invert(8%) sepia(98%) saturate(5962%) hue-rotate(2deg) brightness(93%) contrast(110%)";
+const highlightTrashColor = "invert(11%) sepia(77%) saturate(7498%) hue-rotate(6deg) brightness(105%) contrast(118%)";
 
 export default class TrashCan extends React.Component {
   render() {
@@ -34,7 +43,9 @@ export default class TrashCan extends React.Component {
       <Droppable droppableId="trash-can" type="item">
         {(provided, snapshot) => (
           <div style={{position: "relative"}}>
-            <TrashHeading className="main-heading" isDraggingOver={snapshot.isDraggingOver}>🗑️Trash</TrashHeading>
+            <TrashHeading className="main-heading" isDraggingOver={snapshot.isDraggingOver}>
+             <Image src={trash} fluid alt='trash can' style={{width: "4rem", transition: "filter 0.2s ease", filter: snapshot.isDraggingOver ? highlightTrashColor : defaultTrashColor}}/>
+            </TrashHeading>
             <Container isDraggingOver={snapshot.isDraggingOver}>
               <ItemList
                 ref={provided.innerRef}

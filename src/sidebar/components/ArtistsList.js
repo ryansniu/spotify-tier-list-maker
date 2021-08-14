@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Card, Container, Row, Col } from 'react-bootstrap';
+import { Card, Container, Row, Col, Image } from 'react-bootstrap';
 import _ from 'lodash';
 import noartist from '../images/noartist.svg';
+import cross from '../../tierlist/imgs/cross.svg'
+import plus from '../../tierlist/imgs/plus.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
 
 const ArtistsList = ({ artists }) => {
@@ -22,10 +24,12 @@ const ArtistsList = ({ artists }) => {
                         <Row>
                           <Col xs="auto">
                             <a
+                              className="card-img-link"
                               target="_blank"
                               href={songURL}
                               rel="noopener noreferrer"
                               style={{filter: containsItem(id, type) ? "brightness(50%)" : "brightness(100%)"}}
+                              onDragStart={e => e.preventDefault()}
                             >
                               {!_.isEmpty(artist.images) ? (
                                 <Card.Img src={artist.images[0].url} alt="artist" />
@@ -42,12 +46,16 @@ const ArtistsList = ({ artists }) => {
                                   <button className="remove-buttons" onClick={() => {
                                     deleteFromItemPool(id, type);
                                     setUpdater(!updater);
-                                  }}>×</button>
+                                  }}>
+                                    <Image onDragStart={e => e.preventDefault()} src={cross} fluid alt='remove artist' style={{width: "75%", height: "75%"}}/>
+                                  </button>
                                 ) : (
                                   <button className="item-buttons" onClick={() => {
                                     addToItemPool(id, type, songURL, imgURL, title, subtitle);
                                     setUpdater(!updater);
-                                  }}>+</button>
+                                  }}>
+                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add artist' style={{width: "62.5%", height: "62.5%"}}/>
+                                  </button>
                                 )}
                               </div>
                             </Card.Body>
