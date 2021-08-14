@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/spotify-tier-list-maker/static/css/main.e3a79366.chunk.css",
-    "main.js": "/spotify-tier-list-maker/static/js/main.66ecb12c.chunk.js",
-    "main.js.map": "/spotify-tier-list-maker/static/js/main.66ecb12c.chunk.js.map",
+    "main.js": "/spotify-tier-list-maker/static/js/main.4bd02a67.chunk.js",
+    "main.js.map": "/spotify-tier-list-maker/static/js/main.4bd02a67.chunk.js.map",
     "runtime-main.js": "/spotify-tier-list-maker/static/js/runtime-main.0918518a.js",
     "runtime-main.js.map": "/spotify-tier-list-maker/static/js/runtime-main.0918518a.js.map",
     "static/css/2.10a843f3.chunk.css": "/spotify-tier-list-maker/static/css/2.10a843f3.chunk.css",
-    "static/js/2.b596a3f0.chunk.js": "/spotify-tier-list-maker/static/js/2.b596a3f0.chunk.js",
-    "static/js/2.b596a3f0.chunk.js.map": "/spotify-tier-list-maker/static/js/2.b596a3f0.chunk.js.map",
+    "static/js/2.951fa925.chunk.js": "/spotify-tier-list-maker/static/js/2.951fa925.chunk.js",
+    "static/js/2.951fa925.chunk.js.map": "/spotify-tier-list-maker/static/js/2.951fa925.chunk.js.map",
     "index.html": "/spotify-tier-list-maker/index.html",
     "static/css/2.10a843f3.chunk.css.map": "/spotify-tier-list-maker/static/css/2.10a843f3.chunk.css.map",
     "static/css/main.e3a79366.chunk.css.map": "/spotify-tier-list-maker/static/css/main.e3a79366.chunk.css.map",
-    "static/js/2.b596a3f0.chunk.js.LICENSE.txt": "/spotify-tier-list-maker/static/js/2.b596a3f0.chunk.js.LICENSE.txt",
+    "static/js/2.951fa925.chunk.js.LICENSE.txt": "/spotify-tier-list-maker/static/js/2.951fa925.chunk.js.LICENSE.txt",
     "static/media/sidebar-styles.css": "/spotify-tier-list-maker/static/media/Gotham-Medium.e5cbb8d1.svg",
     "static/media/cog-black.a361acd8.svg": "/spotify-tier-list-maker/static/media/cog-black.a361acd8.svg",
     "static/media/cog-white.07854ec9.svg": "/spotify-tier-list-maker/static/media/cog-white.07854ec9.svg",
@@ -29,8 +29,8 @@
   "entrypoints": [
     "static/js/runtime-main.0918518a.js",
     "static/css/2.10a843f3.chunk.css",
-    "static/js/2.b596a3f0.chunk.js",
+    "static/js/2.951fa925.chunk.js",
     "static/css/main.e3a79366.chunk.css",
-    "static/js/main.66ecb12c.chunk.js"
+    "static/js/main.4bd02a67.chunk.js"
   ]
 }
