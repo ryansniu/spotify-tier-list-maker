@@ -6,8 +6,7 @@ import Item from './Item';
 import Title from './Title'
 
 const Container = styled.div`
-  border: 4px solid ${props => props.isDragDisabled ? '#535353': props.isDragging ? props.bgColor : 'black'};
-  transition: border 0.2s ease;
+  border: 4px solid ${props => props.isDragDisabled ? props.bdColorDark : props.bdColor};
   margin: 8px;
   background-color: none;
   border-radius: 4px;
@@ -17,8 +16,8 @@ const Container = styled.div`
 
 const ItemList = styled.div`
   padding: 8px;
+  background-color: ${props => props.isDraggingOver || props.isDragging ? props.bgColor : 'none'};
   transition: background-color 0.2s ease;
-  background-color: ${props => props.isDraggingOver ? props.bgColor : 'none'};
   flex-grow: 1;
   min-width: 18.25rem;
   min-height: 20rem;
@@ -42,21 +41,21 @@ export default class Column extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEditing: false
+      isEditing: false,
+      borderColor: this.props.column.color
     }
   }
 
-  getBorderColor(color) {
+  getDarkBorderColor(color) {
     let newColor = toColor("hex", color).hsv;
-    newColor.v = 75;
-    newColor.a = 0.75;
+    newColor.a = 0.77;
     return toColor("hsv", newColor).hex;
   }
 
   getBodyColor(color) {
     let newColor = toColor("hex", color).hsv;
     newColor.v = newColor.v / 2;
-    newColor.a = 0.5;
+    newColor.a = 0.64;
     return toColor("hsv", newColor).hex;
   }
 
@@ -67,9 +66,9 @@ export default class Column extends React.Component {
           <Container
             {...provided.draggableProps}
             ref={provided.innerRef}
-            isDragging={snapshot.isDragging}
             isDragDisabled={this.props.toggleEditMode}
-            bgColor={this.getBorderColor(this.props.column.color)}
+            bdColor={this.state.borderColor}
+            bdColorDark={this.getDarkBorderColor(this.state.borderColor)}
           >
             <div {...provided.dragHandleProps}>
               <Title
@@ -79,14 +78,16 @@ export default class Column extends React.Component {
                 showDeleteButton={this.props.toggleEditMode}
                 presetColors={this.props.presetColors}
                 setEditing={(e) => this.setState({ isEditing: e })}
+                setBorderColor={(color) => this.setState({ borderColor: color })}
               />
             </div>
             <Droppable droppableId={this.props.column.id} type="item">
-              {(provided, snapshot) => (
+              {(provided, snapshot2) => (
                 <ItemList
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  isDraggingOver={snapshot.isDraggingOver}
+                  isDragging={snapshot.isDragging}
+                  isDraggingOver={snapshot2.isDraggingOver}
                   bgColor={this.getBodyColor(this.props.column.color)}
                 >
                   <InnerList items={this.props.items} />

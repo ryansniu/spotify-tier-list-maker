@@ -1,6 +1,18 @@
 import axios from 'axios';
 import qs from 'qs';
-import { setAuthHeader } from './functions';
+
+export const setAuthHeader = () => {
+  try {
+    const params = JSON.parse(localStorage.getItem('params'));
+    if (params) {
+      axios.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${params}`;
+    }
+  } catch (error) {
+    console.log('Error setting auth', error);
+  }
+};
 
 export const get = async (url, params) => {
   setAuthHeader();

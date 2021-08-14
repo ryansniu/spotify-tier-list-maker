@@ -22,7 +22,6 @@ const TitleStyle = styled.h3.attrs(props => ({
   font-size: 1.875rem;
 `;
 
-// how tf do i make this full height when editing
 const InputStyle = styled.textarea`
     flex-grow: 1;
     overflow: hidden;
@@ -138,6 +137,7 @@ const Title = props => {
                       e = toColor("hsv", newHSV);
                     }
                     setColor_P(e);
+                    props.setBorderColor(e.hex);
                   }} hideRGB hideHSV dark />
 
                   <div id="preset-colors">
@@ -149,7 +149,7 @@ const Title = props => {
                         type="radio"
                         variant="light"
                         style={{backgroundColor: color}}
-                        onChange={(e) => setColor_P(toColor("hex", color))}
+                        onChange={() => {setColor_P(toColor("hex", color)); props.setBorderColor(color);}}
                       />
                     ))}
                   </div>

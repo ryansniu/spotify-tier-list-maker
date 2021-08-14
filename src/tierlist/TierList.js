@@ -24,19 +24,19 @@ const Container = styled.div`
 const presetColors = ["#F63E02", "#F5B700", "#1DB954", "#4D9DE0", "#360568", "#DC3CA0"];
 const saveFileTypes = ["jpeg", "png", "svg"];
 
-class InnerList extends React.PureComponent {
-  render() {
-    const { column, itemMap, index, updateHeader, deleteHandler, toggleEditMode } = this.props;
-    const items = column.itemIds.map(itemId => itemMap[itemId]);
-    return <Column column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler} presetColors={presetColors} toggleEditMode={toggleEditMode}/>;
-  }
-}
-
 let refreshSidebar = false;
 let refreshColumns = false;
 let showSearchbar = false;
 let showItemPool = false;
 let toggleEditMode = false;
+
+class InnerList extends React.PureComponent {
+  render() {
+    const { column, itemMap, index, updateHeader, deleteHandler, toggleEditMode } = this.props;
+    const items = column.itemIds.map(itemId => itemMap[itemId]);
+    return <Column key={refreshColumns} column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler} presetColors={presetColors} toggleEditMode={toggleEditMode}/>;
+  }
+}
 
 class TierList extends React.Component {
   static contextType = TierListContext;
@@ -173,7 +173,6 @@ class TierList extends React.Component {
       toggleEditMode = false;
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
-      console.log(this.state);
     };
   }
 
@@ -375,7 +374,6 @@ class TierList extends React.Component {
     }
 
     toggleEditMode = false;
-    refreshColumns = !refreshColumns;
     this.setState(newState);
   }
 
@@ -419,7 +417,6 @@ class TierList extends React.Component {
     };
     
     toggleEditMode = false;
-    refreshColumns = !refreshColumns;
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
