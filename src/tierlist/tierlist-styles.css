@@ -316,3 +316,14 @@
 #cancel-delete-btn:active {
     color: white !important;
 }
+
+#item-notif-badge {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    background-color: #f21e08;
+    border-radius: 50%;
+    top: -13%;
+    right: -17%;
+    z-index: 99;
+}

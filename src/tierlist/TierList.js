@@ -7,7 +7,7 @@ import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image } from 'react-bootstrap';
+import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image, Modal } from 'react-bootstrap';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import LZString from 'lz-string';
 import SidebarSearch from '../sidebar/SidebarSearch'
@@ -28,6 +28,9 @@ let refreshSidebar = false;
 let refreshColumns = false;
 let showSearchbar = false;
 let showItemPool = false;
+let showItemNotifBadge = false;
+let showErrorModal = false;
+let errorModalText = "bottom text";
 let toggleEditMode = false;
 
 class InnerList extends React.PureComponent {
@@ -84,6 +87,7 @@ class TierList extends React.Component {
           'item-pool': newItemPool
         }
       };
+      showItemNotifBadge = !showItemPool;
       this.setState(newState);
     };
     
@@ -119,7 +123,9 @@ class TierList extends React.Component {
       if(!('columnOrder' in newState && 'items' in newState && 'columns' in newState && 'item-pool' in newState.columns
       && 'id' in newState.columns['item-pool'] && newState.columns['item-pool'].id === 'item-pool'
       && 'itemIds' in newState.columns['item-pool'] && Array.isArray(newState.columns['item-pool'].itemIds))) {
-        console.log('missing item pool!');
+        showErrorModal = true;
+        errorModalText = "File is missing item-pool!"
+        this.setState(this.state);
         return;
       }
 
@@ -132,7 +138,9 @@ class TierList extends React.Component {
         hasValidColumns = columnKeys.length === requiredColumnKeys.length && columnKeys.every(function(v, i) { return v === requiredColumnKeys[i]});
       });
       if(!hasValidColumns) {
-        console.log('missing required column information!');
+        showErrorModal = true;
+        errorModalText = "File is missing required column information!"
+        this.setState(this.state);
         return;
       }
 
@@ -141,7 +149,9 @@ class TierList extends React.Component {
       let allColumns = Object.keys(newState.columns);
       allColumns.splice(allColumns.indexOf('item-pool'), 1);
       if(!(columnOrder.length === allColumns.length && columnOrder.every(el => allColumns.includes(el)))) {
-        console.log('columnOrder and columns don\'t match!');
+        showErrorModal = true;
+        errorModalText = "File columnOrder and columns don't match!"
+        this.setState(this.state);
         return;
       }
 
@@ -154,7 +164,9 @@ class TierList extends React.Component {
         hasValidItems = itemKeys.length === requiredItemKeys.length && itemKeys.every(function(v, i) { return v === requiredItemKeys[i]});
       });
       if(!hasValidItems) {
-        console.log('missing required item information!');
+        showErrorModal = true;
+        errorModalText = "File is missing required item information!"
+        this.setState(this.state);
         return;
       }
 
@@ -165,12 +177,15 @@ class TierList extends React.Component {
         itemIds = itemIds.concat(newState.columns[key].itemIds);
       });
       if(!(itemIds.length === allItems.length && itemIds.every(el => allItems.includes(el)))) {
-        console.log('items and itemIds don\'t match!');
+        showErrorModal = true;
+        errorModalText = "File items and itemIds don't match!"
+        this.setState(this.state);
         return;
       }
 
       // success
       toggleEditMode = false;
+      showItemNotifBadge = newState.columns['item-pool'].itemIds.length > 0 && !showItemPool;
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
     };
@@ -193,15 +208,15 @@ class TierList extends React.Component {
       
       if(fileType === "jpeg") {
         toJpeg(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
-          .then(saveIMG).catch((err) => { console.log(err); });
+          .then(saveIMG).catch((err) => { showErrorModal = true; errorModalText = err; this.setState(this.state); });
       }
       if(fileType === "png") {
         toPng(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
-          .then(saveIMG).catch((err) => { console.log(err); });
+          .then(saveIMG).catch((err) => { showErrorModal = true; errorModalText = err; this.setState(this.state); });
       }
       if(fileType === "svg") {
         toSvg(tierlist, {backgroundColor: '#121212', width: fullWidth, height: fullHeight})
-          .then(saveIMG).catch((err) => { console.log(err); });
+          .then(saveIMG).catch((err) => { showErrorModal = true; errorModalText = err; this.setState(this.state); });
       }
     });
   }
@@ -316,6 +331,7 @@ class TierList extends React.Component {
     };
     
     toggleEditMode = false;
+    showItemNotifBadge = !showItemPool;
     refreshColumns = !refreshColumns;
     this.setState(newState);
   }
@@ -417,6 +433,7 @@ class TierList extends React.Component {
     };
     
     toggleEditMode = false;
+    showItemNotifBadge = false;
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
@@ -444,6 +461,7 @@ class TierList extends React.Component {
       document.getElementById("itempool-toggle").classList.remove("show-items");
     }
     showItemPool = show;
+    showItemNotifBadge = false;
     this.setState(this.state);
   }
 
@@ -525,6 +543,18 @@ class TierList extends React.Component {
   render() {
     return (
       <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+        <Modal id="delete-modal" show={showErrorModal} onHide={() => {showErrorModal = false; this.setState(this.state);}} size="sm">
+          <Modal.Header closeButton closeVariant="white">
+            <Modal.Title style={{color: '#D30000'}}>Error!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {errorModalText}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="success" id="keep-items" onClick={() => {showErrorModal = false; this.setState(this.state);}}>Okay</Button>
+          </Modal.Footer>
+        </Modal>
+
         <Container style={{flexWrap: 'wrap', margin: '1.5rem 3rem 0 3rem'}}>
           <h1 className="title-heading">Spotify Tier List Maker</h1>
           <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', margin: '0 1.5rem'}}>
@@ -656,6 +686,7 @@ class TierList extends React.Component {
             overlay={<Tooltip>{showItemPool ? 'Hide' : 'Show'} Items</Tooltip>}
           >
             <Button id="itempool-toggle" type="button" onClick={() => this.showItems(!showItemPool)}>
+              {showItemNotifBadge && (<div id="item-notif-badge"/>)}
               <Image onDragStart={e => e.preventDefault()} src={items_img} fluid alt='toggle music items' style={{width: "100%", height: "100%", filter: showItemPool ? "invert(100%)" : ""}}/>
             </Button>
           </OverlayTrigger>

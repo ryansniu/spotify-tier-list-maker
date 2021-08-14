@@ -3,7 +3,6 @@ import Dashboard from './components/Dashboard';
 import { getAuthToken } from './utils/api';
 
 class SidebarSearch extends React.Component {
-    
     constructor(props) {
       super(props);
       this.state = { loaded: false, selectedCategory: 'tracks' };

@@ -58,7 +58,7 @@ export const initiateLoadMoreTracks = (url) => {
     try {
       console.log('url', url);
       const result = await get(url);
-      console.log('categories', result);
+      console.log(result);
       return dispatch(addTracks(result.tracks));
     } catch (error) {
       console.log('error', error);
@@ -71,7 +71,7 @@ export const initiateLoadMoreAlbums = (url) => {
     try {
       console.log('url', url);
       const result = await get(url);
-      console.log('categories', result);
+      console.log(result);
       return dispatch(addAlbums(result.albums));
     } catch (error) {
       console.log('error', error);
@@ -84,7 +84,7 @@ export const initiateLoadMoreArtists = (url) => {
     try {
       console.log('url', url);
       const result = await get(url);
-      console.log('categories', result);
+      console.log(result);
       return dispatch(addArtists(result.artists));
     } catch (error) {
       console.log('error', error);
