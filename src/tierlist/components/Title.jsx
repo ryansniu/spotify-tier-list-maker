@@ -17,8 +17,9 @@ const TitleStyle = styled.h3.attrs(props => ({
   }))`padding: 8px;
   margin-bottom: 0;
   display: flex;
-  max-width: 21rem;
+  max-width: 18.25rem;
   user-select: none;
+  font-size: 1.875rem;
 `;
 
 // how tf do i make this full height when editing
