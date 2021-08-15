@@ -1,4 +1,4 @@
-/* This code is used in my AWS Lambda Proxy, and has no affect on the repo. */
+/* This code is used in my AWS Lambda Proxy, and has no effect on the repo. */
 const axios = require("axios");
 const qs = require("qs");
 const ssm = new(require('aws-sdk/clients/ssm'))();
