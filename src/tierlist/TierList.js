@@ -107,7 +107,6 @@ class TierList extends React.Component {
         items: newItems,
         columns: newColumns
       }
-      console.log(newState);
       refreshColumns = !refreshColumns;
       this.setState(newState);
     }

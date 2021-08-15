@@ -42,7 +42,6 @@ export const initiateGetResult = (searchTerm) => {
         searchTerm
       )}&type=track,album,artist&limit=24`;
       const result = await get(API_URL);
-      console.log(result);
       const { tracks, albums, artists } = result;
       dispatch(setTracks(tracks));
       dispatch(setAlbums(albums));
@@ -56,9 +55,7 @@ export const initiateGetResult = (searchTerm) => {
 export const initiateLoadMoreTracks = (url) => {
   return async (dispatch) => {
     try {
-      console.log('url', url);
       const result = await get(url);
-      console.log(result);
       return dispatch(addTracks(result.tracks));
     } catch (error) {
       console.log('error', error);
@@ -69,9 +66,7 @@ export const initiateLoadMoreTracks = (url) => {
 export const initiateLoadMoreAlbums = (url) => {
   return async (dispatch) => {
     try {
-      console.log('url', url);
       const result = await get(url);
-      console.log(result);
       return dispatch(addAlbums(result.albums));
     } catch (error) {
       console.log('error', error);
@@ -82,9 +77,7 @@ export const initiateLoadMoreAlbums = (url) => {
 export const initiateLoadMoreArtists = (url) => {
   return async (dispatch) => {
     try {
-      console.log('url', url);
       const result = await get(url);
-      console.log(result);
       return dispatch(addArtists(result.artists));
     } catch (error) {
       console.log('error', error);
