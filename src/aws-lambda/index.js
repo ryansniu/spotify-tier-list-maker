@@ -1,24 +1,34 @@
 /* This code is used in my AWS Lambda Proxy, and has no effect on the repo. */
 "use strict";
 const axios = require("axios");
-const qs = require("qs");
+const HttpsAgent = require ("agentkeepalive").HttpsAgent;
+
 const ssm = new(require('aws-sdk/clients/ssm'))();
+const httpsAgent = new HttpsAgent({
+    timeout: 60000, // active socket keepalive for 60 seconds
+    freeSocketTimeout: 30000, // free socket keepalive for 30 seconds
+});
+const keepAliveAxios = axios.create({
+    httpsAgent: httpsAgent,
+});
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-let accessToken = undefined, expiryTime = undefined;
+let accessToken, expiryTime, cold = true;
 
 const getAccessToken = async () => {
     const path = "/spotify-tier-list-maker/";
-    if (!accessToken || !expiryTime) {
+    if (cold) {
         const params = await ssm.getParametersByPath({
             Path: "/spotify-tier-list-maker/"
         }).promise();
         accessToken = params.Parameters[0].Value;
         expiryTime = Number(params.Parameters[1].Value);
+        cold = false;
     }
     const currentTime = (new Date()).getTime();
     
+    const promises = [];
     if (expiryTime < currentTime) {
         const headers = {
             headers: {
@@ -30,42 +40,50 @@ const getAccessToken = async () => {
                 password: clientSecret,
             },
         };
-        const data = {
-            grant_type: 'client_credentials',
-        };
-      
+        
         try {
-            const result = await axios.post(
+            const result = await keepAliveAxios.post(
                   'https://accounts.spotify.com/api/token',
-                  qs.stringify(data),
+                  "grant_type=client_credentials",
                   headers
             );
             accessToken = result.data["access_token"];
             expiryTime = currentTime + result.data["expires_in"] * 1000;
-            await ssm.putParameter({
-                Name: path.concat("ACCESS_TOKEN"),
-                Value: accessToken,
-                Overwrite: true
-            }).promise();
-            await ssm.putParameter({
-                Name: path.concat("EXPIRY_TIME"),
-                Value: expiryTime.toString(),
-                Overwrite: true
-            }).promise();
+            
+            promises.push(
+                ssm.putParameter({
+                    Name: path.concat("ACCESS_TOKEN"),
+                    Value: accessToken,
+                    Overwrite: true
+                }).promise()
+            );
+            promises.push(
+                ssm.putParameter({
+                    Name: path.concat("EXPIRY_TIME"),
+                    Value: expiryTime.toString(),
+                    Overwrite: true
+                }).promise()
+            );
         } catch (error) { console.log(error); }
     }
+    return promises;
 };
 
 const getSearchResult = async (url) => {
-    await getAccessToken();
+    let result = { "message": "Unable to get access token." };
+    const promises = await getAccessToken();
     if (accessToken) {
         try {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-            const result = await axios.get(url);
-            return result.data;
+            keepAliveAxios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+            promises.push(keepAliveAxios.get(url));
+            let result;
+            await Promise.all(promises).then((values) => {
+                result = values[values.length === 3 ? 2 : 0].data;
+            });
+            return result;
         } catch (error) { return { "message": "Unable to get search result." }; }
     }
-    else return { "message": "Unable to get access token." };
+    return result;
 };
 
 exports.handler = async (event) => {
@@ -73,15 +91,8 @@ exports.handler = async (event) => {
     if (event.queryStringParameters && event.queryStringParameters.searchURL) {
         result = await getSearchResult(event.queryStringParameters.searchURL);
     }
-    
-    const allowedOrigin = event.headers.origin === "http://localhost:3000" ? event.headers.origin : "https://ryansniu.github.io";
     const response = {
         statusCode: 200,
-        headers: {
-            "Access-Control-Allow-Headers" : "Content-Type",
-            "Access-Control-Allow-Origin": allowedOrigin,
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
         body: JSON.stringify(result)
     };
     return response;
