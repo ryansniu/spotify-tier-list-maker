@@ -12,14 +12,15 @@ import '../tierlist-styles.css'
 
 const TitleStyle = styled.h3.attrs(props => ({
   style: {
-    backgroundColor: props.color,
+    borderBottom: `4px solid ${props.color}`,
+    backgroundColor: props.color
   },
-  }))`padding: 8px;
+  }))`padding: 6px 8px;
   margin-bottom: 0;
   display: flex;
   max-width: 18.25rem;
   user-select: none;
-  font-size: 1.875rem;
+  font-size: 2rem;
 `;
 
 const InputStyle = styled.textarea`
@@ -158,7 +159,7 @@ const Title = props => {
             </form>
           ) : (
             <div style={{width: "100%", display: "flex", alignItems: "center"}}>
-              <div style={{color: "white", textShadow: "0 0 4px black", wordBreak: "break-all", flexGrow: "1", overflow: "hidden"}}>{title}</div>
+              <div style={{color: "white", textShadow: "0 0 4px black", wordBreak: "break-all", flexGrow: "1"}}>{title}</div>
                 <OverlayTrigger
                   placement={'top'}
                   overlay={<Tooltip>Edit Column</Tooltip>}
