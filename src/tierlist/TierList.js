@@ -359,7 +359,6 @@ class TierList extends React.Component {
     const newState = {
       ...this.state,
       columns: {
-        ...this.state.columns,
         'column-1': {
           id: 'column-1',
           title: 'S',
@@ -383,6 +382,9 @@ class TierList extends React.Component {
           title: 'C',
           color: '#1DB954',
           itemIds: [],
+        },
+        'item-pool': {
+          ...this.state.columns['item-pool']
         }
       },
       columnOrder: ['column-1', 'column-2', 'column-3','column-4']
@@ -397,7 +399,6 @@ class TierList extends React.Component {
     const newState = {
       ...this.state,
       columns: {
-        ...this.state.columns,
         'column-1': {
           id: 'column-1',
           title: 'S',
