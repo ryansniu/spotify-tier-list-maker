@@ -84,3 +84,20 @@ export const initiateLoadMoreArtists = (url) => {
     }
   };
 };
+
+export const getMultipleItems = async (id, typeFrom, itemType) => {
+  try {
+    let allItems = [];
+    let API_URL = `https://api.spotify.com/v1/${typeFrom}s/${encodeURIComponent(id)}/${itemType}s?limit=50`;
+    if(typeFrom === 'artist') API_URL += `&include_groups=album`
+    do {
+      const result = await get(API_URL);
+      const { items, next } = result;
+      allItems = allItems.concat(items);
+      API_URL = next;
+    } while (API_URL);
+    return allItems;
+  } catch (error) {
+    console.log('error', error);
+  }
+};

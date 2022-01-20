@@ -108,7 +108,22 @@ class TierList extends React.Component {
         columns: newColumns
       }
       refreshColumns = !refreshColumns;
+      if(this.state.columns['item-pool'].itemIds.length === 0) showItemNotifBadge = false;
       this.setState(newState);
+    }
+
+    this.context.addManyToItemPool = (items, type) => {
+      for(let i = 0; i < items.length; i++) {
+        let item = items[i];
+        this.context.addToItemPool(item.id, type, item.songURL, item.imgURL, item.title, item.subtitle);
+      }
+    }
+
+    this.context.deleteManyFromItemPool = (items, type) => {
+      for(let i = 0; i < items.length; i++) {
+        let item = items[i];
+        this.context.deleteFromItemPool(item.id, type);
+      }
     }
   }
 

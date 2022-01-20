@@ -5,9 +5,33 @@ import noalbum from '../images/noalbum.svg';
 import cross from '../../tierlist/imgs/cross.svg'
 import plus from '../../tierlist/imgs/plus.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
+import LZString from 'lz-string';
 
-const AlbumsList = ({ albums }) => {
+const AlbumsList = ({ albums, getInnerItems }) => {
   const [updater, setUpdater] = useState(false);
+
+  const getTracksFromAlbum = async (id, imgURL) => {
+    let cacheKey = `album_${id}`;
+    if(sessionStorage.getItem(cacheKey) === null) {
+      let albumContents = [];
+      let result = await getInnerItems(id, 'album', 'track');
+      albumContents = [];
+      for(let i = 0; i < result.length; i++) {
+        let item = result[i];
+        albumContents.push({
+          id: item.id,
+          type: 'track',
+          songURL: item.external_urls.spotify,
+          imgURL: imgURL,
+          title: item.name,
+          subtitle: item.artists.map((artist) => artist.name).join(', ')
+        })
+      }
+      sessionStorage.setItem(cacheKey, LZString.compress(JSON.stringify(albumContents)));
+    }
+    return JSON.parse(LZString.decompress(sessionStorage.getItem(cacheKey)));
+  }
+
   return (
     <React.Fragment>
       {Object.keys(albums).length > 0 && (
@@ -18,7 +42,7 @@ const AlbumsList = ({ albums }) => {
             return (
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
-                  {({containsItem, addToItemPool, deleteFromItemPool}) => (
+                  {({containsItem, addToItemPool, deleteFromItemPool, addManyToItemPool, deleteManyFromItemPool}) => (
                     <Card className="search-card" style={{margin: "0.25rem 0", backgroundColor: containsItem(id, type) ? "black" : ""}}>
                       <Container>
                         <Row>
@@ -60,6 +84,26 @@ const AlbumsList = ({ albums }) => {
                                     <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add album' style={{width: "62.5%", height: "62.5%"}}/>
                                   </button>
                                 )}
+
+                                <button className="item-buttons" style={{right: "2.5rem"}} onClick={async () => {
+                                  const albumContents = await getTracksFromAlbum(id, imgURL);
+                                  if(albumContents) {
+                                    addManyToItemPool(albumContents, 'track');
+                                    setUpdater(!updater);
+                                  }
+                                }}>
+                                  <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add album' style={{width: "62.5%", height: "62.5%"}}/>
+                                </button>
+
+                                <button className="remove-buttons" style={{right: "4.5rem"}} onClick={async () => {
+                                  const albumContents = await getTracksFromAlbum(id, imgURL);
+                                  if(albumContents) {
+                                    deleteManyFromItemPool(albumContents, 'track');
+                                    setUpdater(!updater);
+                                  }
+                                }}>
+                                  <Image onDragStart={e => e.preventDefault()} src={cross} fluid alt='remove album' style={{width: "75%", height: "75%"}}/>
+                                </button>
                               </div>
                             </Card.Body>
                           </Col>

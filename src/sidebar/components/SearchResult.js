@@ -6,7 +6,7 @@ import AlbumsList from './AlbumsList';
 import ArtistsList from './ArtistsList';
 
 const SearchResult = (props) => {
-  const { loadMore, result, setCategory, selectedCategory } = props;
+  const { loadMore, getInnerItems, result, setCategory, selectedCategory } = props;
   const { tracks, albums, artists } = result;
   
   return (
@@ -48,10 +48,10 @@ const SearchResult = (props) => {
         {albums && <TracksList tracks={tracks} />}
       </div>
       <div className={`${selectedCategory === 'albums' ? '' : 'hide'}`}>
-        {albums && <AlbumsList albums={albums} />}
+        {albums && <AlbumsList albums={albums} getInnerItems={getInnerItems} />}
       </div>
       <div className={`${selectedCategory === 'artists' ? '' : 'hide'}`}>
-        {artists && <ArtistsList artists={artists} />}
+        {artists && <ArtistsList artists={artists} getInnerItems={getInnerItems} />}
       </div>
 
       {!_.isEmpty(result[selectedCategory]) &&

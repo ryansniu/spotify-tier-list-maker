@@ -37,7 +37,9 @@ export const initialData = {
   },
   containsItem: (id) => {},
   addToItemPool: (id, type, songURL, imgURL, title, subtitle) => {},
-  deleteFromItemPool: (id, type) => {}
+  deleteFromItemPool: (id, type) => {},
+  addManyToItemPool: (items) => {},
+  deleteManyFromItemPool: (items) => {}
 }
 
 export const TierListContext = React.createContext(initialData);

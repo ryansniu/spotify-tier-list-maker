@@ -6,7 +6,7 @@ import cross from '../../tierlist/imgs/cross.svg'
 import plus from '../../tierlist/imgs/plus.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
 
-const ArtistsList = ({ artists }) => {
+const ArtistsList = ({ artists, getInnerItems }) => {
   const [updater, setUpdater] = useState(false);
   return (
     <React.Fragment>

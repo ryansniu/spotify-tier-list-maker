@@ -3,7 +3,8 @@ import {
   initiateGetResult,
   initiateLoadMoreTracks,
   initiateLoadMoreAlbums,
-  initiateLoadMoreArtists
+  initiateLoadMoreArtists,
+  getMultipleItems
 } from '../actions/result';
 import { connect } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
@@ -40,6 +41,13 @@ const Dashboard = (props) => {
     setIsLoading(false);
   };
 
+  const getInnerItems = async (id, typeFrom, itemType) => {
+    setIsLoading(true);
+    let result = await getMultipleItems(id, typeFrom, itemType);
+    setIsLoading(false);
+    return result;
+  }
+
   const setCategory = (category) => { setSelectedCategory(category); };
 
   const { tracks, albums, artists } = props;
@@ -56,6 +64,7 @@ const Dashboard = (props) => {
         <SearchResult
           result={result}
           loadMore={loadMore}
+          getInnerItems={getInnerItems}
           setCategory={setCategory}
           selectedCategory={selectedCategory}
         />
