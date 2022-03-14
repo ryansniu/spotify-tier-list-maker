@@ -31,7 +31,7 @@ const TracksList = ({ tracks }) => {
                               style={{filter: containsItem(id, type) ? "brightness(50%)" : "brightness(100%)"}}
                               onDragStart={e => e.preventDefault()}
                             >
-                              {!_.isEmpty(track.album.images) ? (
+                              {imgURL !== null ? (
                                 <Card.Img src={imgURL} alt="track album cover" />
                               ) : (
                                 <Card.Img src={notrack} alt="default album cover" />
