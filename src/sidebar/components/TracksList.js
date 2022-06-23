@@ -57,7 +57,7 @@ const TracksList = ({ tracks }) => {
                                     addToItemPool(id, type, songURL, imgURL, title, subtitle);
                                     setUpdater(!updater);
                                   }}>
-                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add track' style={{width: "62.5%", height: "62.5%"}}/>
+                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add track' style={{width: "65%", height: "65%"}}/>
                                   </button>
                                 )}
                               </div>

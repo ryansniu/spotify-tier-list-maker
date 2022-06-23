@@ -55,13 +55,14 @@ body {
 }
   
 .form-control {
+  border-right-style: none;
   font-size: 1.2rem;
   border-color: #1DB954;
 }
 
 .form-control:focus {
   border-color: #1DB954;
-  box-shadow: 0 0 0 .125rem #1db95480;
+  box-shadow: none;
 }
 
 .title-heading, .main-heading {
@@ -319,4 +320,52 @@ body {
   .main-heading {
     text-align: center;
   }
+}
+
+#region-selector {
+  color: white;
+  background-color: #161616;
+  transition: box-shadow 0.15s ease-in-out;
+  border: none;
+  border-color: transparent;
+  width: 4rem;
+  margin: 0 0 0 1.5rem;
+  padding: 0.25rem;
+}
+#region-selector:hover {
+  box-shadow: 0 0 0 0.125rem #77777780;
+}
+#region-selector:focus {
+  box-shadow: 0 0 0 0.125rem #1db95480;
+}
+.region-selector-option {
+  padding: 0.25rem 1.75rem 0.25rem 0.25rem;
+  margin: 0;
+  border-style: none;
+  background-color: transparent;
+}
+
+#search-flag {
+  color: white;
+  text-align: center;
+
+  border-left-style: none;
+  border-color: #1DB954;
+  background-color: #161616;
+
+  font-size: 1.625rem;
+  padding: 0 0.75rem;
+
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.input-group {
+  border-radius: 0.25rem;
+  transition: box-shadow 0.15s ease-in-out;
+}
+.input-group:focus-within {
+  box-shadow: 0 0 0 0.125rem #1db95480;
 }

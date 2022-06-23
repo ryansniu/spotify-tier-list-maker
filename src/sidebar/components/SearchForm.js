@@ -1,9 +1,32 @@
 import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { InputGroup, Form } from 'react-bootstrap';
+
+// country code regex
+const CC_REGEX = /^[a-z]{2}$/i;
+
+// offset between uppercase ascii and regional indicator symbols
+const OFFSET = 127397;
+
+const countryCodetoFlag = (cc) => {
+  if (!CC_REGEX.test(cc)) {
+    const type = typeof cc;
+    throw new TypeError(
+      `cc argument must be an ISO 3166-1 alpha-2 string, but got '${
+        type === 'string' ? cc : type
+      }' instead.`,
+    );
+  }
+
+  const codePoints = [...cc.toUpperCase()].map(c => c.codePointAt() + OFFSET);
+  return String.fromCodePoint(...codePoints);
+}
+
+// the code above is derived from https://github.com/thekelvinliu/country-code-emoji/blob/main/src/index.js
 
 const SearchForm = (props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [flag, setFlag] = useState(sessionStorage.getItem('region') !== null ? countryCodetoFlag(sessionStorage.getItem('region')) : '🌐');
 
   const handleInputChange = (event) => {
     const searchTerm = event.target.value;
@@ -14,6 +37,8 @@ const SearchForm = (props) => {
     event.preventDefault();
     if (searchTerm.trim() !== '') {
       setErrorMsg('');
+      setFlag(countryCodetoFlag(sessionStorage.getItem('region')));
+      sessionStorage.setItem('regionLocked', sessionStorage.getItem('region'));
       props.handleSearch(searchTerm);
     } else {
       setErrorMsg('Please enter a search term.');
@@ -24,7 +49,7 @@ const SearchForm = (props) => {
     <div>
       <Form onSubmit={handleSearch}>
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
-        <Form.Group controlId="formBasicEmail">
+        <InputGroup>
           <Form.Control
             type="search"
             name="searchTerm"
@@ -33,7 +58,8 @@ const SearchForm = (props) => {
             onChange={handleInputChange}
             autoComplete="off"
           />
-        </Form.Group>
+          <InputGroup.Text id="search-flag">{flag}</InputGroup.Text>
+        </InputGroup>
       </Form>
     </div>
   );

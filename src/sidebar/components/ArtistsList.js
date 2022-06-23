@@ -13,10 +13,11 @@ const ArtistsList = ({ artists, getInnerItems }) => {
   const [updater, setUpdater] = useState(false);
 
   const getAlbumsFromArtist = async (id) => {
-    let cacheKey = `artist_${id}`;
+    let cacheKey = `artist_${id}_${sessionStorage.getItem('regionLocked')}`;
     if(sessionStorage.getItem(cacheKey) === null) {
       let artistContents = [];
       let result = await getInnerItems(id, 'artist', 'album');
+      if(result === undefined || result[0] === undefined) return null;
       for(let i = 0; i < result.length; i++) {
         let item = result[i];
         artistContents.push({
@@ -27,7 +28,7 @@ const ArtistsList = ({ artists, getInnerItems }) => {
           title: item.name,
           subtitle: item.artists.map((artist) => artist.name).join(', ')
         })
-        console.log(item.id, item.name, item.available_markets);
+        console.log(item.id, item.name, item.release_date, item.total_tracks, item.available_markets);
       }
       sessionStorage.setItem(cacheKey, LZString.compress(JSON.stringify(artistContents)));
     }
@@ -80,7 +81,7 @@ const ArtistsList = ({ artists, getInnerItems }) => {
                                     addToItemPool(id, type, songURL, imgURL, title, subtitle);
                                     setUpdater(!updater);
                                   }}>
-                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add artist' style={{width: "62.5%", height: "62.5%"}}/>
+                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add artist' style={{width: "65%", height: "65%"}}/>
                                   </button>
                                 )}
 
@@ -91,7 +92,7 @@ const ArtistsList = ({ artists, getInnerItems }) => {
                                     setUpdater(!updater);
                                   }
                                 }}>
-                                  <Image onDragStart={e => e.preventDefault()} src={plus_all} fluid alt='add all albums in artist' style={{width: "62.5%", height: "62.5%"}}/>
+                                  <Image onDragStart={e => e.preventDefault()} src={plus_all} fluid alt='add all albums in artist' style={{width: "60%", height: "60%"}}/>
                                 </button>
 
                                 <button className="remove-buttons" style={{right: "4.5rem"}} onClick={async () => {
@@ -101,7 +102,7 @@ const ArtistsList = ({ artists, getInnerItems }) => {
                                     setUpdater(!updater);
                                   }
                                 }}>
-                                  <Image onDragStart={e => e.preventDefault()} src={cross_all} fluid alt='remove all albums in artist' style={{width: "62.5%", height: "62.5%"}}/>
+                                  <Image onDragStart={e => e.preventDefault()} src={cross_all} fluid alt='remove all albums in artist' style={{width: "60%", height: "60%"}}/>
                                 </button>
                               </div>
                             </Card.Body>

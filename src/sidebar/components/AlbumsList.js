@@ -17,6 +17,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
     if(sessionStorage.getItem(cacheKey) === null) {
       let albumContents = [];
       let result = await getInnerItems(id, 'album', 'track');
+      if(result === undefined || result[0] === undefined) return null;
       for(let i = 0; i < result.length; i++) {
         let item = result[i];
         albumContents.push({
@@ -82,7 +83,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                                     addToItemPool(id, type, songURL, imgURL, title, subtitle);
                                     setUpdater(!updater);
                                   }}>
-                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add album' style={{width: "62.5%", height: "62.5%"}}/>
+                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add album' style={{width: "65%", height: "65%"}}/>
                                   </button>
                                 )}
 
@@ -93,7 +94,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                                     setUpdater(!updater);
                                   }
                                 }}>
-                                  <Image onDragStart={e => e.preventDefault()} src={plus_all} fluid alt='add all tracks in album' style={{width: "62.5%", height: "62.5%"}}/>
+                                  <Image onDragStart={e => e.preventDefault()} src={plus_all} fluid alt='add all tracks in album' style={{width: "60%", height: "60%"}}/>
                                 </button>
 
                                 <button className="remove-buttons" style={{right: "4.5rem", transitionDelay: "0.050s"}} onClick={async () => {
@@ -103,7 +104,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                                     setUpdater(!updater);
                                   }
                                 }}>
-                                  <Image onDragStart={e => e.preventDefault()} src={cross_all} fluid alt='remove all tracks in album' style={{width: "62.5%", height: "62.5%"}}/>
+                                  <Image onDragStart={e => e.preventDefault()} src={cross_all} fluid alt='remove all tracks in album' style={{width: "60%", height: "60%"}}/>
                                 </button>
                               </div>
                             </Card.Body>

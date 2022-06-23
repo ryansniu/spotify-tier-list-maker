@@ -11,6 +11,7 @@ import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, I
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import LZString from 'lz-string';
 import SidebarSearch from '../sidebar/SidebarSearch'
+import RegionSelector from '../sidebar/components/RegionSelector'
 import search_img from './imgs/search.svg'
 import items_img from './imgs/playlist.svg'
 import './tierlist-styles.css';
@@ -727,6 +728,7 @@ class TierList extends React.Component {
         <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
           <Offcanvas.Header style={{justifyContent: "center", paddingBottom: "0.5rem"}}>
             <Offcanvas.Title><h1 className="main-heading">Search</h1></Offcanvas.Title>
+            <RegionSelector refreshSidebar={refreshSidebar}/>
           </Offcanvas.Header>
           <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
             <SidebarSearch refreshSidebar={refreshSidebar}/>
