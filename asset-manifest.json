@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/spotify-tier-list-maker/static/css/main.619bf43d.chunk.css",
-    "main.js": "/spotify-tier-list-maker/static/js/main.523f0a73.chunk.js",
-    "main.js.map": "/spotify-tier-list-maker/static/js/main.523f0a73.chunk.js.map",
+    "main.css": "/spotify-tier-list-maker/static/css/main.00e09428.chunk.css",
+    "main.js": "/spotify-tier-list-maker/static/js/main.75382426.chunk.js",
+    "main.js.map": "/spotify-tier-list-maker/static/js/main.75382426.chunk.js.map",
     "runtime-main.js": "/spotify-tier-list-maker/static/js/runtime-main.0918518a.js",
     "runtime-main.js.map": "/spotify-tier-list-maker/static/js/runtime-main.0918518a.js.map",
     "static/css/2.10a843f3.chunk.css": "/spotify-tier-list-maker/static/css/2.10a843f3.chunk.css",
@@ -10,16 +10,16 @@
     "static/js/2.a6cf158d.chunk.js.map": "/spotify-tier-list-maker/static/js/2.a6cf158d.chunk.js.map",
     "index.html": "/spotify-tier-list-maker/index.html",
     "static/css/2.10a843f3.chunk.css.map": "/spotify-tier-list-maker/static/css/2.10a843f3.chunk.css.map",
-    "static/css/main.619bf43d.chunk.css.map": "/spotify-tier-list-maker/static/css/main.619bf43d.chunk.css.map",
+    "static/css/main.00e09428.chunk.css.map": "/spotify-tier-list-maker/static/css/main.00e09428.chunk.css.map",
     "static/js/2.a6cf158d.chunk.js.LICENSE.txt": "/spotify-tier-list-maker/static/js/2.a6cf158d.chunk.js.LICENSE.txt",
-    "static/media/sidebar-styles.css": "/spotify-tier-list-maker/static/media/Gotham-Medium.e5cbb8d1.svg",
+    "static/media/sidebar-styles.css": "/spotify-tier-list-maker/static/media/Gotham-Medium.a16773f2.svg",
     "static/media/cog-black.a361acd8.svg": "/spotify-tier-list-maker/static/media/cog-black.a361acd8.svg",
     "static/media/cog-white.07854ec9.svg": "/spotify-tier-list-maker/static/media/cog-white.07854ec9.svg",
     "static/media/cross-all.65a55dfa.svg": "/spotify-tier-list-maker/static/media/cross-all.65a55dfa.svg",
     "static/media/cross.86d4de87.svg": "/spotify-tier-list-maker/static/media/cross.86d4de87.svg",
-    "static/media/noalbum.0fe44c37.svg": "/spotify-tier-list-maker/static/media/noalbum.0fe44c37.svg",
-    "static/media/noartist.bd17ebca.svg": "/spotify-tier-list-maker/static/media/noartist.bd17ebca.svg",
-    "static/media/notrack.f41ca20b.svg": "/spotify-tier-list-maker/static/media/notrack.f41ca20b.svg",
+    "static/media/noalbum.317b8fb7.svg": "/spotify-tier-list-maker/static/media/noalbum.317b8fb7.svg",
+    "static/media/noartist.e7aab9ee.svg": "/spotify-tier-list-maker/static/media/noartist.e7aab9ee.svg",
+    "static/media/notrack.885fbb75.svg": "/spotify-tier-list-maker/static/media/notrack.885fbb75.svg",
     "static/media/palette-black.d38e1bfc.svg": "/spotify-tier-list-maker/static/media/palette-black.d38e1bfc.svg",
     "static/media/palette-white.3218a162.svg": "/spotify-tier-list-maker/static/media/palette-white.3218a162.svg",
     "static/media/playlist.52cda70d.svg": "/spotify-tier-list-maker/static/media/playlist.52cda70d.svg",
@@ -32,7 +32,7 @@
     "static/js/runtime-main.0918518a.js",
     "static/css/2.10a843f3.chunk.css",
     "static/js/2.a6cf158d.chunk.js",
-    "static/css/main.619bf43d.chunk.css",
-    "static/js/main.523f0a73.chunk.js"
+    "static/css/main.00e09428.chunk.css",
+    "static/js/main.75382426.chunk.js"
   ]
 }
