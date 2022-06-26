@@ -241,23 +241,27 @@
     transform: scale(1.1);
 }
 
-#delete-modal .modal-content{
+#delete-modal .modal-content, #playlist-modal .modal-content{
     background-color: #161616;
     border: 2px solid #333;
 }
 
-#delete-modal .modal-content .modal-header {
+#playlist-modal .modal-content{
+    width: 27rem;
+}
+
+#delete-modal .modal-content .modal-header, #playlist-modal .modal-content .modal-header {
     border-bottom: 2px solid #222;
     padding: 0.25rem 1rem 0.25rem 0.75rem;
     color: #1DB954;
 }
 
-#delete-modal .modal-content .modal-body {
+#delete-modal .modal-content .modal-body, #playlist-modal .modal-content .modal-body {
     padding: 0.5rem 1rem;
     color: white;
 }
 
-#delete-modal .modal-content .modal-footer {
+#delete-modal .modal-content .modal-footer, #playlist-modal .modal-content .modal-footer {
     border-top: 2px solid #222;
     display: flex;
     align-items: center;
@@ -265,7 +269,7 @@
     padding: 0.5rem;
 }
 
-#delete-modal .modal-content .modal-footer button {
+#delete-modal .modal-content .modal-footer button, #playlist-modal .modal-content .modal-footer button {
     border: none;
     border-radius: 0.25rem;
     font-size: 1rem;

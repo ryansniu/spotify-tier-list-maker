@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import CountryCodes from './CountryCodes';
 
 const RegionSelector = (props) => {
@@ -14,17 +14,22 @@ const RegionSelector = (props) => {
   
   return (
     <div>
-      <Form.Select
-        id="region-selector"
-        aria-label="Spotify Region Selector"
-        size="sm"
-        value={region}
-        onChange={handleInputChange}
+      <OverlayTrigger
+        placement={'left'}
+        overlay={<Tooltip>Select Region</Tooltip>}
       >
-        {CountryCodes.map((cc) => {
-            return (<option className="region-selector-option" key ={cc} value={cc}>{cc}</option>);
-        })}
-      </Form.Select>
+        <Form.Select
+          id="region-selector"
+          aria-label="Spotify Region Selector"
+          size="sm"
+          value={region}
+          onChange={handleInputChange}
+        >
+          {CountryCodes.map((cc) => {
+              return (<option className="region-selector-option" key ={cc} value={cc}>{cc}</option>);
+          })}
+        </Form.Select>
+      </OverlayTrigger>
     </div>
   );
 };

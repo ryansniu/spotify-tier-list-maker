@@ -87,6 +87,12 @@ export const initiateGetResult = (searchTerm) => {
   };
 };
 
+export const initiateGetPlaylist = (playlistID) => {
+  return async (dispatch) => {
+
+  };
+};
+
 export const initiateLoadMoreTracks = (url) => {
   return async (dispatch) => {
     try {

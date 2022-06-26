@@ -6,8 +6,9 @@ import AddColumnButton from './components/AddColumnButton';
 import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
+import { initiateGetPlaylist } from '../sidebar/actions/result';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image, Modal } from 'react-bootstrap';
+import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image, Modal, Form, InputGroup} from 'react-bootstrap';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import LZString from 'lz-string';
 import SidebarSearch from '../sidebar/SidebarSearch'
@@ -32,6 +33,8 @@ let showItemPool = false;
 let showItemNotifBadge = false;
 let showErrorModal = false;
 let errorModalText = "bottom text";
+let showPlaylistModal = false;
+let playlistModalText = "";
 let toggleEditMode = false;
 
 class InnerList extends React.PureComponent {
@@ -204,6 +207,10 @@ class TierList extends React.Component {
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
     };
+  }
+
+  importFromPlaylist = () => {  // TODO
+    console.log(playlistModalText);
   }
 
   saveAsIMG (fileType) {
@@ -570,6 +577,30 @@ class TierList extends React.Component {
             <Button variant="success" id="keep-items" onClick={() => {showErrorModal = false; this.setState(this.state);}}>Okay</Button>
           </Modal.Footer>
         </Modal>
+        <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = ""; }}>
+          <Modal.Header closeButton closeVariant="white">
+            <Modal.Title style={{color: '#D30000'}}>Import from Playlist</Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{width: '27rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Form onSubmit={(event) => {event.preventDefault(); showPlaylistModal = false; this.setState(this.state); playlistModalText = ""; this.importFromPlaylist(); }}>
+              <InputGroup style={{width: '24rem'}}>
+                <InputGroup.Text id="search-flag" style={{fontSize: '0.75rem', borderLeftStyle: 'solid', borderRightStyle: 'none', color: '#777', padding: '0.25rem 0.25rem 0.25rem 0.5rem'}}>open.spotify.com/playlist/</InputGroup.Text>
+                <Form.Control
+                  style={{fontSize: '0.75rem', borderLeftStyle: 'none', borderRightStyle: 'solid', padding: '0.25rem 0.5rem 0.25rem 0.25rem'}}
+                  type="search"
+                  name="searchTerm"
+                  value={playlistModalText}
+                  placeholder="playlist id"
+                  onChange={(event) => { playlistModalText = event.target.value; this.setState(this.state); }}
+                  autoComplete="off"
+                />
+              </InputGroup>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="success" id="keep-items" onClick={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = ""; this.importFromPlaylist();}}>Import</Button>
+          </Modal.Footer>
+        </Modal>
 
         <Container style={{flexWrap: 'wrap', margin: '1.5rem 3rem 0 3rem'}}>
           <h1 className="title-heading">Spotify Tier List Maker</h1>
@@ -630,6 +661,7 @@ class TierList extends React.Component {
                 title="Data"
                 menuRole="Import/export .json data"
               >
+                <Dropdown.Item as="button" style={{letterSpacing: '1px'}} onClick={() => { showPlaylistModal = true; this.setState(this.state); }}>Import from Playlist</Dropdown.Item>
                 <Dropdown.Item
                   href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
                   download="tierlist.json"

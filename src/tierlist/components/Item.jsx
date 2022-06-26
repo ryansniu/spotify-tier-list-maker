@@ -9,6 +9,8 @@ import noartist from '../../sidebar/images/noartist.svg';
 const ItemContent = styled.div`
   background-color: ${props => (props.isDragging ? '#535353' : 'none')};
   border-radius: 4px;
+  width: 17.25rem;
+  max-width: 17.25rem;
 `;
 
 const ItemSmall = styled.small`
