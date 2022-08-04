@@ -45,9 +45,7 @@ export const initiateGetResult = (searchTerm) => {
   resetSearchSets();
   return async (dispatch) => {
     try {
-      let API_URL = `https://api.spotify.com/v1/search?query=${encodeURIComponent(
-        searchTerm
-      )}&type=track,album,artist&limit=24`;
+      let API_URL = `https://api.spotify.com/v1/search?query=${encodeURIComponent(searchTerm)}&type=track,album,artist&limit=24`;
       API_URL += `&market=${sessionStorage.getItem('regionLocked')}`;
       const result = await get(API_URL);
       const { tracks, albums, artists } = result;
@@ -84,12 +82,6 @@ export const initiateGetResult = (searchTerm) => {
     } catch (error) {
       console.log('error', error);
     }
-  };
-};
-
-export const initiateGetPlaylist = (playlistID) => {
-  return async (dispatch) => {
-
   };
 };
 
@@ -163,7 +155,6 @@ export const getMultipleItems = async (id, typeFrom, itemType) => {
     let API_URL = `https://api.spotify.com/v1/${typeFrom}s/${encodeURIComponent(id)}/${itemType}s?limit=50`;
     if(typeFrom === 'artist') API_URL += `&include_groups=album,single`;
     API_URL += `&market=${sessionStorage.getItem('regionLocked')}`;
-    console.log(sessionStorage.getItem('regionLocked'));
     do {
       const result = await get(API_URL);
       const { items, next } = result;
@@ -178,6 +169,25 @@ export const getMultipleItems = async (id, typeFrom, itemType) => {
         allItems = allItems.concat(newItems);
       }
       else allItems = allItems.concat(items);
+      API_URL = next;
+    } while (API_URL);
+    return allItems;
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
+export const getPlaylistItems = async (playlistID) => {
+  try {
+    let API_URL = `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistID)}`;
+    let allItems = [];
+    let firstURL = true;
+    do {
+      const result = await get(API_URL);
+      if(result === undefined || result[0] === undefined) return [];
+      const { items, next } = firstURL ? result.tracks : result;
+      firstURL = false;
+      allItems = allItems.concat(items);
       API_URL = next;
     } while (API_URL);
     return allItems;

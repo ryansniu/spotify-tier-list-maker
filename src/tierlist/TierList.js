@@ -6,9 +6,10 @@ import AddColumnButton from './components/AddColumnButton';
 import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
-import { initiateGetPlaylist } from '../sidebar/actions/result';
+import { getPlaylistItems } from '../sidebar/actions/result';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image, Modal, Form, InputGroup} from 'react-bootstrap';
+import _ from 'lodash';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import LZString from 'lz-string';
 import SidebarSearch from '../sidebar/SidebarSearch'
@@ -209,8 +210,30 @@ class TierList extends React.Component {
     };
   }
 
-  importFromPlaylist = () => {  // TODO
-    console.log(playlistModalText);
+  importFromPlaylist = async () => {
+    let cacheKey = `playlist_${playlistModalText}`;
+    let result = await getPlaylistItems(playlistModalText);
+    // console.log(result)
+    if(sessionStorage.getItem(cacheKey) === null) {
+      let playlistContents = [];
+      if(result === undefined || result[0] === undefined) return null;
+      for(let i = 0; i < result.length; i++) {
+        let item = result[i].track;
+        console.log(item.album.images)
+        playlistContents.push({
+          id: item.id,
+          type: 'track',
+          songURL: item.external_urls.spotify,
+          imgURL: !_.isEmpty(item.album.images) ? item.album.images[0].url : null,
+          title: item.name,
+          subtitle: item.artists.map((artist) => artist.name).join(', ')
+        })
+      }
+      sessionStorage.setItem(cacheKey, LZString.compress(JSON.stringify(playlistContents)));
+    }
+    let tracklist = JSON.parse(LZString.decompress(sessionStorage.getItem(cacheKey)))
+    this.context.addManyToItemPool(tracklist, 'track')
+    return tracklist
   }
 
   saveAsIMG (fileType) {
@@ -577,12 +600,12 @@ class TierList extends React.Component {
             <Button variant="success" id="keep-items" onClick={() => {showErrorModal = false; this.setState(this.state);}}>Okay</Button>
           </Modal.Footer>
         </Modal>
-        <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = ""; }}>
+        <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = "";}}>
           <Modal.Header closeButton closeVariant="white">
             <Modal.Title style={{color: '#D30000'}}>Import from Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{width: '27rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <Form onSubmit={(event) => {event.preventDefault(); showPlaylistModal = false; this.setState(this.state); playlistModalText = ""; this.importFromPlaylist(); }}>
+            <Form onSubmit={async (event) => {event.preventDefault(); await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; this.setState(this.state);}}>
               <InputGroup style={{width: '24rem'}}>
                 <InputGroup.Text id="search-flag" style={{fontSize: '0.75rem', borderLeftStyle: 'solid', borderRightStyle: 'none', color: '#777', padding: '0.25rem 0.25rem 0.25rem 0.5rem'}}>open.spotify.com/playlist/</InputGroup.Text>
                 <Form.Control
@@ -598,7 +621,7 @@ class TierList extends React.Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="success" id="keep-items" onClick={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = ""; this.importFromPlaylist();}}>Import</Button>
+            <Button variant="success" id="keep-items" onClick={async () => {await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; this.setState(this.state);}}>Import</Button>
           </Modal.Footer>
         </Modal>
 
