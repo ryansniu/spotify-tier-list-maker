@@ -212,14 +212,12 @@ class TierList extends React.Component {
 
   importFromPlaylist = async () => {
     let cacheKey = `playlist_${playlistModalText}`;
-    let result = await getPlaylistItems(playlistModalText);
-    // console.log(result)
+    const result = await getPlaylistItems(playlistModalText);
     if(sessionStorage.getItem(cacheKey) === null) {
       let playlistContents = [];
       if(result === undefined || result[0] === undefined) return null;
       for(let i = 0; i < result.length; i++) {
         let item = result[i].track;
-        console.log(item.album.images)
         playlistContents.push({
           id: item.id,
           type: 'track',

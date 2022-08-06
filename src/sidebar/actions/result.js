@@ -184,7 +184,7 @@ export const getPlaylistItems = async (playlistID) => {
     let firstURL = true;
     do {
       const result = await get(API_URL);
-      if(result === undefined || result[0] === undefined) return [];
+      if(result === undefined || result.tracks === undefined) return [];
       const { items, next } = firstURL ? result.tracks : result;
       firstURL = false;
       allItems = allItems.concat(items);
