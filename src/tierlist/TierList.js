@@ -8,7 +8,7 @@ import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
 import { getPlaylistItems } from '../sidebar/actions/result';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image, Modal, Form, InputGroup} from 'react-bootstrap';
+import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image, Modal, Form, InputGroup, Spinner} from 'react-bootstrap';
 import _ from 'lodash';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import LZString from 'lz-string';
@@ -36,6 +36,7 @@ let showErrorModal = false;
 let errorModalText = "bottom text";
 let showPlaylistModal = false;
 let playlistModalText = "";
+let playlistModalIsLoading = false;
 let toggleEditMode = false;
 
 class InnerList extends React.PureComponent {
@@ -211,11 +212,19 @@ class TierList extends React.Component {
   }
 
   importFromPlaylist = async () => {
-    let cacheKey = `playlist_${playlistModalText}`;
+    playlistModalIsLoading = true;
+    this.setState(this.state);
     const result = await getPlaylistItems(playlistModalText);
+
+    let cacheKey = `playlist_${playlistModalText}`;
     if(sessionStorage.getItem(cacheKey) === null) {
       let playlistContents = [];
-      if(result === undefined || result[0] === undefined) return null;
+      if(result === undefined || result[0] === undefined) {
+        showErrorModal = true;
+        errorModalText = "Playlist does not exist (or is private)!"
+        return null;
+      }
+      this.removeAllItems();
       for(let i = 0; i < result.length; i++) {
         let item = result[i].track;
         playlistContents.push({
@@ -374,7 +383,7 @@ class TierList extends React.Component {
     };
     
     toggleEditMode = false;
-    showItemNotifBadge = !showItemPool;
+    showItemNotifBadge = newState.columns['item-pool'].itemIds.length > 0 && !showItemPool;
     refreshColumns = !refreshColumns;
     this.setState(newState);
   }
@@ -394,6 +403,7 @@ class TierList extends React.Component {
     };
 
     toggleEditMode = false;
+    showItemNotifBadge = false;
     refreshSidebar = !refreshSidebar;
     this.setState(newState);
   }
@@ -598,9 +608,9 @@ class TierList extends React.Component {
             <Button variant="success" id="keep-items" onClick={() => {showErrorModal = false; this.setState(this.state);}}>Okay</Button>
           </Modal.Footer>
         </Modal>
-        <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = "";}}>
-          <Modal.Header closeButton closeVariant="white">
-            <Modal.Title style={{color: '#D30000'}}>Import from Playlist</Modal.Title>
+        <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = "";}} backdrop={playlistModalIsLoading ? 'static' : true}>
+          <Modal.Header closeButton={!playlistModalIsLoading} closeVariant="white">
+            <Modal.Title style={{color: '#1DB954'}}>Import from Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{width: '27rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Form onSubmit={async (event) => {event.preventDefault(); await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; this.setState(this.state);}}>
@@ -619,7 +629,11 @@ class TierList extends React.Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="success" id="keep-items" onClick={async () => {await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; this.setState(this.state);}}>Import</Button>
+            <Button variant="success" id="keep-items" style={{display: playlistModalIsLoading ? 'none' : 'inline-block'}} onClick={async () => {await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; playlistModalIsLoading = false; this.setState(this.state);}}>Import</Button>
+            <div id="playlist-loading" style={{display: playlistModalIsLoading ? 'flex' : 'none'}}>
+              <Spinner animation="border" role="status" style={{marginRight: '0.5rem'}}/>
+              Loading...
+            </div>
           </Modal.Footer>
         </Modal>
 
