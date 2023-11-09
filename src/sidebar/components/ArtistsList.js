@@ -26,7 +26,7 @@ const ArtistsList = ({ artists, getInnerItems }) => {
           songURL: item.external_urls.spotify,
           imgURL: !_.isEmpty(item.images) ? item.images[0].url : null,
           title: item.name,
-          subtitle: item.artists.map((artist) => artist.name).join(', ')
+          subtitle: 'Album • ' + item.artists.map((artist) => artist.name).join(', ')
         })
         console.log(item.id, item.name, item.release_date, item.total_tracks, item.available_markets);
       }
@@ -40,7 +40,7 @@ const ArtistsList = ({ artists, getInnerItems }) => {
       {Object.keys(artists).length > 0 && (
         <div className="artists">
           {artists.items.map((artist, index) => {
-            let id = artist.id, type = 'artist', songURL = artist.external_urls.spotify, title = artist.name, subtitle = null;
+            let id = artist.id, type = 'artist', songURL = artist.external_urls.spotify, title = artist.name, subtitle = 'Artist';
             let imgURL = !_.isEmpty(artist.images) ? artist.images[0].url : null;
             return (
               <React.Fragment key={index}>
@@ -68,6 +68,9 @@ const ArtistsList = ({ artists, getInnerItems }) => {
                           <Col>
                             <Card.Body>
                               <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
+                              <Card.Text>
+                                <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
+                              </Card.Text>
                               <div>
                                 {containsItem(id, type) ? (
                                   <button className="remove-buttons" onClick={() => {

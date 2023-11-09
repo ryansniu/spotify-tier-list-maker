@@ -5,9 +5,8 @@ import Item from './Item';
 
 const Container = styled.div`
   margin: 0 auto;
-  border: 1px solid #1DB954;
-  background-color: none;
-  border-radius: 2px;
+  background-color: #121212;
+  border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   width: 19.43rem;
@@ -18,7 +17,7 @@ const Container = styled.div`
 const ItemList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props => props.isDraggingOver ? '#282828' : 'none'};
+  background-color: ${props => props.isDraggingOver ? '#2a2a2a' : 'none'};
   flex-grow: 1;
 `;
 

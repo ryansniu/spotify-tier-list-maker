@@ -9,7 +9,7 @@ const Container = styled.div`
   border: 4px solid ${props => props.isDragDisabled ? props.bdColorDark : props.bdColor};
   margin: 8px;
   background-color: none;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
 `;

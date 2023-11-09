@@ -6,10 +6,10 @@ import trash from '../imgs/trash-can.svg'
 
 const Container = styled.div`
   margin: 0.5rem auto;
-  border: 1px solid ${props => props.isDraggingOver ? 'red' : 'darkred'};
+  border: 2px solid ${props => props.isDraggingOver ? 'red' : 'darkred'};
   transition: border 0.2s ease;
   background-color: none;
-  border-radius: 2px;
+  border-radius: 0.5rem;
   width: 19.43rem;
   height: 4.75rem;
   max-height: 4.75rem;
@@ -19,7 +19,7 @@ const Container = styled.div`
 const ItemList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props => props.isDraggingOver ? '#530000' : 'none'};
+  background-color: ${props => props.isDraggingOver ? '#530000' : '#121212'};
   height: 100%;
 `;
 

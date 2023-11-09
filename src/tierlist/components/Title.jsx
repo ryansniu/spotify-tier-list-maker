@@ -44,6 +44,10 @@ const ButtonStyle = styled.button`
     border-radius: 50%;
     display: flex;
     align-items: center;
+    transition: transform 0.1s ease-in-out;
+    &:hover {
+      transform: rotate(150deg);
+    }
 `;
 
 const Title = props => {
@@ -164,10 +168,10 @@ const Title = props => {
                   placement={'top'}
                   overlay={<Tooltip>Edit Column</Tooltip>}
                 >
-                <ButtonStyle onClick={() => { setInputVisible(true); props.setEditing(true); }}>
-                  <Image onDragStart={e => e.preventDefault()} src={color_p.hsv.v < 50 ? settings_white : settings_black} fluid alt='settings' style={{width: "100%", height: "100%"}}/>
-                </ButtonStyle> 
-              </OverlayTrigger>
+                  <ButtonStyle onClick={() => { setInputVisible(true); props.setEditing(true); }}>
+                    <Image onDragStart={e => e.preventDefault()} src={color_p.hsv.v < 50 ? settings_white : settings_black} fluid alt='settings' style={{width: "100%", height: "100%"}}/>
+                  </ButtonStyle> 
+                </OverlayTrigger>
             </div>
           )}
         </React.Fragment>

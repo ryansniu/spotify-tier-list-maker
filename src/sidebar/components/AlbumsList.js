@@ -39,7 +39,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
       {Object.keys(albums).length > 0 && (
         <div className="albums">
           {albums.items.map((album, index) => {
-            let id = album.id, type = 'album', songURL = album.external_urls.spotify, title = album.name, subtitle = album.artists.map((artist) => artist.name).join(', ');
+            let id = album.id, type = 'album', songURL = album.external_urls.spotify, title = album.name, subtitle = 'Album • ' + album.artists.map((artist) => artist.name).join(', ');
             let imgURL = !_.isEmpty(album.images) ? album.images[0].url : null;
             return (
               <React.Fragment key={index}>

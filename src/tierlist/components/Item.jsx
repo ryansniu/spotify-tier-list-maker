@@ -7,7 +7,7 @@ import noalbum from '../../sidebar/images/noalbum.svg';
 import noartist from '../../sidebar/images/noartist.svg';
 
 const ItemContent = styled.div`
-  background-color: ${props => (props.isDragging ? '#535353' : 'none')};
+  background-color: ${props => (props.isDragging ? '#5a5a5a' : 'none')};
   border-radius: 4px;
   width: 17.25rem;
   max-width: 17.25rem;

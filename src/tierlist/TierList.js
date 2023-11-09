@@ -644,7 +644,7 @@ class TierList extends React.Component {
               placement={'top'}
               overlay={<Tooltip>Add/Delete Columns</Tooltip>}
             >
-              <Button id="toolbar-button" style={toggleEditMode ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { toggleEditMode = !toggleEditMode; this.setState(this.state); }}>Edit</Button>
+              <Button id="toolbar-button" style={toggleEditMode ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { toggleEditMode = !toggleEditMode; this.setState(this.state); }}>{toggleEditMode ? <span style={{color:"#1DB954"}}>✦</span> : ''} Edit{toggleEditMode ? 'ing' : ''}</Button>
             </OverlayTrigger>
             
             <OverlayTrigger
@@ -696,17 +696,18 @@ class TierList extends React.Component {
                 title="Data"
                 menuRole="Import/export .json data"
               >
-                <Dropdown.Item as="button" style={{letterSpacing: '1px'}} onClick={() => { showPlaylistModal = true; this.setState(this.state); }}>Import from Playlist</Dropdown.Item>
+                <Dropdown.Item as="button" onClick={() => { showPlaylistModal = true; this.setState(this.state); }}>Import from Playlist</Dropdown.Item>
                 <Dropdown.Item
                   href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
                   download="tierlist.json"
                   id="export-data"
                   onSelect={() => { toggleEditMode = false; this.setState(this.state); }}
                   onDragStart={e => e.preventDefault()}
+                  style={{letterSpacing: '0px'}}
                 >
                   Export as Json
                 </Dropdown.Item>
-                <Dropdown.ItemText id="import-data">
+                <Dropdown.ItemText id="import-data" style={{letterSpacing: '0px'}}>
                   <label style={{width: '100%', height: '100%'}} htmlFor="import_tierlist">Import from Json</label>
                   <br/>
                   <input style={{display: 'none'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
@@ -797,7 +798,7 @@ class TierList extends React.Component {
             <Offcanvas.Title><h1 className="main-heading">Search</h1></Offcanvas.Title>
             <RegionSelector refreshSidebar={refreshSidebar}/>
           </Offcanvas.Header>
-          <Offcanvas.Body style={{padding: "0.5rem 0 0 0", overflowY: 'scroll'}}>
+          <Offcanvas.Body style={{padding: "0.125rem 0 0 0", overflowY: 'scroll'}}>
             <SidebarSearch refreshSidebar={refreshSidebar}/>
           </Offcanvas.Body>
         </Offcanvas>
