@@ -25,7 +25,6 @@ const countryCodetoFlag = (cc) => {
 
 const SearchForm = (props) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
   const [flag, setFlag] = useState(sessionStorage.getItem('region') !== null ? countryCodetoFlag(sessionStorage.getItem('region')) : '🌐');
 
   const handleInputChange = (event) => {
@@ -36,19 +35,15 @@ const SearchForm = (props) => {
   const handleSearch = (event) => {
     event.preventDefault();
     if (searchTerm.trim() !== '') {
-      setErrorMsg('');
       setFlag(countryCodetoFlag(sessionStorage.getItem('region')));
       sessionStorage.setItem('regionLocked', sessionStorage.getItem('region'));
       props.handleSearch(searchTerm);
-    } else {
-      setErrorMsg('Please enter a search term.');
     }
   };
   
   return (
     <div>
       <Form onSubmit={handleSearch}>
-        {errorMsg && <p className="errorMsg">{errorMsg}</p>}
         <InputGroup>
           <Form.Control
             type="search"

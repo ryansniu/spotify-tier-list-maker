@@ -599,7 +599,7 @@ class TierList extends React.Component {
       <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
         <Modal id="delete-modal" show={showErrorModal} onHide={() => {showErrorModal = false; this.setState(this.state);}} size="sm">
           <Modal.Header closeButton closeVariant="white">
-            <Modal.Title style={{color: '#D30000'}}>Error!</Modal.Title>
+            <Modal.Title style={{color: '#F30000'}}>Error!</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {errorModalText}
@@ -610,14 +610,13 @@ class TierList extends React.Component {
         </Modal>
         <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = "";}} backdrop={playlistModalIsLoading ? 'static' : true}>
           <Modal.Header closeButton={!playlistModalIsLoading} closeVariant="white">
-            <Modal.Title style={{color: '#1DB954'}}>Import from Playlist</Modal.Title>
+            <Modal.Title style={{fontWeight: 'bold'}}>Import from Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{width: '27rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Form onSubmit={async (event) => {event.preventDefault(); await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; this.setState(this.state);}}>
               <InputGroup style={{width: '24rem'}}>
-                <InputGroup.Text id="search-flag" style={{fontSize: '0.75rem', borderLeftStyle: 'solid', borderRightStyle: 'none', color: '#777', padding: '0.25rem 0.25rem 0.25rem 0.5rem'}}>open.spotify.com/playlist/</InputGroup.Text>
+                <InputGroup.Text id="search-flag" style={{fontSize: '0.75rem', borderRadius: '1rem 0 0 1rem', borderLeftStyle: 'solid', borderRightStyle: 'none', color: '#777', padding: '0.25rem 0.25rem 0.25rem 0.5rem'}}>open.spotify.com/playlist/</InputGroup.Text>
                 <Form.Control
-                  style={{fontSize: '0.75rem', borderLeftStyle: 'none', borderRightStyle: 'solid', padding: '0.25rem 0.5rem 0.25rem 0.25rem'}}
                   type="search"
                   name="searchTerm"
                   value={playlistModalText}

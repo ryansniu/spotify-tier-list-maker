@@ -272,19 +272,6 @@
     transform: scale(1.1);
 }
 
-#delete-modal .modal-content, #playlist-modal .modal-content{
-    background-color: #121212;
-    border: 2px solid #333;
-}
-
-#playlist-modal{
-    max-width: 27rem;
-}
-
-#playlist-modal .modal-content{
-    width: 27rem;
-}
-
 #playlist-loading {
     align-items: center;
     justify-content: center;
@@ -295,26 +282,77 @@
     user-select: none;
 }
 
-#delete-modal .modal-content .modal-header, #playlist-modal .modal-content .modal-header {
-    border-bottom: 2px solid #222;
-    padding: 0.25rem 1rem 0.25rem 0.75rem;
-    color: #1DB954;
+#playlist-modal {
+    max-width: 27rem;
 }
 
-#delete-modal .modal-content .modal-body, #playlist-modal .modal-content .modal-body {
+#playlist-modal .modal-content {
+    width: 27rem;
+}
+
+#delete-modal .modal-content, #playlist-modal .modal-content {
+    background-color: #272727;
+    padding: 0.25rem;
+    border: 0;
+    box-shadow: 0 0 0.25rem black;
+    letter-spacing: -0.025rem;
+}
+
+#delete-modal .modal-header, #playlist-modal .modal-header {
+    border-bottom: 0;
+    padding: 0.25rem 1rem 0.25rem 0.75rem;
+    letter-spacing: -0.05rem;
+    user-select: none;
+}
+
+#delete-modal .btn-close, #playlist-modal .btn-close {
+    scale: 0.625;
+    border-radius: 50%;
+}
+
+#playlist-modal .form-control {
+    border-right-style: none;
+    border-left-style: none;
+    font-size: 0.75rem;
+    background-color: #3E3E3E;
+    border-radius: 0 1rem 1rem 0;
+    border: 0;
+    color: white;
+    padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+}
+
+#playlist-modal .form-control::placeholder {
+    color: #757575;
+}
+
+#playlist-modal .input-group {
+    border-radius: 2rem;
+}
+
+#playlist-modal .input-group:focus-within {
+    box-shadow: 0 0 0 1px #535353;
+}
+
+#playlist-modal .form-control:focus {
+    box-shadow: none;
+    background-color: #333;
+}
+
+
+#delete-modal .modal-body, #playlist-modal .modal-body {
     padding: 0.5rem 1rem;
     color: white;
 }
 
-#delete-modal .modal-content .modal-footer, #playlist-modal .modal-content .modal-footer {
-    border-top: 2px solid #222;
+#delete-modal .modal-footer, #playlist-modal .modal-footer {
+    border-top: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0.5rem;
 }
 
-#delete-modal .modal-content .modal-footer button, #playlist-modal .modal-content .modal-footer button {
+#delete-modal .modal-footer button, #playlist-modal .modal-footer button {
     border: none;
     border-radius: 0.25rem;
     font-size: 1rem;

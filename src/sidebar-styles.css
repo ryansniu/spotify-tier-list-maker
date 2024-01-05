@@ -41,7 +41,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(0deg, #121212 0%, #121212 calc(100% - 216px), #555 100%) no-repeat, #121212;
+  background: linear-gradient(0deg, #121212 0%, #121212 calc(100% - 200px), #555 100%) no-repeat, #121212;
   box-sizing: border-box;
   font-family: 'Gotham', 'Monsterrat', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
@@ -54,7 +54,7 @@ body {
   padding: 0 1rem;
 }
   
-.form-control {
+.sidebar-search .form-control {
   border-right-style: none;
   font-size: 1rem;
   background-color: #242424;
@@ -63,15 +63,15 @@ body {
   color: white !important;
 }
 
-.form-control::placeholder {
+.sidebar-search .form-control::placeholder {
   color: #757575;
 }
 
-.form-control:hover {
+.sidebar-search .form-control:hover {
   background-color: #2a2a2a !important;
 }
 
-.form-control:focus {
+.sidebar-search .form-control:focus {
   box-shadow: none;
   background-color: #242424;
 }
@@ -89,14 +89,15 @@ body {
   
 .title-heading {
   font-size: 4.5rem;
-  letter-spacing: -0.25rem;
+  letter-spacing: -0.3rem;
   font-weight: bold;
   margin: 0 1.5rem !important;
 }
 
 .main-heading {
   font-size: 3rem;
-  letter-spacing: -0.15rem;
+  font-weight: bold;
+  letter-spacing: -0.25rem;
   margin: 0;
 }
   
@@ -163,15 +164,6 @@ body {
   
 .loader-open {
   overflow: hidden;
-}
-  
-.errorMsg {
-  color: #f21e08;
-  background: #121212;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  border-radius: 2rem;
-  text-align: center;
 }
   
 .search-buttons {
@@ -374,12 +366,12 @@ body {
   user-select: none;
 }
 
-.input-group {
+.sidebar-search .input-group {
   border-radius: 2rem;
 }
-.input-group:hover {
+.sidebar-search .input-group:hover {
   box-shadow: 0 0 0 1px #A4A4A4;
 }
-.input-group:focus-within {
+.sidebar-search .input-group:focus-within {
   box-shadow: 0 0 0 2px white;
 }
