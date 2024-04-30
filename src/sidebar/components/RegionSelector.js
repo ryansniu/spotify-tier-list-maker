@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import CountryCodes from './CountryCodes';
 
-const RegionSelector = (props) => {
-  const [region, setRegion] = useState(sessionStorage.getItem('region') === null ? "US" : sessionStorage.getItem('region'));
+const RegionSelector = () => {
+  const [region, setRegion] = useState(() => {
+    const storedRegion = sessionStorage.getItem('region');
+    return storedRegion || 'US';
+  });
+
   sessionStorage.setItem('region', region);
 
-  const handleInputChange = (event) => {
-    const region = event.target.value;
+  useEffect(() => {
     sessionStorage.setItem('region', region);
-    setRegion(region);
+  }, [region]);
+
+  const handleInputChange = (event) => {
+    setRegion(event.target.value);
   };
   
   return (
