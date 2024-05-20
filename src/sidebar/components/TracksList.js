@@ -6,6 +6,8 @@ import cross from '../../tierlist/imgs/cross.svg'
 import plus from '../../tierlist/imgs/plus.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
 
+import AudioPlayer from '../../tierlist/components/AudioPlayer';
+
 const TracksList = ({ tracks }) => {
   const [updater, setUpdater] = useState(false);
   return (
@@ -15,6 +17,7 @@ const TracksList = ({ tracks }) => {
           {tracks.items.map((track, index) => {
             let id = track.id, type = 'track', songURL = track.external_urls.spotify, title = track.name, subtitle = track.artists.map((artist) => artist.name).join(', ');
             let imgURL = !_.isEmpty(track.album.images) ? track.album.images[0].url : null;
+            let previewURL = track.preview_url;
             return (
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
@@ -37,6 +40,7 @@ const TracksList = ({ tracks }) => {
                                 <Card.Img src={notrack} alt="default album cover" />
                               )}
                             </a>
+                            {previewURL && <AudioPlayer src={previewURL} />}
                           </Col>
                           <Col>
                             <Card.Body>
@@ -54,7 +58,7 @@ const TracksList = ({ tracks }) => {
                                   </button>
                                 ) : (
                                   <button className="item-buttons" onClick={() => {
-                                    addToItemPool(id, type, songURL, imgURL, title, subtitle);
+                                    addToItemPool(id, type, songURL, imgURL, title, subtitle, previewURL);
                                     setUpdater(!updater);
                                   }}>
                                     <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add track' style={{width: "65%", height: "65%"}}/>

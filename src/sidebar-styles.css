@@ -92,6 +92,23 @@ body {
   letter-spacing: -0.3rem;
   font-weight: bold;
   margin: 0 1.5rem !important;
+  
+  background: transparent;
+  border: none;
+  overflow: hidden;
+  resize: none;
+  border-radius: 4.5rem;
+
+  transition: background-color 0.125s ease;
+}
+
+.title-heading:hover {
+  background-color: #2a2a2a;
+}
+
+.title-heading:focus {
+  outline: none !important;
+  background-color: #242424;
 }
 
 .main-heading {

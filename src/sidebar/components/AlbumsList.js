@@ -80,7 +80,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                                   </button>
                                 ) : (
                                   <button className="item-buttons" onClick={() => {
-                                    addToItemPool(id, type, songURL, imgURL, title, subtitle);
+                                    addToItemPool(id, type, songURL, imgURL, title, subtitle, null);
                                     setUpdater(!updater);
                                   }}>
                                     <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add album' style={{width: "65%", height: "65%"}}/>

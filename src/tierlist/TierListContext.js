@@ -2,6 +2,7 @@ import React from 'react';
 
 export const initialData = {
   data: {
+    title: 'Spotify Tier List Maker',
     items: {},
     columns: {
       'column-1': {
@@ -36,7 +37,7 @@ export const initialData = {
     columnOrder: ['column-1', 'column-2', 'column-3','column-4']
   },
   containsItem: (id) => {},
-  addToItemPool: (id, type, songURL, imgURL, title, subtitle) => {},
+  addToItemPool: (id, type, songURL, imgURL, title, subtitle, audio) => {},
   deleteFromItemPool: (id, type) => {},
   addManyToItemPool: (items) => {},
   deleteManyFromItemPool: (items) => {}

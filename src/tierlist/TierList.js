@@ -18,13 +18,14 @@ import search_img from './imgs/search.svg'
 import items_img from './imgs/playlist.svg'
 import './tierlist-styles.css';
 
+import AudioPlayer from './components/AudioPlayer';
+
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-const presetColors = ["#F63E02", "#F5B700", "#1DB954", "#4D9DE0", "#360568", "#DC3CA0"];
 const saveFileTypes = ["jpeg", "png", "svg"];
 
 let refreshSidebar = false;
@@ -41,6 +42,7 @@ let toggleEditMode = false;
 
 class InnerList extends React.PureComponent {
   render() {
+    const presetColors = ["#F63E02", "#F5B700", "#1DB954", "#4D9DE0", "#360568", "#DC3CA0"];
     const { column, itemMap, index, updateHeader, deleteHandler, toggleEditMode } = this.props;
     const items = column.itemIds.map(itemId => itemMap[itemId]);
     return <Column key={refreshColumns} column={column} items={items} index={index} updateHeader={updateHeader} deleteHandler={deleteHandler} presetColors={presetColors} toggleEditMode={toggleEditMode}/>;
@@ -67,7 +69,7 @@ class TierList extends React.Component {
       return false;
     };
 
-    this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle) => {
+    this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle, audio) => {
       if(this.context.containsItem(id, type)) return; // do nothing
       const newItems = {
         ...this.state.items,
@@ -77,7 +79,8 @@ class TierList extends React.Component {
           songURL: songURL,
           imgURL: imgURL,
           title: title,
-          subtitle: subtitle
+          subtitle: subtitle,
+          audio: audio
         }
       }
       const newItemIds = Array.from(this.state.columns['item-pool'].itemIds).concat(id);
@@ -121,7 +124,7 @@ class TierList extends React.Component {
     this.context.addManyToItemPool = (items, type) => {
       for(let i = 0; i < items.length; i++) {
         let item = items[i];
-        this.context.addToItemPool(item.id, type, item.songURL, item.imgURL, item.title, item.subtitle);
+        this.context.addToItemPool(item.id, type, item.songURL, item.imgURL, item.title, item.subtitle, item.audio);
       }
     }
 
@@ -133,83 +136,77 @@ class TierList extends React.Component {
     }
   }
 
-  // absolutely cursed
+  ////////////////// START OF IMPORT FROM JSON //////////////////
+  hasRequiredKeys = (object, keys) => keys.every(key => key in object);
+  
+  isValidItemPool = (itemPool) => itemPool && itemPool.id === 'item-pool' && Array.isArray(itemPool.itemIds);
+  
+  hasValidColumns = (columns, requiredKeys) => {
+    return Object.values(columns).every(column => {
+      return this.hasRequiredKeys(column, requiredKeys);
+    });
+  }
+  
+  isColumnOrderValid = (columnOrder, columns) => columnOrder.length === columns.length && columnOrder.every(el => columns.includes(el));
+  
+  hasValidItems = (items, requiredKeys) => Object.values(items).every(item => this.hasRequiredKeys(item, requiredKeys));
+  
+  areItemIdsValid = (columns, items) => {
+    const allItems = Object.keys(items);
+    const itemIds = Object.values(columns).flatMap(column => column.itemIds);
+    return itemIds.length === allItems.length && itemIds.every(id => allItems.includes(id));
+  }
+  
+  showError = (message) => {
+    showErrorModal = true;
+    errorModalText = message;
+    this.setState(this.state);
+  }
+
   importFromJson = e => {
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
       const newState = JSON.parse(e.target.result);
-      // check if the required keys exist and the item-pool exists in column and has the correct format
-      if(!('columnOrder' in newState && 'items' in newState && 'columns' in newState && 'item-pool' in newState.columns
-      && 'id' in newState.columns['item-pool'] && newState.columns['item-pool'].id === 'item-pool'
-      && 'itemIds' in newState.columns['item-pool'] && Array.isArray(newState.columns['item-pool'].itemIds))) {
-        showErrorModal = true;
-        errorModalText = "File is missing item-pool!"
-        this.setState(this.state);
-        return;
-      }
-
-      // check if every column has the correct format
-      let hasValidColumns = true;
+      const {'item-pool': itemPool, ...columns} = newState.columns;
+  
+      const requiredStateKeys = ['title', 'columnOrder', 'items', 'columns'];
       const requiredColumnKeys = ['id', 'title', 'color', 'itemIds'];
-      Object.keys(newState.columns).forEach(function(key) {
-        if(!hasValidColumns || key === 'item-pool') return;
-        const columnKeys = Object.keys(newState.columns[key]);
-        hasValidColumns = columnKeys.length === requiredColumnKeys.length && columnKeys.every(function(v, i) { return v === requiredColumnKeys[i]});
-      });
-      if(!hasValidColumns) {
-        showErrorModal = true;
-        errorModalText = "File is missing required column information!"
-        this.setState(this.state);
+      const requiredItemKeys = ['id', 'type', 'songURL', 'imgURL', 'title', 'subtitle', 'audio'];
+  
+      if (!this.hasRequiredKeys(newState, requiredStateKeys) || !this.isValidItemPool(itemPool)) {
+        this.showError("File is missing required keys or item-pool!");
         return;
       }
-
-      // check if every column in columnOrder exists in column (and no extra besides item-pool)
-      const columnOrder = newState.columnOrder;
-      let allColumns = Object.keys(newState.columns);
-      allColumns.splice(allColumns.indexOf('item-pool'), 1);
-      if(!(columnOrder.length === allColumns.length && columnOrder.every(el => allColumns.includes(el)))) {
-        showErrorModal = true;
-        errorModalText = "File columnOrder and columns don't match!"
-        this.setState(this.state);
+  
+      if (!this.hasValidColumns(columns, requiredColumnKeys)) {
+        this.showError("File is missing required column information!");
         return;
       }
-
-      // check if every item in items has the correct format
-      let hasValidItems = true;
-      const requiredItemKeys = ['id', 'type', 'songURL', 'imgURL', 'title', 'subtitle'];
-      Object.keys(newState.items).forEach(function(key) {
-        if(!hasValidItems) return;
-        const itemKeys = Object.keys(newState.items[key]);
-        hasValidItems = itemKeys.length === requiredItemKeys.length && itemKeys.every(function(v, i) { return v === requiredItemKeys[i]});
-      });
-      if(!hasValidItems) {
-        showErrorModal = true;
-        errorModalText = "File is missing required item information!"
-        this.setState(this.state);
+  
+      if (!this.isColumnOrderValid(newState.columnOrder, Object.keys(columns))) {
+        this.showError("File columnOrder and columns don't match!");
         return;
       }
-
-      // check if every itemIDs exists in items (and no extra)
-      const allItems = Object.keys(newState.items);
-      let itemIds = [];
-      Object.keys(newState.columns).forEach(function(key) {
-        itemIds = itemIds.concat(newState.columns[key].itemIds);
-      });
-      if(!(itemIds.length === allItems.length && itemIds.every(el => allItems.includes(el)))) {
-        showErrorModal = true;
-        errorModalText = "File items and itemIds don't match!"
-        this.setState(this.state);
+  
+      if (!this.hasValidItems(newState.items, requiredItemKeys)) {
+        this.showError("File is missing required item information!");
         return;
       }
-
-      // success
+  
+      if (!this.areItemIdsValid(newState.columns, newState.items)) {
+        this.showError("File items and itemIds don't match!");
+        return;
+      }
+  
       toggleEditMode = false;
       showItemNotifBadge = newState.columns['item-pool'].itemIds.length > 0 && !showItemPool;
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
+      console.log("Successfully imported from JSON!");
     };
   }
+  ////////////////// END OF IMPORT FROM JSON //////////////////
 
   importFromPlaylist = async () => {
     playlistModalIsLoading = true;
@@ -251,6 +248,7 @@ class TierList extends React.Component {
         link.download = 'tierlist.'.concat(fileType);
         link.href = dataUrl;
         link.click();
+        URL.revokeObjectURL(link.href);
       }
   
       let tierlist = document.getElementById('tierlist-inner');
@@ -271,6 +269,14 @@ class TierList extends React.Component {
           .then(saveIMG).catch((err) => { showErrorModal = true; errorModalText = err; this.setState(this.state); });
       }
     });
+  }
+
+  updateTitle = (title) => {
+    const newState = {
+      ...this.state,
+      title: title
+    };
+    this.setState(newState);
   }
 
   deleteItem = (id, source, home) => {
@@ -452,6 +458,7 @@ class TierList extends React.Component {
     this.resetAllItems();
     const newState = {
       ...this.state,
+      title: 'Spotify Tier List Maker',
       columns: {
         'column-1': {
           id: 'column-1',
@@ -636,8 +643,25 @@ class TierList extends React.Component {
           </Modal.Footer>
         </Modal>
 
-        <Container style={{flexWrap: 'wrap', margin: '1.5rem 3rem 0 3rem'}}>
-          <h1 className="title-heading">Spotify Tier List Maker</h1>
+        <div style={{margin: '0.5rem 0 0 0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <textarea 
+            type="text"
+            value={this.state.title}
+            placeholder='Title here...'
+            onBlur={e => {
+              if (e.target.value === '') this.updateTitle('Spotify Tier List Maker');
+            }}
+            className="title-heading"
+            onInput={e => {
+              e.target.rows = e.target.value.split('\n').length;
+              this.updateTitle(e.target.value);
+            }}
+            rows={this.state.title.split('\n').length}
+          />
+        </div>
+        
+        <Container style={{flexWrap: 'wrap', margin: '0.5rem 3rem 0 3rem'}}>
+          
           <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', margin: '0 1.5rem'}}>
             <OverlayTrigger
               placement={'top'}
