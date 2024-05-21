@@ -15,7 +15,7 @@ const TitleStyle = styled.h3.attrs(props => ({
     borderBottom: `4px solid ${props.color}`,
     backgroundColor: props.color
   },
-  }))`padding: 6px 8px;
+  }))`padding: 0 8px;
   margin-bottom: 0;
   display: flex;
   max-width: 18.25rem;
@@ -26,11 +26,11 @@ const TitleStyle = styled.h3.attrs(props => ({
 const InputStyle = styled.textarea`
     flex-grow: 1;
     overflow: hidden;
-    word-break: break-all;
-    min-height: 40px;
-    max-width: 14.25rem;
-    height: 40px;
-    resize: both;
+    height: auto;
+    resize: none;
+    outline: none;
+    border: none;
+    border-radius: 0.25rem;
 `;
 
 const ButtonStyle = styled.button`
@@ -52,6 +52,7 @@ const ButtonStyle = styled.button`
 
 const Title = props => {
   const inputRef = useRef(null);
+  const textareaRef = useRef(null);
   const [id, setID] = useState(props.colData.id);
   const [title, setTitle] = useState(props.colData.title);
   const [color, setColor] = useState(props.colData.color);
@@ -74,6 +75,14 @@ const Title = props => {
       props.setEditing(false);
     }
   }
+
+  // There's a bug here where the textarea will be 1 pixel off the title text but whatever i guess
+  useEffect(() => {
+    if (textareaRef.current && textareaRef.current.scrollHeight) {
+      textareaRef.current.style.height = 'inherit';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [inputVisible]);
 
   useEffect(() => {
     if (inputVisible) document.addEventListener("mousedown", onClickOutSide);
@@ -112,13 +121,20 @@ const Title = props => {
       <TitleStyle color={color_p.hex}>
         <React.Fragment>
           {inputVisible ? (
-            <form style={{width: "100%", display: "flex", alignItems: "center"}} onSubmit={() => { setInputVisible(false); props.setEditing(false); }} ref={inputRef}>
+            <form style={{width: "100%", display: "flex", alignItems: "center"}} onSubmit={() => { setInputVisible(false); props.setEditing(false);}} ref={inputRef}>
               <InputStyle
                 value={title}
+                placeholder="Column Title"
                 onChange={e => {
                   setTitle(e.target.value);
                   update(id, e.target.value, color);
                 }}
+                onInput={e => {
+                  e.target.style.height = 'inherit';
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+                rows='1'
+                ref={textareaRef}
               />
               <Dropdown autoClose="inside" as={ButtonGroup} drop="right"
                 onToggle={(isOpen) => {
@@ -163,7 +179,14 @@ const Title = props => {
             </form>
           ) : (
             <div style={{width: "100%", display: "flex", alignItems: "center"}}>
-              <div style={{color: "white", textShadow: "0 0 4px black", wordBreak: "break-all", flexGrow: "1"}}>{title}</div>
+              <div style={{color: "white", textShadow: "0 0 4px black", wordBreak: "break-all", flexGrow: "1", letterSpacing: "0"}}>
+                {title.split('\n').map((line, index) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    <br />
+                  </React.Fragment>
+                ))}
+              </div>
                 <OverlayTrigger
                   placement={'top'}
                   overlay={<Tooltip>Edit Column</Tooltip>}

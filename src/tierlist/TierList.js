@@ -62,6 +62,10 @@ class TierList extends React.Component {
   componentDidMount() {
     window.addEventListener("beforeunload", this.saveStateToStorage);
 
+    const textarea = document.querySelector('.title-heading');
+    textarea.style.height = 'inherit';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+
     this.context.containsItem = (id, type) => {
       if(id in this.state.items) {
         return this.state.items[id]['type'] === type;
@@ -647,16 +651,17 @@ class TierList extends React.Component {
           <textarea 
             type="text"
             value={this.state.title}
-            placeholder='Title here...'
+            placeholder='Tier List Title'
             onBlur={e => {
               if (e.target.value === '') this.updateTitle('Spotify Tier List Maker');
             }}
+            onChange={e => this.updateTitle(e.target.value)}
             className="title-heading"
             onInput={e => {
-              e.target.rows = e.target.value.split('\n').length;
-              this.updateTitle(e.target.value);
+              e.target.style.height = 'inherit';
+              e.target.style.height = `${e.target.scrollHeight}px`;
             }}
-            rows={this.state.title.split('\n').length}
+            rows='1'
           />
         </div>
         
