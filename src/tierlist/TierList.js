@@ -73,7 +73,7 @@ class TierList extends React.Component {
       return false;
     };
 
-    this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle, audio) => {
+    this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle, isExplicit, audioURL) => {
       if(this.context.containsItem(id, type)) return; // do nothing
       const newItems = {
         ...this.state.items,
@@ -84,7 +84,8 @@ class TierList extends React.Component {
           imgURL: imgURL,
           title: title,
           subtitle: subtitle,
-          audio: audio
+          isExplicit: isExplicit,
+          audioURL: audioURL
         }
       }
       const newItemIds = Array.from(this.state.columns['item-pool'].itemIds).concat(id);
@@ -128,7 +129,7 @@ class TierList extends React.Component {
     this.context.addManyToItemPool = (items, type) => {
       for(let i = 0; i < items.length; i++) {
         let item = items[i];
-        this.context.addToItemPool(item.id, type, item.songURL, item.imgURL, item.title, item.subtitle, item.audio);
+        this.context.addToItemPool(item.id, type, item.songURL, item.imgURL, item.title, item.subtitle, item.isExplicit, item.audioURL);
       }
     }
 
@@ -176,7 +177,7 @@ class TierList extends React.Component {
   
       const requiredStateKeys = ['title', 'columnOrder', 'items', 'columns'];
       const requiredColumnKeys = ['id', 'title', 'color', 'itemIds'];
-      const requiredItemKeys = ['id', 'type', 'songURL', 'imgURL', 'title', 'subtitle', 'audio'];
+      const requiredItemKeys = ['id', 'type', 'songURL', 'imgURL', 'title', 'subtitle', 'isExplicit', 'audioURL'];
   
       if (!this.hasRequiredKeys(newState, requiredStateKeys) || !this.isValidItemPool(itemPool)) {
         this.showError("File is missing required keys or item-pool!");

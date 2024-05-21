@@ -37,7 +37,7 @@ export const initialData = {
     columnOrder: ['column-1', 'column-2', 'column-3','column-4']
   },
   containsItem: (id) => {},
-  addToItemPool: (id, type, songURL, imgURL, title, subtitle, audio) => {},
+  addToItemPool: (id, type, songURL, imgURL, title, subtitle, isExplicit, audioURL) => {},
   deleteFromItemPool: (id, type) => {},
   addManyToItemPool: (items) => {},
   deleteManyFromItemPool: (items) => {}

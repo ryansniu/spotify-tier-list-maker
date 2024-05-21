@@ -52,6 +52,8 @@ export default class Item extends React.Component {
                         {this.props.item.subtitle &&
                           <Card.Text>
                             <ItemSmall isDragging={snapshot.isDragging}>
+                              {this.props.item.isExplicit && <div style={{transform: 'translateY(-1.5px)', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: '#AAAAAA', color: '#121212', width: '0.75rem', height: '0.75rem'}}>E</div>}
+                              {this.props.item.isExplicit && ' '}
                               {this.props.item.subtitle}
                             </ItemSmall>
                           </Card.Text>

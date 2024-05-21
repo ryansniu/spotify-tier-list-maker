@@ -17,7 +17,7 @@ const TracksList = ({ tracks }) => {
           {tracks.items.map((track, index) => {
             let id = track.id, type = 'track', songURL = track.external_urls.spotify, title = track.name, subtitle = track.artists.map((artist) => artist.name).join(', ');
             let imgURL = !_.isEmpty(track.album.images) ? track.album.images[0].url : null;
-            let previewURL = track.preview_url;
+            let audioURL = track.preview_url, isExplicit = track.explicit;
             return (
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
@@ -40,13 +40,17 @@ const TracksList = ({ tracks }) => {
                                 <Card.Img src={notrack} alt="default album cover" />
                               )}
                             </a>
-                            {previewURL && <AudioPlayer src={previewURL} />}
+                            {audioURL && <AudioPlayer src={audioURL} />}
                           </Col>
                           <Col>
                             <Card.Body>
                               <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
                               <Card.Text>
-                                <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
+                                <small style={{color: containsItem(id, type) ?  "#555" : ""}}>
+                                  {isExplicit && <div style={{transform: 'translateY(-1.5px)', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: '#AAAAAA', color: '#121212', width: '0.75rem', height: '0.75rem'}}>E</div>}
+                                  {isExplicit && ' '}
+                                  {subtitle}
+                                </small>
                               </Card.Text>
                               <div>
                                 {containsItem(id, type) ? (
@@ -58,7 +62,7 @@ const TracksList = ({ tracks }) => {
                                   </button>
                                 ) : (
                                   <button className="item-buttons" onClick={() => {
-                                    addToItemPool(id, type, songURL, imgURL, title, subtitle, previewURL);
+                                    addToItemPool(id, type, songURL, imgURL, title, subtitle, isExplicit, audioURL);
                                     setUpdater(!updater);
                                   }}>
                                     <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add track' style={{width: "65%", height: "65%"}}/>
