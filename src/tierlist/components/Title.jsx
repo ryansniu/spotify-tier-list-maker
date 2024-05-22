@@ -44,8 +44,10 @@ const ButtonStyle = styled.button`
     border-radius: 50%;
     display: flex;
     align-items: center;
-    transition: transform 0.1s ease-in-out;
-    &:hover {
+    & .img-fluid {
+      transition: transform 0.1s ease-in-out;
+    }
+    &:hover .img-fluid {
       transform: rotate(150deg);
     }
 `;

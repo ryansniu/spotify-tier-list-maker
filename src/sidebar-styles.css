@@ -236,12 +236,6 @@ body {
   padding: 0.25rem;
   letter-spacing: normal;
 }
-.card:hover {
-  background: #2a2a2a;
-}
-.card:hover small {
-  color: white;
-}
 
 .container {
   padding: 0;
@@ -289,45 +283,74 @@ body {
 }
 
 .card-img-link:active, .card-img-link:focus {
-  outline-color: #1DB954;
+  outline: none;
 }
 
-.card:hover .item-buttons, .card:hover .remove-buttons {
-  opacity: 1;
-  transform: translateY(-40%);
-  transition: 0.125s ease-out;
+.card-img-link:active .card-img {
+  outline: solid 2px #1DB954;
 }
-.item-buttons, .remove-buttons {
-  display: block;
-  border: none;
-  opacity: 0;
-  width: 1.75rem;
-  height: 1.75rem;
-  position: absolute;
-  bottom: 0;
-  right: 0.5rem;
-  border-radius: 50%;
-  transform: 0;
-  transition: 0.25s ease-out;
-  z-index: 999;
+
+.search-entry {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  width: 100%;
+  border-radius: 0.25rem;
 }
-.item-buttons:hover, .remove-buttons:hover {
-  transform: translateY(-40%) scale(1.2) !important;
-  transition: 0s !important;
+
+.search-entry:hover{
+  background: #2a2a2a;
+  cursor: pointer;
 }
-.item-buttons:active, .remove-buttons:active {
-  transform: translateY(-40%) scale(1.1) !important;
+.search-entry .card {
+  position: static;
 }
+
+.search-entry:hover .card small {
+  color: white;
+}
+
 .item-buttons {
-  background-color: #1DB954;
-  box-shadow: 0px 1px 2px #121212;
+  border: #A4A4A4 1.5px solid;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  transition: scale 0.125s ease-out;
+  /* z-index: 999; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  margin-right: 8px;
 }
-.remove-buttons {
-  background-color: #f21e08;
-  box-shadow: 0px 1px 2px #393939;
+.item-buttons:hover {
+  transform: scale(1.1);
+  transition: scale 0s !important;
+  border-color: white;
+}
+.item-buttons:active {
+  transform: scale(1.05);
+  border-color: #A4A4A4;
+}
+.item-buttons-icon.rotate {
+  rotate: -45deg;
+}
+.item-buttons-icon.rotate:hover {
+  rotate: -45deg;
+}
+.item-buttons-icon.rotate:active {
+  rotate: -45deg;
+}
+.item-buttons-icon {
+  filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%);
+  transition: rotate 0.1s ease-out;
+}
+.item-buttons:active .item-buttons-icon {
+  filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%) !important;
+}
+.item-buttons:hover .item-buttons-icon {
+  filter: invert(100%);
 }
   
 @media screen and (max-width: 400px) {
@@ -388,7 +411,7 @@ body {
   border-radius: 2rem;
 }
 .sidebar-search .input-group:hover {
-  box-shadow: 0 0 0 1px #A4A4A4;
+  box-shadow: 0 0 0 1.5px #A4A4A4;
 }
 .sidebar-search .input-group:focus-within {
   box-shadow: 0 0 0 2px white;

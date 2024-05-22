@@ -11,6 +11,12 @@ const ItemContent = styled.div`
   border-radius: 4px;
   width: 17.25rem;
   max-width: 17.25rem;
+  &:hover .card{
+    background: #2a2a2a;
+  }
+  &:hover .card small{
+    color: white;
+  }
 `;
 
 const ItemSmall = styled.small`
@@ -50,13 +56,14 @@ export default class Item extends React.Component {
                       <Card.Body>
                         <Card.Title>{this.props.item.title}</Card.Title>
                         {this.props.item.subtitle &&
-                          <Card.Text>
-                            <ItemSmall isDragging={snapshot.isDragging}>
-                              {this.props.item.isExplicit && <div style={{transform: 'translateY(-1.5px)', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: '#AAAAAA', color: '#121212', width: '0.75rem', height: '0.75rem'}}>E</div>}
-                              {this.props.item.isExplicit && ' '}
-                              {this.props.item.subtitle}
-                            </ItemSmall>
-                          </Card.Text>
+                          <div style={{display: 'flex', alignItems: 'center' }}>
+                            {this.props.item.isExplicit && <div style={{marginRight: '0.2rem', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: '#AAAAAA', color: '#121212', width: '0.75rem', height: '0.75rem'}}>E</div>}
+                            <Card.Text>
+                              <ItemSmall isDragging={snapshot.isDragging}>
+                                {this.props.item.subtitle}
+                              </ItemSmall>
+                            </Card.Text>
+                          </div>
                         }
                       </Card.Body>
                     </Col>

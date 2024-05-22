@@ -57,14 +57,25 @@ class TierList extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener("beforeunload", this.saveStateToStorage);
+    this.resizeObserver.unobserve(this.textarea);
   }
 
   componentDidMount() {
     window.addEventListener("beforeunload", this.saveStateToStorage);
 
-    const textarea = document.querySelector('.title-heading');
-    textarea.style.height = 'inherit';
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    this.resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        if (entry.target === this.textarea) {
+          this.textarea.style.height = 'inherit';
+          this.textarea.style.height = `${this.textarea.scrollHeight}px`;
+        }
+      }
+    });
+
+    this.textarea = document.querySelector('.title-heading');
+    this.textarea.style.height = 'inherit';
+    this.textarea.style.height = `${this.textarea.scrollHeight}px`;
+    this.resizeObserver.observe(this.textarea);
 
     this.context.containsItem = (id, type) => {
       if(id in this.state.items) {
@@ -277,6 +288,7 @@ class TierList extends React.Component {
   }
 
   updateTitle = (title) => {
+    // console.log(this.state.title, title)
     const newState = {
       ...this.state,
       title: title
@@ -459,8 +471,18 @@ class TierList extends React.Component {
     this.setState(newState);
   }
 
+  resetTitle() {
+    this.setState({ title: 'Spotify Tier List Maker' }, () => {
+      const textarea = document.querySelector('.title-heading');
+      textarea.style.height = 'inherit';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    });
+  }
+
+  // bug with title height when resetting
   resetTierList = () => {
     this.resetAllItems();
+    this.resetTitle();
     const newState = {
       ...this.state,
       title: 'Spotify Tier List Maker',

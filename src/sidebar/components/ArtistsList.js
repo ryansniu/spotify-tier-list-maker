@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { Card, Container, Row, Col, Image } from 'react-bootstrap';
+import { Card, Container, Row, Col, Image, OverlayTrigger, Tooltip, DropdownButton, Dropdown } from 'react-bootstrap';
 import _ from 'lodash';
 import noartist from '../images/noartist.svg';
-import cross from '../../tierlist/imgs/cross.svg'
 import plus from '../../tierlist/imgs/plus.svg'
-import cross_all from '../../tierlist/imgs/cross-all.svg'
-import plus_all from '../../tierlist/imgs/plus-all.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
 import LZString from 'lz-string';
 
@@ -46,73 +43,87 @@ const ArtistsList = ({ artists, getInnerItems }) => {
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
                   {({containsItem, addToItemPool, deleteFromItemPool, addManyToItemPool, deleteManyFromItemPool}) => (
-                    <Card className="search-card" style={{margin: "0.25rem 0", backgroundColor: containsItem(id, type) ? "black" : ""}}>
-                      <Container>
-                        <Row>
-                          <Col xs="auto">
-                            <a
-                              className="card-img-link"
-                              target="_blank"
-                              href={songURL}
-                              rel="noopener noreferrer"
-                              style={{filter: containsItem(id, type) ? "brightness(50%)" : "brightness(100%)"}}
-                              onDragStart={e => e.preventDefault()}
-                            >
-                              {imgURL !== null ? (
-                                <Card.Img src={artist.images[0].url} alt="artist" />
-                              ) : (
-                                <Card.Img src={noartist} alt="default artist" />
-                              )}
-                            </a>
-                          </Col>
-                          <Col>
-                            <Card.Body>
-                              <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
-                              <Card.Text>
-                                <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
-                              </Card.Text>
-                              <div>
-                                {containsItem(id, type) ? (
-                                  <button className="remove-buttons" onClick={() => {
-                                    deleteFromItemPool(id, type);
-                                    setUpdater(!updater);
-                                  }}>
-                                    <Image onDragStart={e => e.preventDefault()} src={cross} fluid alt='remove artist' style={{width: "75%", height: "75%"}}/>
-                                  </button>
+                    <div className='search-entry' style={{margin: "0.25rem 0", backgroundColor: containsItem(id, type) ? "black" : ""}}>
+                      <Card className="search-card"
+                        onClick={() => {
+                          if (containsItem(id, type)) deleteFromItemPool(id, type);
+                          else addToItemPool(id, type, songURL, imgURL, title, subtitle, null, null);
+                          setUpdater(!updater);
+                        }}
+                      >
+                        <Container>
+                          <Row>
+                            <Col xs="auto">
+                              <a
+                                className="card-img-link"
+                                target="_blank"
+                                href={songURL}
+                                rel="noopener noreferrer"
+                                style={{filter: containsItem(id, type) ? "brightness(50%)" : "brightness(100%)"}}
+                                onDragStart={e => e.preventDefault()}
+                              >
+                                {imgURL !== null ? (
+                                  <Card.Img src={artist.images[0].url} alt="artist" />
                                 ) : (
-                                  <button className="item-buttons" onClick={() => {
-                                    addToItemPool(id, type, songURL, imgURL, title, subtitle, null);
-                                    setUpdater(!updater);
-                                  }}>
-                                    <Image onDragStart={e => e.preventDefault()} src={plus} fluid alt='add artist' style={{width: "65%", height: "65%"}}/>
-                                  </button>
+                                  <Card.Img src={noartist} alt="default artist" />
                                 )}
-
-                                <button className="item-buttons" style={{right: "2.5rem"}} onClick={async () => {
-                                  const artistContents = await getAlbumsFromArtist(id, imgURL);
-                                  if(artistContents) {
-                                    addManyToItemPool(artistContents, 'album');
-                                    setUpdater(!updater);
-                                  }
-                                }}>
-                                  <Image onDragStart={e => e.preventDefault()} src={plus_all} fluid alt='add all albums in artist' style={{width: "60%", height: "60%"}}/>
-                                </button>
-
-                                <button className="remove-buttons" style={{right: "4.5rem"}} onClick={async () => {
-                                  const artistContents = await getAlbumsFromArtist(id, imgURL);
-                                  if(artistContents) {
-                                    deleteManyFromItemPool(artistContents, 'album');
-                                    setUpdater(!updater);
-                                  }
-                                }}>
-                                  <Image onDragStart={e => e.preventDefault()} src={cross_all} fluid alt='remove all albums in artist' style={{width: "60%", height: "60%"}}/>
-                                </button>
-                              </div>
-                            </Card.Body>
-                          </Col>
-                        </Row>
-                      </Container>
-                    </Card>
+                              </a>
+                            </Col>
+                            <Col>
+                              <Card.Body>
+                                <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
+                                <Card.Text>
+                                  <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
+                                </Card.Text>
+                              </Card.Body>
+                            </Col>
+                          </Row>
+                        </Container>
+                      </Card>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
+                        <button className="item-buttons"
+                          onClick={() => {
+                            if (containsItem(id, type)) deleteFromItemPool(id, type);
+                            else addToItemPool(id, type, songURL, imgURL, title, subtitle, null, null);
+                            setUpdater(!updater);
+                        }}>
+                          <Image className={`item-buttons-icon ${containsItem(id, type) ? 'rotate' : ''}`} onDragStart={e => e.preventDefault()} src={plus} fluid alt={`${containsItem(id, type) ? 'remove' : 'add'} album`}/>
+                        </button>
+                        <OverlayTrigger
+                          placement={'top'}
+                          overlay={<Tooltip>More Options</Tooltip>}
+                        >
+                          <DropdownButton
+                            className="item-dropdown"
+                            size="lg"
+                            variant="outline-secondary"
+                            menuVariant="dark"
+                            title="⋯"
+                            menuRole="Add/Remove Artist Albums"
+                            drop="start"
+                          >
+                            <Dropdown.Item as="button" onClick={async () => {
+                              const artistContents = await getAlbumsFromArtist(id, imgURL);
+                              if(artistContents) {
+                                addManyToItemPool(artistContents, 'album');
+                                setUpdater(!updater);
+                              }
+                            }}>
+                              Add All Albums
+                            </Dropdown.Item>
+                            <Dropdown.Item as="button" onClick={async () => {
+                              const artistContents = await getAlbumsFromArtist(id, imgURL);
+                              if(artistContents) {
+                                deleteManyFromItemPool(artistContents, 'album');
+                                setUpdater(!updater);
+                              }
+                            }}>
+                              Remove All Albums
+                            </Dropdown.Item>
+                          </DropdownButton>
+                        </OverlayTrigger>
+                      </div>
+                    </div>
                   )}
                 </TierListContext.Consumer>
               </React.Fragment>
