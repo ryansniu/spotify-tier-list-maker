@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
 import play from '../../tierlist/imgs/play.svg';
 import pause from '../../tierlist/imgs/pause.svg';
+import './audio-bars.css';
 
 const AudioPlayer = ({ src }) => {
   const audioRef = useRef(null);
@@ -11,12 +12,18 @@ const AudioPlayer = ({ src }) => {
     const audio = audioRef.current;
     audio.src = src;
     audio.volume = 0.25;
+    audio.onended = () => setIsPlaying(false);
   }, [src]);
 
   useEffect(() => {
     const audio = audioRef.current;
-    // resume if the previous audio played is the same one
-    isPlaying ? audio.play() : audio.pause(); audio.currentTime = 0;
+    if (isPlaying) {
+      audio.play();
+    }
+    else {
+      audio.pause();
+    }
+    // audio.currentTime = 0;
   }, [isPlaying]);
 
   const toggleAudio = () => {
@@ -29,12 +36,26 @@ const AudioPlayer = ({ src }) => {
         <source src={src} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
-      <button className="item-buttons" style={{border: "none", borderRadius: "0"}}
+      <button className="item-buttons audio-btn" style={{border: "none", borderRadius: "0"}}
       onClick={(e) => {
         e.stopPropagation();
         toggleAudio();
       }}>
-        <Image className="item-buttons-icon" onDragStart={e => e.preventDefault()} src={isPlaying ? pause : play} fluid alt={`${isPlaying ? 'pause' : 'play'} track`}/>
+        {
+          isPlaying ? (
+            <>
+              <div className="icon-bars">
+                <div className="bar"></div>
+                <div className="bar"></div>
+                <div className="bar"></div>
+                <div className="bar"></div>
+              </div>
+              <Image className="item-buttons-icon audio-icon" onDragStart={e => e.preventDefault()} src={pause} fluid alt="pause track"/>
+            </>
+          ) : (
+            <Image className="item-buttons-icon" onDragStart={e => e.preventDefault()} src={play} fluid alt="play track"/>
+          )
+        }
       </button>
     </div>
   );

@@ -1,0 +1,86 @@
+/* body {
+  background-color: #333;
+} */
+
+.item-buttons-icon.audio-icon {
+  visibility: hidden;
+}
+
+.icon-bars {
+  visibility: visible;
+}
+
+.item-buttons.audio-btn:hover .item-buttons-icon.audio-icon {
+  visibility: visible;
+}
+
+.item-buttons.audio-btn:hover .icon-bars {
+  visibility: hidden;
+}
+
+.icon-bars {
+  margin: 0 auto;
+  position: relative;
+  /* left: 50%;
+  top: 50%; */
+  transform: translateX(2.5px);
+  width: 15px;
+  height: 15px;
+  user-select: none;
+}
+
+.icon-bars .bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  width: 3px;
+  background-color: #1DB954;
+  -webkit-animation: up-down 0.9s infinite;
+          animation: up-down 0.9s infinite;
+}
+.icon-bars .bar:nth-child(2) {
+  left: 4px;
+  -webkit-animation-delay: -0.45s;
+          animation-delay: -0.45s;
+}
+.icon-bars .bar:nth-child(3) {
+  left: 8px;
+  -webkit-animation-delay: -0.675s;
+          animation-delay: -0.675s;
+}
+.icon-bars .bar:nth-child(4) {
+  left: 12px;
+  -webkit-animation-delay: -0.225s;
+          animation-delay: -0.225s;
+}
+
+@-webkit-keyframes up-down {
+  from {
+    top: 90%;
+  }
+  33% {
+    top: 45%;
+  }
+  67% {
+    top: 0;
+  }
+  to {
+    top: 90%;
+  }
+}
+
+@keyframes up-down {
+  from {
+    top: 90%;
+  }
+  33% {
+    top: 45%;
+  }
+  67% {
+    top: 0;
+  }
+  to {
+    top: 90%;
+  }
+}

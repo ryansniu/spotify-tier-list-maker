@@ -47,7 +47,6 @@ const TracksList = ({ tracks }) => {
                                   <Card.Img src={notrack} alt="default album cover" />
                                 )}
                               </a>
-                              {/* {audioURL && <AudioPlayer src={audioURL} />} */}
                             </Col>
                             <Col>
                               <Card.Body>
