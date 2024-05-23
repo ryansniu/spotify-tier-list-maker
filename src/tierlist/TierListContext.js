@@ -40,7 +40,9 @@ export const initialData = {
   addToItemPool: (id, type, songURL, imgURL, title, subtitle, audioURL, isExplicit) => {},
   deleteFromItemPool: (id, type) => {},
   addManyToItemPool: (items) => {},
-  deleteManyFromItemPool: (items) => {}
+  deleteManyFromItemPool: (items) => {},
+  getCurrentAudio: () => {},
+  setCurrentAudio: (audio) => {},
 }
 
 export const TierListContext = React.createContext(initialData);

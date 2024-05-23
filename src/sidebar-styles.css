@@ -344,7 +344,7 @@ body {
 }
 .item-buttons-icon {
   filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%);
-  transition: rotate 0.1s ease-out;
+  transition: rotate 0.1s ease-in-out;
 }
 .item-buttons:active .item-buttons-icon {
   filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%) !important;

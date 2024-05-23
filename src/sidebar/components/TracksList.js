@@ -73,7 +73,7 @@ const TracksList = ({ tracks }) => {
                         }}>
                           <Image className={`item-buttons-icon ${containsItem(id, type) ? 'rotate' : ''}`} onDragStart={e => e.preventDefault()} src={plus} fluid alt={`${containsItem(id, type) ? 'remove' : 'add'} track`}/>
                         </button>
-                        { audioURL && <AudioPlayer src={audioURL}/> }
+                        { audioURL && !containsItem(id, type) ? <AudioPlayer src={audioURL}/> : <div style={{height: "1.25rem"}} onClick={(e) => e.stopPropagation()}/>  }
                       </div>
                     </div>
                   )}

@@ -40,6 +40,8 @@ let playlistModalText = "";
 let playlistModalIsLoading = false;
 let toggleEditMode = false;
 
+let currentAudio = null;
+
 class InnerList extends React.PureComponent {
   render() {
     const presetColors = ["#F63E02", "#F5B700", "#1DB954", "#4D9DE0", "#360568", "#DC3CA0"];
@@ -150,6 +152,9 @@ class TierList extends React.Component {
         this.context.deleteFromItemPool(item.id, type);
       }
     }
+
+    this.context.getCurrentAudio = () => currentAudio;
+    this.context.setCurrentAudio = (audio) => currentAudio = audio;
   }
 
   ////////////////// START OF IMPORT FROM JSON //////////////////

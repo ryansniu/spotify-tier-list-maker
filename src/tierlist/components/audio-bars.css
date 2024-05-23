@@ -21,8 +21,6 @@
 .icon-bars {
   margin: 0 auto;
   position: relative;
-  /* left: 50%;
-  top: 50%; */
   transform: translateX(2.5px);
   width: 15px;
   height: 15px;
