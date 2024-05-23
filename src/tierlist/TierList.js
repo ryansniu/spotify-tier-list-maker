@@ -84,7 +84,7 @@ class TierList extends React.Component {
       return false;
     };
 
-    this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle, isExplicit, audioURL) => {
+    this.context.addToItemPool = (id, type, songURL, imgURL, title, subtitle, audioURL, isExplicit) => {
       if(this.context.containsItem(id, type)) return; // do nothing
       const newItems = {
         ...this.state.items,
@@ -95,8 +95,8 @@ class TierList extends React.Component {
           imgURL: imgURL,
           title: title,
           subtitle: subtitle,
-          isExplicit: isExplicit,
-          audioURL: audioURL
+          audioURL: audioURL,
+          isExplicit: isExplicit
         }
       }
       const newItemIds = Array.from(this.state.columns['item-pool'].itemIds).concat(id);
@@ -479,7 +479,6 @@ class TierList extends React.Component {
     });
   }
 
-  // bug with title height when resetting
   resetTierList = () => {
     this.resetAllItems();
     this.resetTitle();

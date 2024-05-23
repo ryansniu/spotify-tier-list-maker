@@ -1,13 +1,16 @@
 import { useRef, useEffect, useState } from 'react';
+import { Image } from 'react-bootstrap';
+import play from '../../tierlist/imgs/play.svg';
+import pause from '../../tierlist/imgs/pause.svg';
 
 const AudioPlayer = ({ src }) => {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [buttonText, setButtonText] = useState('P');
 
   useEffect(() => {
     const audio = audioRef.current;
     audio.src = src;
+    audio.volume = 0.25;
   }, [src]);
 
   useEffect(() => {
@@ -18,7 +21,6 @@ const AudioPlayer = ({ src }) => {
 
   const toggleAudio = () => {
     setIsPlaying(p => !p);
-    setButtonText(p => (p === 'P' ? 'S' : 'P'));
   };
 
   return (
@@ -27,7 +29,13 @@ const AudioPlayer = ({ src }) => {
         <source src={src} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
-      <button onClick={toggleAudio}>{buttonText}</button>
+      <button className="item-buttons" style={{border: "none", borderRadius: "0"}}
+      onClick={(e) => {
+        e.stopPropagation();
+        toggleAudio();
+      }}>
+        <Image className="item-buttons-icon" onDragStart={e => e.preventDefault()} src={isPlaying ? pause : play} fluid alt={`${isPlaying ? 'pause' : 'play'} track`}/>
+      </button>
     </div>
   );
 };

@@ -6,6 +6,8 @@ import notrack from '../../sidebar/images/notrack.svg';
 import noalbum from '../../sidebar/images/noalbum.svg';
 import noartist from '../../sidebar/images/noartist.svg';
 
+import AudioPlayer from '../../tierlist/components/AudioPlayer';
+
 const ItemContent = styled.div`
   background-color: ${props => (props.isDragging ? '#5a5a5a' : 'none')};
   border-radius: 4px;
@@ -56,8 +58,8 @@ export default class Item extends React.Component {
                       <Card.Body>
                         <Card.Title>{this.props.item.title}</Card.Title>
                         {this.props.item.subtitle &&
-                          <div style={{display: 'flex', alignItems: 'center' }}>
-                            {this.props.item.isExplicit && <div style={{marginRight: '0.2rem', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: '#AAAAAA', color: '#121212', width: '0.75rem', height: '0.75rem'}}>E</div>}
+                          <div style={{display: 'flex', alignItems: 'start' }}>
+                            {this.props.item.isExplicit && <div style={{userSelect: 'none', transform: 'translateY(3px)', marginRight: '0.2rem', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: '#AAAAAA', color: '#121212', minWidth: '0.75rem', height: '0.75rem'}}>E</div>}
                             <Card.Text>
                               <ItemSmall isDragging={snapshot.isDragging}>
                                 {this.props.item.subtitle}
@@ -70,6 +72,9 @@ export default class Item extends React.Component {
                   </Row>
                 </Container>
               </Card>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
+                { this.props.item.audioURL && <AudioPlayer src={this.props.item.audioURL}/> }
+              </div>
             </ItemContent>
           )}
         </Draggable>

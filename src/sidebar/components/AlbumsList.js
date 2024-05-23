@@ -42,14 +42,14 @@ const AlbumsList = ({ albums, getInnerItems }) => {
               <React.Fragment key={index}>
                 <TierListContext.Consumer>
                   {({containsItem, addToItemPool, deleteFromItemPool, addManyToItemPool, deleteManyFromItemPool}) => (
-                    <div className='search-entry' style={{margin: "0.25rem 0", backgroundColor: containsItem(id, type) ? "black" : ""}}>
-                      <Card className="search-card"
-                        onClick={() => {
-                          if (containsItem(id, type)) deleteFromItemPool(id, type);
-                          else addToItemPool(id, type, songURL, imgURL, title, subtitle, null, null);
-                          setUpdater(!updater);
-                        }}
-                      >
+                    <div className='search-entry' style={{margin: "0.25rem 0", backgroundColor: containsItem(id, type) ? "black" : ""}}
+                      onClick={() => {
+                        if (containsItem(id, type)) deleteFromItemPool(id, type);
+                        else addToItemPool(id, type, songURL, imgURL, title, subtitle, null, null);
+                        setUpdater(!updater);
+                      }}
+                    >
+                      <Card className="search-card">
                         <Container>
                           <Row>
                             <Col xs="auto">
@@ -60,6 +60,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                                 rel="noopener noreferrer"
                                 style={{filter: containsItem(id, type) ? "brightness(50%)" : "brightness(100%)"}}
                                 onDragStart={e => e.preventDefault()}
+                                onClick={(e) => e.stopPropagation()}
                               >
                                 {imgURL !== null ? (
                                   <Card.Img src={album.images[0].url} alt="album cover" />
@@ -83,7 +84,8 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                       </Card>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
                         <button className="item-buttons"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             if (containsItem(id, type)) deleteFromItemPool(id, type);
                             else addToItemPool(id, type, songURL, imgURL, title, subtitle, null, null);
                             setUpdater(!updater);
@@ -102,6 +104,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                             title="⋯"
                             menuRole="Add/Remove Album Tracks"
                             drop="start"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <Dropdown.Item as="button" onClick={async () => {
                               const albumContents = await getTracksFromAlbum(id, imgURL);
