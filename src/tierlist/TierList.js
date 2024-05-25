@@ -16,9 +16,6 @@ import SidebarSearch from '../sidebar/SidebarSearch'
 import RegionSelector from '../sidebar/components/RegionSelector'
 import search_img from './imgs/search.svg'
 import items_img from './imgs/playlist.svg'
-import './tierlist-styles.css';
-
-import AudioPlayer from './components/AudioPlayer';
 
 const Container = styled.div`
   display: flex;
@@ -39,8 +36,6 @@ let showPlaylistModal = false;
 let playlistModalText = "";
 let playlistModalIsLoading = false;
 let toggleEditMode = false;
-
-let currentAudio = null;
 
 class InnerList extends React.PureComponent {
   render() {
@@ -152,9 +147,6 @@ class TierList extends React.Component {
         this.context.deleteFromItemPool(item.id, type);
       }
     }
-
-    this.context.getCurrentAudio = () => currentAudio;
-    this.context.setCurrentAudio = (audio) => currentAudio = audio;
   }
 
   ////////////////// START OF IMPORT FROM JSON //////////////////

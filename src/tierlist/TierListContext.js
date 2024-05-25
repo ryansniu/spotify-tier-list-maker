@@ -34,15 +34,13 @@ export const initialData = {
         itemIds: [],
       }
     },
-    columnOrder: ['column-1', 'column-2', 'column-3','column-4']
+    columnOrder: ['column-1', 'column-2', 'column-3','column-4'],
   },
   containsItem: (id) => {},
   addToItemPool: (id, type, songURL, imgURL, title, subtitle, audioURL, isExplicit) => {},
   deleteFromItemPool: (id, type) => {},
   addManyToItemPool: (items) => {},
-  deleteManyFromItemPool: (items) => {},
-  getCurrentAudio: () => {},
-  setCurrentAudio: (audio) => {},
+  deleteManyFromItemPool: (items) => {}
 }
 
 export const TierListContext = React.createContext(initialData);

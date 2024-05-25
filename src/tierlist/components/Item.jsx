@@ -7,6 +7,7 @@ import noalbum from '../../sidebar/images/noalbum.svg';
 import noartist from '../../sidebar/images/noartist.svg';
 
 import AudioPlayer from '../../tierlist/components/AudioPlayer';
+import { AudioContext } from '../AudioContext';
 
 const ItemContent = styled.div`
   background-color: ${props => (props.isDragging ? '#5a5a5a' : 'none')};
@@ -73,7 +74,13 @@ export default class Item extends React.Component {
                 </Container>
               </Card>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
-                { this.props.item.audioURL && <AudioPlayer src={this.props.item.audioURL}/> }
+                { this.props.item.audioURL &&
+                <AudioContext.Consumer>
+                  {({getCurrentAudio, setCurrentAudio}) => (
+                    <AudioPlayer key={getCurrentAudio()} src={this.props.item.audioURL} getCurrentAudio={getCurrentAudio} setCurrentAudio={setCurrentAudio}/> 
+                  )}
+                </AudioContext.Consumer>
+                }
               </div>
             </ItemContent>
           )}
