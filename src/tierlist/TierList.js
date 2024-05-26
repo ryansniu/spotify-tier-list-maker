@@ -285,7 +285,6 @@ class TierList extends React.Component {
   }
 
   updateTitle = (title) => {
-    // console.log(this.state.title, title)
     const newState = {
       ...this.state,
       title: title

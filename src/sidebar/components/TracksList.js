@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card, Container, Row, Col, Image } from 'react-bootstrap';
 import _ from 'lodash';
 import notrack from '../images/notrack.svg';
 import plus from '../../tierlist/imgs/plus.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
-import { AudioContext } from '../../tierlist/AudioContext';
+import { AudioContext } from '../../tierlist/AudioProvider';
 
 import AudioPlayer from '../../tierlist/components/AudioPlayer';
 
 const TracksList = ({ tracks }) => {
   const [updater, setUpdater] = useState(false);
+  const { getCurrentAudioSrc, getCurrentAudioId, setCurrentAudio } = useContext(AudioContext);
+  const { containsItem } = useContext(TierListContext);
+
+  useEffect(() => {
+    const currentAudioSrc = getCurrentAudioSrc();
+    const currentAudioId = getCurrentAudioId();
+    if (currentAudioId && currentAudioSrc) {
+      const currentTrackStillExists = (tracks.items && tracks.items.some(track => track.preview_url === currentAudioSrc)) || containsItem(currentAudioId, 'track');
+      if (!currentTrackStillExists) setCurrentAudio(null, null);
+    }
+  }, [tracks, getCurrentAudioId, getCurrentAudioSrc, setCurrentAudio]);
+
   return (
     <React.Fragment>
       {Object.keys(tracks).length > 0 && (
@@ -23,7 +35,7 @@ const TracksList = ({ tracks }) => {
                 <TierListContext.Consumer>
                   {({containsItem, addToItemPool, deleteFromItemPool}) => (
                     <AudioContext.Consumer>
-                      {({getCurrentAudio, setCurrentAudio}) => (
+                      {({getCurrentAudioId, getCurrentAudioSrc, setCurrentAudio}) => (
                         <div className='search-entry' style={{margin: "0.25rem 0", backgroundColor: containsItem(id, type) ? "black" : ""}}
                           onClick={() => {
                             if (containsItem(id, type)) deleteFromItemPool(id, type);
@@ -76,7 +88,7 @@ const TracksList = ({ tracks }) => {
                             }}>
                               <Image className={`item-buttons-icon ${containsItem(id, type) ? 'rotate' : ''}`} onDragStart={e => e.preventDefault()} src={plus} fluid alt={`${containsItem(id, type) ? 'remove' : 'add'} track`}/>
                             </button>
-                            { audioURL && !containsItem(id, type) ? <AudioPlayer key={getCurrentAudio()} src={audioURL} getCurrentAudio={getCurrentAudio} setCurrentAudio={setCurrentAudio}/> : <div style={{height: "1.25rem"}} onClick={(e) => e.stopPropagation()}/>  }
+                            { audioURL && !containsItem(id, type) ? <AudioPlayer key={getCurrentAudioId()} id={id} src={audioURL} getCurrentAudioId={getCurrentAudioId} getCurrentAudioSrc={getCurrentAudioSrc} setCurrentAudio={setCurrentAudio}/> : <div style={{height: "1.25rem"}} onClick={(e) => e.stopPropagation()}/>  }
                           </div>
                         </div>
                       )}

@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AudioWrapper from './tierlist/AudioWrapper';
-import { AudioContext, initialAudio } from './tierlist/AudioContext';
+import { AudioProvider } from './tierlist/AudioProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './sidebar-styles.css';
 
 ReactDOM.render(
-  <AudioContext.Provider value = {initialAudio}>
+  <AudioProvider>
     <AudioWrapper/>
-  </AudioContext.Provider>,
+  </AudioProvider>,
   document.getElementById('root')
 );
