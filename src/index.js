@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import AudioWrapper from './tierlist/AudioWrapper';
 import { AudioProvider } from './tierlist/AudioProvider';

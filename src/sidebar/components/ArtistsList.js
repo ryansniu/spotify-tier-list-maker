@@ -23,9 +23,10 @@ const ArtistsList = ({ artists, getInnerItems }) => {
           songURL: item.external_urls.spotify,
           imgURL: !_.isEmpty(item.images) ? item.images[0].url : null,
           title: item.name,
-          subtitle: 'Album • ' + item.artists.map((artist) => artist.name).join(', ')
+          subtitle: 'Album • ' + item.artists.map((artist) => artist.name).join(', '),
+          audioURL: null,
+          isExplicit: null
         })
-        console.log(item.id, item.name, item.release_date, item.total_tracks, item.available_markets);
       }
       sessionStorage.setItem(cacheKey, LZString.compress(JSON.stringify(artistContents)));
     }

@@ -178,20 +178,25 @@ export const getMultipleItems = async (id, typeFrom, itemType) => {
 };
 
 export const getPlaylistItems = async (playlistID) => {
+  let playlistName = null;
+  let allItems = [];
   try {
     let API_URL = `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistID)}`;
-    let allItems = [];
     let firstURL = true;
     do {
       const result = await get(API_URL);
-      if(result === undefined || result.tracks === undefined) return [];
+      if(result === undefined || result.tracks === undefined) break;
+      if (firstURL) playlistName = result.name;
       const { items, next } = firstURL ? result.tracks : result;
       firstURL = false;
       allItems = allItems.concat(items);
       API_URL = next;
     } while (API_URL);
-    return allItems;
   } catch (error) {
     console.log('error', error);
   }
+  return {
+    name: playlistName,
+    result: allItems
+  };
 };

@@ -23,7 +23,9 @@ const AlbumsList = ({ albums, getInnerItems }) => {
           songURL: item.external_urls.spotify,
           imgURL: imgURL,
           title: item.name,
-          subtitle: item.artists.map((artist) => artist.name).join(', ')
+          subtitle: item.artists.map((artist) => artist.name).join(', '),
+          audioURL: item.preview_url,
+          isExplicit: item.explicit
         })
       }
       sessionStorage.setItem(cacheKey, LZString.compress(JSON.stringify(albumContents)));
@@ -118,6 +120,7 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                             <Dropdown.Item as="button" onClick={async () => {
                               const albumContents = await getTracksFromAlbum(id, imgURL);
                               if(albumContents) {
+                                // TODO: if track in albumContents is in item pool, stop playing it
                                 deleteManyFromItemPool(albumContents, 'track');
                                 setUpdater(!updater);
                               }

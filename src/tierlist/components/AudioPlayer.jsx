@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
 import play from '../../tierlist/imgs/play.svg';
 import pause from '../../tierlist/imgs/pause.svg';

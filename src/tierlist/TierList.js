@@ -137,7 +137,7 @@ class TierList extends React.Component {
     this.context.addManyToItemPool = (items, type) => {
       for(let i = 0; i < items.length; i++) {
         let item = items[i];
-        this.context.addToItemPool(item.id, type, item.songURL, item.imgURL, item.title, item.subtitle, item.isExplicit, item.audioURL);
+        this.context.addToItemPool(item.id, type, item.songURL, item.imgURL, item.title, item.subtitle, item.audioURL, item.isExplicit);
       }
     }
 
@@ -177,6 +177,7 @@ class TierList extends React.Component {
   }
 
   importFromJson = e => {
+    // TODO: set audio to null
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
@@ -216,25 +217,27 @@ class TierList extends React.Component {
       showItemNotifBadge = newState.columns['item-pool'].itemIds.length > 0 && !showItemPool;
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
+      this.textarea.style.height = 'inherit';
+      this.textarea.style.height = `${this.textarea.scrollHeight}px`;
       console.log("Successfully imported from JSON!");
     };
   }
   ////////////////// END OF IMPORT FROM JSON //////////////////
 
   importFromPlaylist = async () => {
+    // TODO: set audio to null
     playlistModalIsLoading = true;
     this.setState(this.state);
-    const result = await getPlaylistItems(playlistModalText);
+    const {name, result} = await getPlaylistItems(playlistModalText);
 
     let cacheKey = `playlist_${playlistModalText}`;
     if(sessionStorage.getItem(cacheKey) === null) {
       let playlistContents = [];
-      if(result === undefined || result[0] === undefined) {
+      if(name === null || result === undefined || result[0] === undefined) {
         showErrorModal = true;
         errorModalText = "Playlist does not exist (or is private)!"
         return null;
       }
-      this.removeAllItems();
       for(let i = 0; i < result.length; i++) {
         let item = result[i].track;
         playlistContents.push({
@@ -243,13 +246,25 @@ class TierList extends React.Component {
           songURL: item.external_urls.spotify,
           imgURL: !_.isEmpty(item.album.images) ? item.album.images[0].url : null,
           title: item.name,
-          subtitle: item.artists.map((artist) => artist.name).join(', ')
+          subtitle: item.artists.map((artist) => artist.name).join(', '),
+          audioURL: item.preview_url,
+          isExplicit: item.explicit
         })
       }
-      sessionStorage.setItem(cacheKey, LZString.compress(JSON.stringify(playlistContents)));
+
+      const data = {
+        title: name,
+        tracklist: playlistContents
+      }
+      sessionStorage.setItem(cacheKey, LZString.compress(JSON.stringify(data)));
     }
-    let tracklist = JSON.parse(LZString.decompress(sessionStorage.getItem(cacheKey)))
+    this.removeAllItems();
+    let {title, tracklist} = JSON.parse(LZString.decompress(sessionStorage.getItem(cacheKey)))
     this.context.addManyToItemPool(tracklist, 'track')
+
+    this.updateTitle(title);
+    this.textarea.style.height = 'inherit';
+    this.textarea.style.height = `${this.textarea.scrollHeight}px`;
     return tracklist
   }
 
@@ -304,6 +319,9 @@ class TierList extends React.Component {
     const newItems = Object.keys(oldItems).reduce((object, key) => {
       if (key !== id) {
         object[key] = oldItems[key];
+      }
+      else {
+        // TODO: set audio to null IF item is playing
       }
       return object;
     }, {});
@@ -362,6 +380,9 @@ class TierList extends React.Component {
       if(!this.state.columns[id].itemIds.includes(key)) {
         object[key] = oldItems[key];
       }
+      else {
+        // TODO: set audio to null IF item is playing
+      }
       return object;
     }, {});
 
@@ -409,6 +430,7 @@ class TierList extends React.Component {
 
   removeAllItems = () => {
     this.resetAllItems();
+    // TODO: if item is playing in item pool then set audio to null
     const newState = {
       ...this.state,
       columns: {
@@ -477,6 +499,7 @@ class TierList extends React.Component {
 
   resetTierList = () => {
     this.resetAllItems();
+    // TODO: set audio to null
     this.resetTitle();
     const newState = {
       ...this.state,
