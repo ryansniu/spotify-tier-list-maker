@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Card, Container, Row, Col, Image, OverlayTrigger, Tooltip, DropdownButton, Dropdown } from 'react-bootstrap';
 import _ from 'lodash';
 import noalbum from '../images/noalbum.svg';
 import plus from '../../tierlist/imgs/plus.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
+import { AudioContext } from '../../tierlist/AudioProvider';
 import LZString from 'lz-string';
 
 const AlbumsList = ({ albums, getInnerItems }) => {
   const [updater, setUpdater] = useState(false);
+  const { getCurrentAudioSrc, getCurrentAudioId, setCurrentAudio } = useContext(AudioContext);
+  const { containsItem } = useContext(TierListContext);
 
   const getTracksFromAlbum = async (id, imgURL) => {
     let cacheKey = `album_${id}`;
@@ -120,7 +123,10 @@ const AlbumsList = ({ albums, getInnerItems }) => {
                             <Dropdown.Item as="button" onClick={async () => {
                               const albumContents = await getTracksFromAlbum(id, imgURL);
                               if(albumContents) {
-                                // TODO: if track in albumContents is in item pool, stop playing it
+                                const currentAudioId = getCurrentAudioId();
+                                if (currentAudioId) {
+                                  albumContents.some(track => track.id === currentAudioId) && containsItem(currentAudioId, 'track') && setCurrentAudio(null, null);
+                                }
                                 deleteManyFromItemPool(albumContents, 'track');
                                 setUpdater(!updater);
                               }

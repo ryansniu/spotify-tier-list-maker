@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Image, Dropdown, Button, ButtonGroup, OverlayTrigger, Tooltip, ToggleButton, Modal } from 'react-bootstrap';
 import { ColorPicker, useColor, toColor } from "react-color-palette";
 import styled from 'styled-components';
@@ -9,6 +9,9 @@ import palette_white from '../imgs/palette-white.svg'
 import cross from '../imgs/cross.svg'
 import "react-color-palette/lib/css/styles.css";
 import '../tierlist-styles.css'
+
+import { TierListContext } from '../../tierlist/TierListContext';
+import { AudioContext } from '../../tierlist/AudioProvider';
 
 const TitleStyle = styled.h3.attrs(props => ({
   style: {
@@ -65,6 +68,9 @@ const Title = props => {
   const update = props.updateHeader;
   const deleteCol = props.deleteHandler;
   const presetColors = props.presetColors;
+  
+  const { getCurrentAudioId, setCurrentAudio } = useContext(AudioContext);
+  const { containsItem } = useContext(TierListContext);
 
 
   function onClickOutSide(e) {
@@ -115,7 +121,7 @@ const Title = props => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="success" id="keep-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, true);}}>Keep</Button>
-          <Button variant="danger" id="delete-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, false);}}>Delete</Button>
+          <Button variant="danger" id="delete-items" onClick={() => {setdeleteModalShow(false); deleteCol(id, false); containsItem(getCurrentAudioId(), 'track') && setCurrentAudio(null, null);}}>Delete</Button>
           <Button variant="secondary" id="cancel-delete-btn" onClick={() => {setdeleteModalShow(false);}}>Cancel</Button>
         </Modal.Footer>
       </Modal>

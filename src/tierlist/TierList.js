@@ -6,6 +6,7 @@ import AddColumnButton from './components/AddColumnButton';
 import ItemPool from './components/ItemPool';
 import TrashCan from './components/TrashCan';
 import { TierListContext } from './TierListContext';
+import { AudioContext } from './AudioProvider';
 import { getPlaylistItems } from '../sidebar/actions/result';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button, Offcanvas, Dropdown, DropdownButton, OverlayTrigger, Tooltip, Image, Modal, Form, InputGroup, Spinner} from 'react-bootstrap';
@@ -177,7 +178,6 @@ class TierList extends React.Component {
   }
 
   importFromJson = e => {
-    // TODO: set audio to null
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
@@ -217,15 +217,16 @@ class TierList extends React.Component {
       showItemNotifBadge = newState.columns['item-pool'].itemIds.length > 0 && !showItemPool;
       refreshSidebar = !refreshSidebar;
       this.setState(newState);
+
       this.textarea.style.height = 'inherit';
       this.textarea.style.height = `${this.textarea.scrollHeight}px`;
+      
       console.log("Successfully imported from JSON!");
     };
   }
   ////////////////// END OF IMPORT FROM JSON //////////////////
 
   importFromPlaylist = async () => {
-    // TODO: set audio to null
     playlistModalIsLoading = true;
     this.setState(this.state);
     const {name, result} = await getPlaylistItems(playlistModalText);
@@ -261,10 +262,13 @@ class TierList extends React.Component {
     this.removeAllItems();
     let {title, tracklist} = JSON.parse(LZString.decompress(sessionStorage.getItem(cacheKey)))
     this.context.addManyToItemPool(tracklist, 'track')
+    refreshSidebar = !refreshSidebar;
+    this.setState(this.state);
 
     this.updateTitle(title);
     this.textarea.style.height = 'inherit';
     this.textarea.style.height = `${this.textarea.scrollHeight}px`;
+
     return tracklist
   }
 
@@ -278,6 +282,8 @@ class TierList extends React.Component {
         link.click();
         URL.revokeObjectURL(link.href);
       }
+
+      const filter = node => !['audio-player'].some(classname => node.classList?.contains(classname));
   
       let tierlist = document.getElementById('tierlist-inner');
       let displayWidth = tierlist.getBoundingClientRect().width;
@@ -285,15 +291,15 @@ class TierList extends React.Component {
       if(fullWidth > displayWidth) fullWidth += 8;
       
       if(fileType === "jpeg") {
-        toJpeg(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
+        toJpeg(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight, filter: filter})
           .then(saveIMG).catch((err) => { showErrorModal = true; errorModalText = err; this.setState(this.state); });
       }
       if(fileType === "png") {
-        toPng(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight})
+        toPng(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight, filter: filter})
           .then(saveIMG).catch((err) => { showErrorModal = true; errorModalText = err; this.setState(this.state); });
       }
       if(fileType === "svg") {
-        toSvg(tierlist, {backgroundColor: '#121212', width: fullWidth, height: fullHeight})
+        toSvg(tierlist, {backgroundColor: '#121212', width: fullWidth, height: fullHeight, filter: filter})
           .then(saveIMG).catch((err) => { showErrorModal = true; errorModalText = err; this.setState(this.state); });
       }
     });
@@ -322,6 +328,7 @@ class TierList extends React.Component {
       }
       else {
         // TODO: set audio to null IF item is playing
+        // id == getCurrentAudioId() && setCurrentAudio(null, null);
       }
       return object;
     }, {});
@@ -380,9 +387,6 @@ class TierList extends React.Component {
       if(!this.state.columns[id].itemIds.includes(key)) {
         object[key] = oldItems[key];
       }
-      else {
-        // TODO: set audio to null IF item is playing
-      }
       return object;
     }, {});
 
@@ -430,7 +434,7 @@ class TierList extends React.Component {
 
   removeAllItems = () => {
     this.resetAllItems();
-    // TODO: if item is playing in item pool then set audio to null
+
     const newState = {
       ...this.state,
       columns: {
@@ -499,7 +503,6 @@ class TierList extends React.Component {
 
   resetTierList = () => {
     this.resetAllItems();
-    // TODO: set audio to null
     this.resetTitle();
     const newState = {
       ...this.state,
@@ -648,230 +651,234 @@ class TierList extends React.Component {
 
   render() {
     return (
-      <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
-        <Modal id="delete-modal" show={showErrorModal} onHide={() => {showErrorModal = false; this.setState(this.state);}} size="sm">
-          <Modal.Header closeButton closeVariant="white">
-            <Modal.Title style={{color: '#F30000'}}>Error!</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {errorModalText}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="success" id="keep-items" onClick={() => {showErrorModal = false; this.setState(this.state);}}>Okay</Button>
-          </Modal.Footer>
-        </Modal>
-        <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = "";}} backdrop={playlistModalIsLoading ? 'static' : true}>
-          <Modal.Header closeButton={!playlistModalIsLoading} closeVariant="white">
-            <Modal.Title style={{fontWeight: 'bold'}}>Import from Playlist</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{width: '27rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <Form onSubmit={async (event) => {event.preventDefault(); await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; this.setState(this.state);}}>
-              <InputGroup style={{width: '24rem'}}>
-                <InputGroup.Text id="search-flag" style={{fontSize: '0.75rem', borderRadius: '1rem 0 0 1rem', borderLeftStyle: 'solid', borderRightStyle: 'none', color: '#777', padding: '0.25rem 0.25rem 0.25rem 0.5rem'}}>open.spotify.com/playlist/</InputGroup.Text>
-                <Form.Control
-                  type="search"
-                  name="searchTerm"
-                  value={playlistModalText}
-                  placeholder="playlist id"
-                  onChange={(event) => { playlistModalText = event.target.value; this.setState(this.state); }}
-                  autoComplete="off"
-                />
-              </InputGroup>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="success" id="keep-items" style={{display: playlistModalIsLoading ? 'none' : 'inline-block'}} onClick={async () => {await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; playlistModalIsLoading = false; this.setState(this.state);}}>Import</Button>
-            <div id="playlist-loading" style={{display: playlistModalIsLoading ? 'flex' : 'none'}}>
-              <Spinner animation="border" role="status" style={{marginRight: '0.5rem'}}/>
-              Loading...
+      <AudioContext.Consumer>
+        {({getCurrentAudioId, getCurrentAudioSrc, setCurrentAudio}) => (
+          <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+            <Modal id="delete-modal" show={showErrorModal} onHide={() => {showErrorModal = false; this.setState(this.state);}} size="sm">
+              <Modal.Header closeButton closeVariant="white">
+                <Modal.Title style={{color: '#F30000'}}>Error!</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {errorModalText}
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="success" id="keep-items" onClick={() => {showErrorModal = false; this.setState(this.state);}}>Okay</Button>
+              </Modal.Footer>
+            </Modal>
+            <Modal id="playlist-modal" show={showPlaylistModal} onHide={() => {showPlaylistModal = false; this.setState(this.state); playlistModalText = "";}} backdrop={playlistModalIsLoading ? 'static' : true}>
+              <Modal.Header closeButton={!playlistModalIsLoading} closeVariant="white">
+                <Modal.Title style={{fontWeight: 'bold'}}>Import from Playlist</Modal.Title>
+              </Modal.Header>
+              <Modal.Body style={{width: '27rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Form onSubmit={async (event) => {event.preventDefault(); await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; this.setState(this.state); setCurrentAudio(null, null);}}>
+                  <InputGroup style={{width: '24rem'}}>
+                    <InputGroup.Text id="search-flag" style={{fontSize: '0.75rem', borderRadius: '1rem 0 0 1rem', borderLeftStyle: 'solid', borderRightStyle: 'none', color: '#777', padding: '0.25rem 0.25rem 0.25rem 0.5rem'}}>open.spotify.com/playlist/</InputGroup.Text>
+                    <Form.Control
+                      type="search"
+                      name="searchTerm"
+                      value={playlistModalText}
+                      placeholder="playlist id"
+                      onChange={(event) => { playlistModalText = event.target.value; this.setState(this.state); }}
+                      autoComplete="off"
+                    />
+                  </InputGroup>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="success" id="keep-items" style={{display: playlistModalIsLoading ? 'none' : 'inline-block'}} onClick={async () => {await this.importFromPlaylist(); showPlaylistModal = false; playlistModalText = ""; playlistModalIsLoading = false; this.setState(this.state); setCurrentAudio(null, null);}}>Import</Button>
+                <div id="playlist-loading" style={{display: playlistModalIsLoading ? 'flex' : 'none'}}>
+                  <Spinner animation="border" role="status" style={{marginRight: '0.5rem'}}/>
+                  Loading...
+                </div>
+              </Modal.Footer>
+            </Modal>
+    
+            <div style={{margin: '0.5rem 0 0 0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <textarea 
+                type="text"
+                value={this.state.title}
+                placeholder='Tier List Title'
+                onBlur={e => {
+                  if (e.target.value === '') this.updateTitle('Spotify Tier List Maker');
+                }}
+                onChange={e => this.updateTitle(e.target.value)}
+                className="title-heading"
+                onInput={e => {
+                  e.target.style.height = 'inherit';
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+                rows='1'
+              />
             </div>
-          </Modal.Footer>
-        </Modal>
-
-        <div style={{margin: '0.5rem 0 0 0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <textarea 
-            type="text"
-            value={this.state.title}
-            placeholder='Tier List Title'
-            onBlur={e => {
-              if (e.target.value === '') this.updateTitle('Spotify Tier List Maker');
-            }}
-            onChange={e => this.updateTitle(e.target.value)}
-            className="title-heading"
-            onInput={e => {
-              e.target.style.height = 'inherit';
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            }}
-            rows='1'
-          />
-        </div>
-        
-        <Container style={{flexWrap: 'wrap', margin: '0.5rem 3rem 0 3rem'}}>
-          
-          <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', margin: '0 1.5rem'}}>
-            <OverlayTrigger
-              placement={'top'}
-              overlay={<Tooltip>Add/Delete Columns</Tooltip>}
-            >
-              <Button id="toolbar-button" style={toggleEditMode ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { toggleEditMode = !toggleEditMode; this.setState(this.state); }}>{toggleEditMode ? <span style={{color:"#1DB954"}}>✦</span> : ''} Edit{toggleEditMode ? 'ing' : ''}</Button>
-            </OverlayTrigger>
             
-            <OverlayTrigger
-              placement={'top'}
-              overlay={<Tooltip>Reset Placements</Tooltip>}
-            >
-              <DropdownButton
-                className="toolbar-dropdown"
-                size="lg"
-                variant="outline-secondary"
-                menuVariant="dark"
-                title="Reset"
-                menuRole="Reset placements"
-              >
-                <Dropdown.Item as="button" onClick={this.resetAllItems}>Reset All Items</Dropdown.Item>
-                <Dropdown.Item as="button" onClick={this.removeAllItems}>Delete All Items</Dropdown.Item>
-                <Dropdown.Item as="button" onClick={this.resetAllColumns}>Reset All Columns</Dropdown.Item>
-                <Dropdown.Item as="button" onClick={this.resetTierList}>Reset Tier List</Dropdown.Item>
-              </DropdownButton>
-            </OverlayTrigger>
-
-            <OverlayTrigger
-              placement={'top'}
-              overlay={<Tooltip>Save Image</Tooltip>}
-            >
-              <DropdownButton
-                className="toolbar-dropdown"
-                size="lg"
-                variant="outline-secondary"
-                menuVariant="dark"
-                title="Save"
-                menuRole="Save as image"
-              >
-                {saveFileTypes.map((fileType) => (
-                  <Dropdown.Item as="button" key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</Dropdown.Item>
-                ))}
-              </DropdownButton>
-            </OverlayTrigger>
-
-            <OverlayTrigger
-              placement={'top'}
-              overlay={<Tooltip>Import/Export Data</Tooltip>}
-            >
-              <DropdownButton
-                className="toolbar-dropdown"
-                size="lg"
-                variant="outline-secondary"
-                menuVariant="dark"
-                title="Data"
-                menuRole="Import/export .json data"
-              >
-                <Dropdown.Item as="button" onClick={() => { showPlaylistModal = true; this.setState(this.state); }}>Import from Playlist</Dropdown.Item>
-                <Dropdown.Item
-                  href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
-                  download="tierlist.json"
-                  id="export-data"
-                  onSelect={() => { toggleEditMode = false; this.setState(this.state); }}
-                  onDragStart={e => e.preventDefault()}
-                  style={{letterSpacing: '0px'}}
+            <Container style={{flexWrap: 'wrap', margin: '0.5rem 3rem 0 3rem'}}>
+              
+              <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', margin: '0 1.5rem'}}>
+                <OverlayTrigger
+                  placement={'top'}
+                  overlay={<Tooltip>Add/Delete Columns</Tooltip>}
                 >
-                  Export as Json
-                </Dropdown.Item>
-                <Dropdown.ItemText id="import-data" style={{letterSpacing: '0px'}}>
-                  <label style={{width: '100%', height: '100%'}} htmlFor="import_tierlist">Import from Json</label>
-                  <br/>
-                  <input style={{display: 'none'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={this.importFromJson}/>
-                </Dropdown.ItemText>
-              </DropdownButton>
-            </OverlayTrigger>
-          </div>
-        </Container>
-
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          <div id="tierlist-outer">
-            <div id="tierlist-holder">
-              <Droppable droppableId="tiers" direction="horizontal" type="column">
-                {provided => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    key={refreshColumns}
-                    id="tierlist-inner"
+                  <Button id="toolbar-button" style={toggleEditMode ? {color: "white"} : {}} size="lg" variant="outline-secondary" onClick={() => { toggleEditMode = !toggleEditMode; this.setState(this.state); }}>{toggleEditMode ? <span style={{color:"#1DB954"}}>✦</span> : ''} Edit{toggleEditMode ? 'ing' : ''}</Button>
+                </OverlayTrigger>
+                
+                <OverlayTrigger
+                  placement={'top'}
+                  overlay={<Tooltip>Reset Placements</Tooltip>}
+                >
+                  <DropdownButton
+                    className="toolbar-dropdown"
+                    size="lg"
+                    variant="outline-secondary"
+                    menuVariant="dark"
+                    title="Reset"
+                    menuRole="Reset placements"
                   >
-                    {this.state.columnOrder.map((columnId, index) => {
-                      const column = this.state.columns[columnId];
-                      return (
-                        <div key={index} style={{display: 'flex', flexDirection: 'row'}}>
-                          {toggleEditMode && (
-                            <AddColumnButton
-                              key={`add-btn-${index}`}
-                              index={index}
-                              addHandler={this.addNewCol}
-                            />
-                          )}
-                          <InnerList
-                            key={column.id}
-                            column={column}
-                            itemMap={this.state.items}
-                            index={index}
-                            updateHeader={this.updateColHeader}
-                            deleteHandler={this.removeCol}
-                            toggleEditMode={toggleEditMode}
+                    <Dropdown.Item as="button" onClick={this.resetAllItems}>Reset All Items</Dropdown.Item>
+                    <Dropdown.Item as="button" onClick={() => {this.removeAllItems(); setCurrentAudio(null, null);}}>Delete All Items</Dropdown.Item>
+                    <Dropdown.Item as="button" onClick={this.resetAllColumns}>Reset All Columns</Dropdown.Item>
+                    <Dropdown.Item as="button" onClick={() => {this.resetTierList(); setCurrentAudio(null, null);}}>Reset Tier List</Dropdown.Item>
+                  </DropdownButton>
+                </OverlayTrigger>
+    
+                <OverlayTrigger
+                  placement={'top'}
+                  overlay={<Tooltip>Save Image</Tooltip>}
+                >
+                  <DropdownButton
+                    className="toolbar-dropdown"
+                    size="lg"
+                    variant="outline-secondary"
+                    menuVariant="dark"
+                    title="Save"
+                    menuRole="Save as image"
+                  >
+                    {saveFileTypes.map((fileType) => (
+                      <Dropdown.Item as="button" key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</Dropdown.Item>
+                    ))}
+                  </DropdownButton>
+                </OverlayTrigger>
+    
+                <OverlayTrigger
+                  placement={'top'}
+                  overlay={<Tooltip>Import/Export Data</Tooltip>}
+                >
+                  <DropdownButton
+                    className="toolbar-dropdown"
+                    size="lg"
+                    variant="outline-secondary"
+                    menuVariant="dark"
+                    title="Data"
+                    menuRole="Import/export .json data"
+                  >
+                    <Dropdown.Item as="button" onClick={() => { showPlaylistModal = true; this.setState(this.state); }}>Import from Playlist</Dropdown.Item>
+                    <Dropdown.Item
+                      href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
+                      download="tierlist.json"
+                      id="export-data"
+                      onSelect={() => { toggleEditMode = false; this.setState(this.state); }}
+                      onDragStart={e => e.preventDefault()}
+                      style={{letterSpacing: '0px'}}
+                    >
+                      Export as Json
+                    </Dropdown.Item>
+                    <Dropdown.ItemText id="import-data" style={{letterSpacing: '0px'}}>
+                      <label style={{width: '100%', height: '100%'}} htmlFor="import_tierlist">Import from Json</label>
+                      <br/>
+                      <input style={{display: 'none'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={(e) => {this.importFromJson(e); setCurrentAudio(null, null);}}/>
+                    </Dropdown.ItemText>
+                  </DropdownButton>
+                </OverlayTrigger>
+              </div>
+            </Container>
+    
+            <DragDropContext onDragEnd={this.onDragEnd}>
+              <div id="tierlist-outer">
+                <div id="tierlist-holder">
+                  <Droppable droppableId="tiers" direction="horizontal" type="column">
+                    {provided => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        key={refreshColumns}
+                        id="tierlist-inner"
+                      >
+                        {this.state.columnOrder.map((columnId, index) => {
+                          const column = this.state.columns[columnId];
+                          return (
+                            <div key={index} style={{display: 'flex', flexDirection: 'row'}}>
+                              {toggleEditMode && (
+                                <AddColumnButton
+                                  key={`add-btn-${index}`}
+                                  index={index}
+                                  addHandler={this.addNewCol}
+                                />
+                              )}
+                              <InnerList
+                                key={column.id}
+                                column={column}
+                                itemMap={this.state.items}
+                                index={index}
+                                updateHeader={this.updateColHeader}
+                                deleteHandler={this.removeCol}
+                                toggleEditMode={toggleEditMode}
+                              />
+                            </div>
+                          );
+                        })}
+                        {toggleEditMode && (
+                          <AddColumnButton
+                            key={`add-btn-${this.state.columnOrder.length}`}
+                            index={this.state.columnOrder.length}
+                            addHandler={this.addNewCol}
                           />
-                        </div>
-                      );
-                    })}
-                    {toggleEditMode && (
-                      <AddColumnButton
-                        key={`add-btn-${this.state.columnOrder.length}`}
-                        index={this.state.columnOrder.length}
-                        addHandler={this.addNewCol}
-                      />
+                        )}
+                        {provided.placeholder}
+                      </div>
                     )}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </div>
+                  </Droppable>
+                </div>
+              </div>
+    
+              <OverlayTrigger
+                placement={'right'}
+                overlay={<Tooltip>{showItemPool ? 'Hide' : 'Show'} Items</Tooltip>}
+              >
+                <Button id="itempool-toggle" type="button" onClick={() => this.showItems(!showItemPool)}>
+                  {showItemNotifBadge && (<div id="item-notif-badge"/>)}
+                  <Image onDragStart={e => e.preventDefault()} src={items_img} fluid alt='toggle music items' style={{width: "100%", height: "100%", filter: showItemPool ? "invert(100%)" : ""}}/>
+                </Button>
+              </OverlayTrigger>
+              <Offcanvas id="itempool-overlay" show={showItemPool} onHide={() => this.showItems(false)} placement={'start'} scroll backdrop={false}>
+                <Offcanvas.Header style={{justifyContent: "center", padding: "0.5rem 1rem 0 1rem"}}>
+                  <Offcanvas.Title><TrashCan /></Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body style={{padding: 0}}>
+                  <h1 className="main-heading">Items</h1>
+                  <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
+                </Offcanvas.Body>
+              </Offcanvas>
+            </DragDropContext>
+    
+            <OverlayTrigger
+              placement={'left'}
+              overlay={<Tooltip>{showSearchbar ? 'Hide' : 'Show'} Search</Tooltip>}
+            >
+              <Button id="search-toggle" type="button" onClick={() => this.showSearch(!showSearchbar)}>
+                <Image onDragStart={e => e.preventDefault()} src={search_img} fluid alt='toggle search bar' style={{width: "100%", height: "100%", filter: showSearchbar ? "invert(100%)" : ""}}/>
+              </Button>
+            </OverlayTrigger>
+            <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
+              <Offcanvas.Header style={{justifyContent: "center", paddingBottom: "0.5rem"}}>
+                <Offcanvas.Title><h1 className="main-heading">Search</h1></Offcanvas.Title>
+                <RegionSelector refreshSidebar={refreshSidebar}/>
+              </Offcanvas.Header>
+              <Offcanvas.Body style={{padding: "0.125rem 0 0 0", overflowY: 'scroll'}}>
+                <SidebarSearch refreshSidebar={refreshSidebar}/>
+              </Offcanvas.Body>
+            </Offcanvas>
           </div>
-
-          <OverlayTrigger
-            placement={'right'}
-            overlay={<Tooltip>{showItemPool ? 'Hide' : 'Show'} Items</Tooltip>}
-          >
-            <Button id="itempool-toggle" type="button" onClick={() => this.showItems(!showItemPool)}>
-              {showItemNotifBadge && (<div id="item-notif-badge"/>)}
-              <Image onDragStart={e => e.preventDefault()} src={items_img} fluid alt='toggle music items' style={{width: "100%", height: "100%", filter: showItemPool ? "invert(100%)" : ""}}/>
-            </Button>
-          </OverlayTrigger>
-          <Offcanvas id="itempool-overlay" show={showItemPool} onHide={() => this.showItems(false)} placement={'start'} scroll backdrop={false}>
-            <Offcanvas.Header style={{justifyContent: "center", padding: "0.5rem 1rem 0 1rem"}}>
-              <Offcanvas.Title><TrashCan /></Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body style={{padding: 0}}>
-              <h1 className="main-heading">Items</h1>
-              <ItemPool items = {this.state.columns['item-pool'].itemIds.map(itemId => this.state.items[itemId])} />
-            </Offcanvas.Body>
-          </Offcanvas>
-        </DragDropContext>
-
-        <OverlayTrigger
-          placement={'left'}
-          overlay={<Tooltip>{showSearchbar ? 'Hide' : 'Show'} Search</Tooltip>}
-        >
-          <Button id="search-toggle" type="button" onClick={() => this.showSearch(!showSearchbar)}>
-            <Image onDragStart={e => e.preventDefault()} src={search_img} fluid alt='toggle search bar' style={{width: "100%", height: "100%", filter: showSearchbar ? "invert(100%)" : ""}}/>
-          </Button>
-        </OverlayTrigger>
-        <Offcanvas id="sidebar-overlay" show={showSearchbar} onHide={() => this.showSearch(false)} placement={'end'} scroll backdrop={false}>
-          <Offcanvas.Header style={{justifyContent: "center", paddingBottom: "0.5rem"}}>
-            <Offcanvas.Title><h1 className="main-heading">Search</h1></Offcanvas.Title>
-            <RegionSelector refreshSidebar={refreshSidebar}/>
-          </Offcanvas.Header>
-          <Offcanvas.Body style={{padding: "0.125rem 0 0 0", overflowY: 'scroll'}}>
-            <SidebarSearch refreshSidebar={refreshSidebar}/>
-          </Offcanvas.Body>
-        </Offcanvas>
-      </div>
+        )}
+      </AudioContext.Consumer>
     );
   }
 }

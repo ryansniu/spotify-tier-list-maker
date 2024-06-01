@@ -73,11 +73,11 @@ export default class Item extends React.Component {
                   </Row>
                 </Container>
               </Card>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
+              <div className="audio-player" style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
                 { this.props.item.audioURL &&
                 <AudioContext.Consumer>
                   {({getCurrentAudioId, getCurrentAudioSrc, setCurrentAudio}) => (
-                    <AudioPlayer key={getCurrentAudioId()} src={this.props.item.audioURL} getCurrentAudioId={getCurrentAudioId} getCurrentAudioSrc={getCurrentAudioSrc} setCurrentAudio={setCurrentAudio}/> 
+                    <AudioPlayer key={getCurrentAudioId()} id={this.props.item.id} src={this.props.item.audioURL} getCurrentAudioId={getCurrentAudioId} getCurrentAudioSrc={getCurrentAudioSrc} setCurrentAudio={setCurrentAudio}/> 
                   )}
                 </AudioContext.Consumer>
                 }
