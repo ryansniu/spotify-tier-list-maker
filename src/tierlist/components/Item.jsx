@@ -20,6 +20,12 @@ const ItemContent = styled.div`
   &:hover .card small{
     color: white;
   }
+  &:hover .audio-player-bg {
+    background-color: #0008;
+  }
+  &:hover .audio-player-bg > * {
+    visibility: visible;
+  }
 `;
 
 const ItemSmall = styled.small`
@@ -41,19 +47,20 @@ export default class Item extends React.Component {
                 <Container>
                   <Row>
                     <Col xs="auto">
-                      <a
-                        className="card-img-link"
-                        target="_blank"
-                        href={this.props.item.songURL}
-                        rel="noopener noreferrer"
-                        onDragStart={e => e.preventDefault()}
-                      >
+                      <div style={{ position: 'relative'}}>
                         {this.props.item.imgURL ? (
-                          <Card.Img src={this.props.item.imgURL} alt="" />
+                          <Card.Img src={this.props.item.imgURL} alt="track album cover" />
                         ) : (
-                          <Card.Img src={this.props.item.type === "track" ? notrack : this.props.item.type === "album" ? noalbum : noartist } alt="" />
+                          <Card.Img src={this.props.item.type === "track" ? notrack : this.props.item.type === "album" ? noalbum : noartist } alt="default album cover" />
                         )}
-                      </a>
+                        <div className="audio-player">
+                          <AudioContext.Consumer>
+                            {({getCurrentAudioId, getCurrentAudioSrc, setCurrentAudio}) => (
+                              <AudioPlayer key={getCurrentAudioId()} id={this.props.item.id} src={this.props.item.audioURL} ext_link={this.props.item.songURL} getCurrentAudioId={getCurrentAudioId} getCurrentAudioSrc={getCurrentAudioSrc} setCurrentAudio={setCurrentAudio}/> 
+                            )}
+                          </AudioContext.Consumer>
+                        </div>
+                      </div>
                     </Col>
                     <Col>
                       <Card.Body>
@@ -73,15 +80,6 @@ export default class Item extends React.Component {
                   </Row>
                 </Container>
               </Card>
-              <div className="audio-player" style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
-                { this.props.item.audioURL &&
-                <AudioContext.Consumer>
-                  {({getCurrentAudioId, getCurrentAudioSrc, setCurrentAudio}) => (
-                    <AudioPlayer key={getCurrentAudioId()} id={this.props.item.id} src={this.props.item.audioURL} getCurrentAudioId={getCurrentAudioId} getCurrentAudioSrc={getCurrentAudioSrc} setCurrentAudio={setCurrentAudio}/> 
-                  )}
-                </AudioContext.Consumer>
-                }
-              </div>
             </ItemContent>
           )}
         </Draggable>

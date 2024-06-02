@@ -2,53 +2,88 @@
   background-color: #333;
 } */
 
+.audio-player-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(.25rem - 1.75px);
+}
+.audio-player-bg > * {
+  visibility: hidden;
+}
+.audio-player-bg:hover {
+  background-color: #000C !important;
+}
+.search-entry:hover .audio-player-bg {
+  background-color: #0008;
+}
+.search-entry:hover .audio-player-bg > * {
+  visibility: visible;
+}
+
+.item-buttons {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+}
+.item-buttons-icon {
+  width: 2rem !important;
+  height: 2rem !important;
+  transition: scale 0.125s ease-out;
+  filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%);
+}
+.item-buttons:hover .item-buttons-icon, .card-img-link:hover .item-buttons-icon {
+  filter: invert(100%);
+}
+.item-buttons:active .item-buttons-icon, .card-img-link:active .item-buttons-icon {
+  filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%) !important;
+  transform: scale(0.9);
+}
+
 .item-buttons-icon.audio-icon {
   visibility: hidden;
 }
-
 .icon-bars {
   visibility: visible;
+  margin: 0 auto;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  user-select: none;
 }
-
 .item-buttons.audio-btn:hover .item-buttons-icon.audio-icon {
   visibility: visible;
 }
-
 .item-buttons.audio-btn:hover .icon-bars {
   visibility: hidden;
 }
-
-.icon-bars {
-  margin: 0 auto;
-  position: relative;
-  transform: translateX(2.5px);
-  width: 15px;
-  height: 15px;
-  user-select: none;
-}
-
 .icon-bars .bar {
   position: absolute;
   bottom: 0;
   left: 0;
   top: 0;
-  width: 3px;
+  width: 4px;
   background-color: #1DB954;
   -webkit-animation: up-down 0.9s infinite;
           animation: up-down 0.9s infinite;
 }
 .icon-bars .bar:nth-child(2) {
-  left: 4px;
+  left: 5px;
   -webkit-animation-delay: -0.45s;
           animation-delay: -0.45s;
 }
 .icon-bars .bar:nth-child(3) {
-  left: 8px;
+  left: 10px;
   -webkit-animation-delay: -0.675s;
           animation-delay: -0.675s;
 }
 .icon-bars .bar:nth-child(4) {
-  left: 12px;
+  left: 15px;
   -webkit-animation-delay: -0.225s;
           animation-delay: -0.225s;
 }

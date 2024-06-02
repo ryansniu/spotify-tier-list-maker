@@ -280,15 +280,24 @@ body {
 .card img {
   width: 3.25rem;
   height: 3.25rem;
+  user-select: none;
 }
 
+.card-img-link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  user-select: none;
+}
 .card-img-link:active, .card-img-link:focus {
   outline: none;
 }
-
-.card-img-link:active .card-img {
-  outline: solid 2px #1DB954;
-}
+/* .card-img-link:active .card-img {
+  outline: solid 2px #1DB954 !important;
+} */
 
 .search-entry {
   display: flex;
@@ -298,7 +307,6 @@ body {
   width: 100%;
   border-radius: 0.25rem;
 }
-
 .search-entry:hover{
   background: #2a2a2a;
   cursor: pointer;
@@ -306,51 +314,8 @@ body {
 .search-entry .card {
   position: static;
 }
-
 .search-entry:hover .card small {
   color: white;
-}
-
-.item-buttons {
-  border: #A4A4A4 1.5px solid;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 50%;
-  transition: scale 0.125s ease-out;
-  /* z-index: 999; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  margin-right: 8px;
-}
-.item-buttons:hover {
-  transform: scale(1.1);
-  transition: scale 0s !important;
-  border-color: white;
-}
-.item-buttons:active {
-  transform: scale(1.05);
-  border-color: #A4A4A4;
-}
-.item-buttons-icon.rotate {
-  rotate: -45deg;
-}
-.item-buttons-icon.rotate:hover {
-  rotate: -45deg;
-}
-.item-buttons-icon.rotate:active {
-  rotate: -45deg;
-}
-.item-buttons-icon {
-  filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%);
-  transition: rotate 0.1s ease-in-out;
-}
-.item-buttons:active .item-buttons-icon {
-  filter: invert(64%) sepia(20%) saturate(0%) hue-rotate(196deg) brightness(97%) contrast(98%) !important;
-}
-.item-buttons:hover .item-buttons-icon {
-  filter: invert(100%);
 }
   
 @media screen and (max-width: 400px) {

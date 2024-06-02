@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Card, Container, Row, Col, Image, OverlayTrigger, Tooltip, DropdownButton, Dropdown } from 'react-bootstrap';
 import _ from 'lodash';
 import noartist from '../images/noartist.svg';
-import plus from '../../tierlist/imgs/plus.svg'
 import { TierListContext } from '../../tierlist/TierListContext';
 import LZString from 'lz-string';
+import link from '../../tierlist/imgs/external-link.svg';
 
 const ArtistsList = ({ artists, getInnerItems }) => {
   const [updater, setUpdater] = useState(false);
@@ -55,7 +55,7 @@ const ArtistsList = ({ artists, getInnerItems }) => {
                         <Container>
                           <Row>
                             <Col xs="auto">
-                              <a
+                              {/* <a
                                 className="card-img-link"
                                 target="_blank"
                                 href={songURL}
@@ -69,64 +69,75 @@ const ArtistsList = ({ artists, getInnerItems }) => {
                                 ) : (
                                   <Card.Img src={noartist} alt="default artist" />
                                 )}
-                              </a>
+                              </a> */}
+                              <div style={{ position: 'relative'}}>
+                                <Card.Img src={imgURL || noartist} style={{filter: containsItem(id, type) ? "brightness(50%)" : "brightness(100%)"}} alt="artist"/>
+                                {
+                                  !containsItem(id, type) && 
+                                  <div className="audio-player">
+                                    <div className="audio-player-bg">
+                                      <a
+                                        className="card-img-link"
+                                        target="_blank"
+                                        href={songURL}
+                                        rel="noopener noreferrer"
+                                        onDragStart={e => e.preventDefault()}
+                                        onClick={e => e.stopPropagation()}
+                                      >
+                                        <Image className="item-buttons-icon" onDragStart={e => e.preventDefault()} src={link} fluid alt=""/>
+                                      </a>
+                                    </div>
+                                  </div>
+                                }
+                              </div>
                             </Col>
                             <Col>
-                              <Card.Body>
-                                <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
-                                <Card.Text>
-                                  <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
-                                </Card.Text>
-                              </Card.Body>
+                              <div style={{ position: 'relative', height: '100%' }}>
+                                <Card.Body>
+                                  <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
+                                  <Card.Text>
+                                    <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
+                                  </Card.Text>
+                                </Card.Body>
+                                <OverlayTrigger
+                                  placement={'top'}
+                                  overlay={<Tooltip>More Options</Tooltip>}
+                                >
+                                  <DropdownButton
+                                    className="item-dropdown"
+                                    size="lg"
+                                    variant="outline-secondary"
+                                    menuVariant="dark"
+                                    title="⋮"
+                                    menuRole="Add/Remove Artist Albums"
+                                    drop="start"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <Dropdown.Item as="button" onClick={async () => {
+                                      const artistContents = await getAlbumsFromArtist(id, imgURL);
+                                      if(artistContents) {
+                                        addManyToItemPool(artistContents, 'album');
+                                        setUpdater(!updater);
+                                      }
+                                    }}>
+                                      Add All Albums
+                                    </Dropdown.Item>
+                                    <Dropdown.Item as="button" onClick={async () => {
+                                      const artistContents = await getAlbumsFromArtist(id, imgURL);
+                                      if(artistContents) {
+                                        deleteManyFromItemPool(artistContents, 'album');
+                                        setUpdater(!updater);
+                                      }
+                                    }}>
+                                      Remove All Albums
+                                    </Dropdown.Item>
+                                  </DropdownButton>
+                                </OverlayTrigger>
+                              </div>
                             </Col>
                           </Row>
                         </Container>
                       </Card>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', transform: 'translateY(2px)' }}>
-                        <button className="item-buttons"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (containsItem(id, type)) deleteFromItemPool(id, type);
-                            else addToItemPool(id, type, songURL, imgURL, title, subtitle, null, null);
-                            setUpdater(!updater);
-                        }}>
-                          <Image className={`item-buttons-icon ${containsItem(id, type) ? 'rotate' : ''}`} onDragStart={e => e.preventDefault()} src={plus} fluid alt={`${containsItem(id, type) ? 'remove' : 'add'} album`}/>
-                        </button>
-                        <OverlayTrigger
-                          placement={'top'}
-                          overlay={<Tooltip>More Options</Tooltip>}
-                        >
-                          <DropdownButton
-                            className="item-dropdown"
-                            size="lg"
-                            variant="outline-secondary"
-                            menuVariant="dark"
-                            title="⋯"
-                            menuRole="Add/Remove Artist Albums"
-                            drop="start"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Dropdown.Item as="button" onClick={async () => {
-                              const artistContents = await getAlbumsFromArtist(id, imgURL);
-                              if(artistContents) {
-                                addManyToItemPool(artistContents, 'album');
-                                setUpdater(!updater);
-                              }
-                            }}>
-                              Add All Albums
-                            </Dropdown.Item>
-                            <Dropdown.Item as="button" onClick={async () => {
-                              const artistContents = await getAlbumsFromArtist(id, imgURL);
-                              if(artistContents) {
-                                deleteManyFromItemPool(artistContents, 'album');
-                                setUpdater(!updater);
-                              }
-                            }}>
-                              Remove All Albums
-                            </Dropdown.Item>
-                          </DropdownButton>
-                        </OverlayTrigger>
-                      </div>
                     </div>
                   )}
                 </TierListContext.Consumer>

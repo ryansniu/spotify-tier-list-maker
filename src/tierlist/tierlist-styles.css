@@ -55,11 +55,11 @@
 
 #sidebar-overlay {
     background-color: black;
-    width: 23rem;
+    width: 21.5rem;
 }
 #itempool-overlay {
     background-color: black;
-    width: 23rem;
+    width: 21.5rem;
     max-height: 100%;
     overflow-y: hidden;
 }
@@ -97,10 +97,10 @@
 }
 
 .show-search {
-    margin-right: 23rem !important;
+    margin-right: 21.5rem !important;
 }
 .show-items {
-    margin-left: 23rem !important;
+    margin-left: 21.5rem !important;
 }
 #tierlist-all {
     transition: margin 0.3s ease-in-out;
@@ -198,8 +198,20 @@
 }
 
 .item-dropdown.dropdown {
-    width: 1.25rem;
-    height: 1.25rem;
+    /* width: 1.25rem;
+    height: 1.25rem; */
+}
+
+.item-dropdown {
+    position: absolute !important;
+    top: -3%;
+    /* bottom: 0; */
+    right: -5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* transform: translateY(-50%); */
+    z-index: 9999;
 }
 
 .item-dropdown .dropdown-toggle{
@@ -221,13 +233,13 @@
     width: 0;
     height: 0;
 }
-.item-dropdown .dropdown-toggle:hover {
+/* .item-dropdown .dropdown-toggle:hover {
     transform: scale(1.1);
     transition: scale 0s !important;
 }
 .item-dropdown .dropdown-toggle:active {
     transform: scale(1.05);
-}
+} */
 
 
 #export-data {

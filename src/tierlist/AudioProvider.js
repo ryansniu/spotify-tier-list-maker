@@ -29,7 +29,7 @@ export const AudioProvider = ({ children }) => {
 
   useEffect(() => {
     const audioElement = audioRef.current;
-    const handleAudioEnd = () => setAudioSrc(null);
+    const handleAudioEnd = () => {setAudioId(null); setAudioSrc(null);};
     audioElement.addEventListener('ended', handleAudioEnd);
     return () => audioElement.removeEventListener('ended', handleAudioEnd);
   }, []);
