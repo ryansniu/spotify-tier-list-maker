@@ -313,7 +313,7 @@ class TierList extends React.Component {
     this.setState(newState);
   }
 
-  deleteItem = (id, source, home) => {
+  deleteItem = (id, source, home, getCurrentAudioId, setCurrentAudio) => {
     const homeitemIds = Array.from(home.itemIds);
     homeitemIds.splice(source.index, 1);
     const newHome = {
@@ -328,7 +328,7 @@ class TierList extends React.Component {
       }
       else {
         // TODO: set audio to null IF item is playing
-        // id == getCurrentAudioId() && setCurrentAudio(null, null);
+        id === getCurrentAudioId() && setCurrentAudio(null, null);
       }
       return object;
     }, {});
@@ -574,7 +574,7 @@ class TierList extends React.Component {
     this.setState(this.state);
   }
 
-  onDragEnd = result => {
+  onDragEnd = (result, getCurrentAudioId, setCurrentAudio) => {
     const { destination, source, draggableId, type } = result;
 
     if (!destination) return;
@@ -597,7 +597,7 @@ class TierList extends React.Component {
     const foreign = this.state.columns[destination.droppableId];
 
     if (destination.droppableId === 'trash-can') {
-      this.deleteItem(draggableId, source, home);
+      this.deleteItem(draggableId, source, home, getCurrentAudioId, setCurrentAudio);
       return;
     }
 
@@ -652,7 +652,7 @@ class TierList extends React.Component {
   render() {
     return (
       <AudioContext.Consumer>
-        {({getCurrentAudioId, getCurrentAudioSrc, setCurrentAudio}) => (
+        {({getCurrentAudioId, setCurrentAudio}) => (
           <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
             <Modal id="delete-modal" show={showErrorModal} onHide={() => {showErrorModal = false; this.setState(this.state);}} size="sm">
               <Modal.Header closeButton closeVariant="white">
@@ -791,7 +791,7 @@ class TierList extends React.Component {
               </div>
             </Container>
     
-            <DragDropContext onDragEnd={this.onDragEnd}>
+            <DragDropContext onDragEnd={(result) => this.onDragEnd(result, getCurrentAudioId, setCurrentAudio)}>
               <div id="tierlist-outer">
                 <div id="tierlist-holder">
                   <Droppable droppableId="tiers" direction="horizontal" type="column">
