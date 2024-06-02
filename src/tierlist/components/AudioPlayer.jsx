@@ -12,7 +12,6 @@ const AudioPlayer = ({ id, src, ext_link, getCurrentAudioSrc, setCurrentAudio })
           <button className="item-buttons audio-btn" style={{border: "none", borderRadius: "0"}}
             onClick={(e) => {
               e.stopPropagation();
-              console.log("hmm")
               if (getCurrentAudioSrc() === src) setCurrentAudio(null, null);
               else setCurrentAudio(id, src);
           }}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Card, Container, Row, Col, Image } from 'react-bootstrap';
+import { Card, Container, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 import notrack from '../images/notrack.svg';
 import { TierListContext } from '../../tierlist/TierListContext';
@@ -59,10 +59,11 @@ const TracksList = ({ tracks }) => {
                                 <Col>
                                   <Card.Body>
                                     <Card.Title style={{color: containsItem(id, type) ? "#555" : ""}}>{title}</Card.Title>
-                                    <div style={{display: 'flex', alignItems: 'start' }}>
-                                      {isExplicit && <div style={{userSelect: 'none', transform: 'translateY(3px)', marginRight: '0.2rem', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: containsItem(id, type) ? '#555' : '#AAAAAA', color: containsItem(id, type) ? 'black' : '#121212', width: '0.75rem', height: '0.75rem'}}>E</div>}
-                                      <Card.Text>
-                                        <small style={{color: containsItem(id, type) ?  "#555" : ""}}>{subtitle}</small>
+                                    <div style={{display: 'flex', alignItems: 'start' }}>                                      <Card.Text>
+                                        <small style={{color: containsItem(id, type) ?  "#555" : ""}}>
+                                          {isExplicit && <span style={{userSelect: 'none', transform: 'translateY(-1.5px)', marginRight: '0.2rem', fontSize: '0.5rem', textAlign: 'center', display: 'inline-block', borderRadius: '2px', backgroundColor: containsItem(id, type) ? '#555' : '#AAAAAA', color: containsItem(id, type) ? 'black' : '#121212', width: '0.75rem', height: '0.75rem'}}>E</span>}
+                                          {subtitle}
+                                        </small>
                                       </Card.Text>
                                     </div>
                                   </Card.Body>
