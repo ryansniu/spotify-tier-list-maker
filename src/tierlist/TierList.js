@@ -272,8 +272,20 @@ class TierList extends React.Component {
     return tracklist
   }
 
-  saveAsIMG (fileType) {
+  saveAsIMG = async (fileType) => {
     toggleEditMode = false;
+    this.textarea.setAttribute('readonly', true);
+
+    if (showSearchbar || showItemPool) {
+      this.showSearch(false);
+      this.showItems(false);
+      // time to wait might have to be adjusted
+      await new Promise(resolve => setTimeout(resolve, 300));
+    }
+
+    const tierlist = document.getElementById('tierlist-all');
+    const oldTierlistWidth = document.getElementById('tierlist-all').style.width;
+
     this.setState(this.state, () => {
       const saveIMG = (dataUrl) => {
         const link = document.createElement('a');
@@ -281,14 +293,18 @@ class TierList extends React.Component {
         link.href = dataUrl;
         link.click();
         URL.revokeObjectURL(link.href);
+        this.textarea.removeAttribute('readonly');
+        tierlist.style.width = oldTierlistWidth;
       }
 
-      const filter = node => !['audio-player'].some(classname => node.classList?.contains(classname));
+      const filter = node => !(node.classList?.contains('audio-player') || ['tierlist-buttons', 'itempool-toggle', 'search-toggle'].includes(node.id));
   
-      let tierlist = document.getElementById('tierlist-inner');
-      let displayWidth = tierlist.getBoundingClientRect().width;
-      let fullWidth = tierlist.scrollWidth, fullHeight = tierlist.scrollHeight;
-      if(fullWidth > displayWidth) fullWidth += 8;
+      const tierlistTitle = document.querySelector('.title-heading');
+      const tierlistInner = document.getElementById('tierlist-inner');
+
+      const fullHeight = tierlistInner.scrollHeight + tierlistTitle.scrollHeight + 28;
+      const fullWidth = Math.max(tierlistInner.getBoundingClientRect().width, tierlistTitle.scrollWidth) + 24;
+      tierlist.style.width = `${fullWidth}px`;
       
       if(fileType === "jpeg") {
         toJpeg(tierlist, {backgroundColor: '#121212', pixelRatio: 2, width: fullWidth, height: fullHeight, filter: filter})
@@ -327,7 +343,6 @@ class TierList extends React.Component {
         object[key] = oldItems[key];
       }
       else {
-        // TODO: set audio to null IF item is playing
         id === getCurrentAudioId() && setCurrentAudio(null, null);
       }
       return object;
@@ -548,26 +563,30 @@ class TierList extends React.Component {
   }
 
   showSearch = (show) => {
+    const tierlistAll = document.getElementById("tierlist-all");
+    const searchToggle = document.getElementById("search-toggle");
     if(show) {
-      document.getElementById("tierlist-all").classList.add("show-search");
-      document.getElementById("search-toggle").classList.add("show-search");
+      tierlistAll.classList.add("show-search");
+      searchToggle.classList.add("show-search");
     }
     else {
-      document.getElementById("tierlist-all").classList.remove("show-search");
-      document.getElementById("search-toggle").classList.remove("show-search");
+      tierlistAll.classList.remove("show-search");
+      searchToggle.classList.remove("show-search");
     }
     showSearchbar = show;
     this.setState(this.state);
   }
 
   showItems = (show) => {
+    const tierlistAll = document.getElementById("tierlist-all");
+    const itempoolToggle = document.getElementById("itempool-toggle");
     if(show) {
-      document.getElementById("tierlist-all").classList.add("show-items");
-      document.getElementById("itempool-toggle").classList.add("show-items");
+      tierlistAll.classList.add("show-items");
+      itempoolToggle.classList.add("show-items");
     }
     else {
-      document.getElementById("tierlist-all").classList.remove("show-items");
-      document.getElementById("itempool-toggle").classList.remove("show-items");
+      tierlistAll.classList.remove("show-items");
+      itempoolToggle.classList.remove("show-items");
     }
     showItemPool = show;
     showItemNotifBadge = false;
@@ -653,7 +672,7 @@ class TierList extends React.Component {
     return (
       <AudioContext.Consumer>
         {({getCurrentAudioId, setCurrentAudio}) => (
-          <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+          <div id="tierlist-all" style={{display: 'flex', flexDirection: 'column', minHeight: '95vh', minWidth: 'max-content'}}>
             <Modal id="delete-modal" show={showErrorModal} onHide={() => {showErrorModal = false; this.setState(this.state);}} size="sm">
               <Modal.Header closeButton closeVariant="white">
                 <Modal.Title style={{color: '#F30000'}}>Error!</Modal.Title>
@@ -711,7 +730,7 @@ class TierList extends React.Component {
               />
             </div>
             
-            <Container style={{flexWrap: 'wrap', margin: '0.5rem 3rem 0 3rem'}}>
+            <Container id="tierlist-buttons" style={{flexWrap: 'wrap', margin: '0.5rem 3rem 0 3rem'}}>
               
               <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', margin: '0 1.5rem'}}>
                 <OverlayTrigger
@@ -753,7 +772,7 @@ class TierList extends React.Component {
                     menuRole="Save as image"
                   >
                     {saveFileTypes.map((fileType) => (
-                      <Dropdown.Item as="button" key={fileType} type="button" onClick={() => this.saveAsIMG(fileType)}>Save as .{fileType}</Dropdown.Item>
+                      <Dropdown.Item as="button" key={fileType} type="button" onClick={async () => await this.saveAsIMG(fileType)}>Save as .{fileType}</Dropdown.Item>
                     ))}
                   </DropdownButton>
                 </OverlayTrigger>
@@ -771,6 +790,11 @@ class TierList extends React.Component {
                     menuRole="Import/export .json data"
                   >
                     <Dropdown.Item as="button" onClick={() => { showPlaylistModal = true; this.setState(this.state); }}>Import from Playlist</Dropdown.Item>
+                    <Dropdown.ItemText id="import-data" style={{letterSpacing: '0px'}}>
+                      <label style={{width: '100%', height: '100%'}} htmlFor="import_tierlist">Import from Json</label>
+                      <br/>
+                      <input style={{display: 'none'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={(e) => {this.importFromJson(e); setCurrentAudio(null, null);}}/>
+                    </Dropdown.ItemText>
                     <Dropdown.Item
                       href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state))}`}
                       download="tierlist.json"
@@ -781,11 +805,6 @@ class TierList extends React.Component {
                     >
                       Export as Json
                     </Dropdown.Item>
-                    <Dropdown.ItemText id="import-data" style={{letterSpacing: '0px'}}>
-                      <label style={{width: '100%', height: '100%'}} htmlFor="import_tierlist">Import from Json</label>
-                      <br/>
-                      <input style={{display: 'none'}}type="file" id="import_tierlist" name="import_tierlist" accept=".json" onChange={(e) => {this.importFromJson(e); setCurrentAudio(null, null);}}/>
-                    </Dropdown.ItemText>
                   </DropdownButton>
                 </OverlayTrigger>
               </div>

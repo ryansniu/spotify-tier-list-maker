@@ -67,7 +67,7 @@
 #itempool-toggle, #search-toggle {
     top: 1rem;
     font-size: 1.75rem;
-    position: absolute;
+    position: fixed;
     transition: margin 0.3s ease-in-out, background-color 0.15s;
     background-color: #1DB954;
     border: none;
@@ -107,7 +107,7 @@
 }
 #tierlist-outer { 
     display: flex;
-    overflow: scroll;
+    /* overflow: scroll; */
     flex: 1;
     padding: 0.5rem 0.5rem 0 0.5rem;
 }

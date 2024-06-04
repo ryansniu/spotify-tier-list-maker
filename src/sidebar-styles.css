@@ -38,6 +38,12 @@
   background-color: transparent;
 }
 
+html {
+  margin: 0;
+  padding: 0;
+  min-width: fit-content;
+}
+
 body {
   margin: 0;
   padding: 0;
