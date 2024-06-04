@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/spotify-tier-list-maker/static/css/main.3d5c3de0.css",
-    "main.js": "/spotify-tier-list-maker/static/js/main.094ef157.js",
+    "main.css": "/spotify-tier-list-maker/static/css/main.ebc7012e.css",
+    "main.js": "/spotify-tier-list-maker/static/js/main.3df3ce32.js",
     "static/media/Gotham-Medium.svg": "/spotify-tier-list-maker/static/media/Gotham-Medium.a16773f28fb9a09c94e7.svg",
     "static/media/Gotham-Medium.eot": "/spotify-tier-list-maker/static/media/Gotham-Medium.508d28fb24fceefedb82.eot",
     "static/media/Gotham-Medium.ttf": "/spotify-tier-list-maker/static/media/Gotham-Medium.9c3fb2822dd75493a59f.ttf",
@@ -15,16 +15,19 @@
     "static/media/cog-white.svg": "/spotify-tier-list-maker/static/media/cog-white.07854ec9533bd13dfd2a02348c2488f2.svg",
     "static/media/palette-black.svg": "/spotify-tier-list-maker/static/media/palette-black.d38e1bfc9444bdafd94a2af3e6357472.svg",
     "static/media/palette-white.svg": "/spotify-tier-list-maker/static/media/palette-white.3218a16254c04cbcff5461fb6ca2182d.svg",
+    "static/media/external-link.svg": "/spotify-tier-list-maker/static/media/external-link.21d5cac47ff77b153efb7e47fa270918.svg",
     "static/media/search.svg": "/spotify-tier-list-maker/static/media/search.75a0c657f6514168192a81cf5e550133.svg",
+    "static/media/pause.svg": "/spotify-tier-list-maker/static/media/pause.eada51c2100c86f73c4dbd6c153f2dba.svg",
     "static/media/playlist.svg": "/spotify-tier-list-maker/static/media/playlist.52cda70d50db2d00c04088d2dbe14598.svg",
+    "static/media/play.svg": "/spotify-tier-list-maker/static/media/play.c688319fcdcead8d9b67685f3f3cb6fd.svg",
     "static/media/cross.svg": "/spotify-tier-list-maker/static/media/cross.86d4de87e199c7855c3d941a5d625c61.svg",
     "static/media/trash-can.svg": "/spotify-tier-list-maker/static/media/trash-can.26a1eb4df16c6d0004a928efe01d06fb.svg",
     "static/media/plus.svg": "/spotify-tier-list-maker/static/media/plus.45dbd09c558a9ee14b248c9635a76a1a.svg",
-    "main.3d5c3de0.css.map": "/spotify-tier-list-maker/static/css/main.3d5c3de0.css.map",
-    "main.094ef157.js.map": "/spotify-tier-list-maker/static/js/main.094ef157.js.map"
+    "main.ebc7012e.css.map": "/spotify-tier-list-maker/static/css/main.ebc7012e.css.map",
+    "main.3df3ce32.js.map": "/spotify-tier-list-maker/static/js/main.3df3ce32.js.map"
   },
   "entrypoints": [
-    "static/css/main.3d5c3de0.css",
-    "static/js/main.094ef157.js"
+    "static/css/main.ebc7012e.css",
+    "static/js/main.3df3ce32.js"
   ]
 }
