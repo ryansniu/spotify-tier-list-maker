@@ -2,7 +2,7 @@
   "name": "spotify-tier-list-maker",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://ryansniu.github.io/spotify-tier-list-maker/",
+  "homepage": "https://ryanniu.dev/spotify-tier-list-maker/",
   "dependencies": {
     "@atlaskit/css-reset": "^6.0.5",
     "@testing-library/jest-dom": "^5.11.6",
